@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="LireOffice.Views.AddCustomer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:local="clr-namespace:LireOffice.Views"
+             mc:Ignorable="d" >
+    <Grid Background="Black">
+        <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Margin="16 16 24 16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Detail Pelanggan" Grid.ColumnSpan="2" FontSize="22"/>
+
+                <Label Grid.Row="2" Content="No. Register" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.RegisterId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
+
+                <Label Grid.Row="2" Grid.Column="3" Content="No. Kartu" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.CardId}" Grid.Column="4" Grid.Row="2"/>
+
+                <Label Grid.Row="4" Content="No. Identitas" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.SelfId}" Grid.Column="1" Grid.Row="4"/>
+
+                <Label Grid.Row="4" Grid.Column="3" Content="NPWP" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.TaxId}" Grid.Column="4" Grid.Row="4"/>
+
+                <Label Grid.Row="6" Grid.Column="0" Content="Nama" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="6"/>
+
+                <CheckBox Content="Aktif" IsTabStop="False" FontSize="14" Grid.Column="4" Grid.Row="6" Margin="20 0 0 0" IsChecked="{Binding CustomerDTO.IsActive}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+
+                <Label Grid.Row="8" Grid.Column="0" Content="Tgl Lahir" FontSize="14" VerticalAlignment="Center" />
+                <DatePicker FontSize="14" Height="29" SelectedDate="{Binding CustomerDTO.DateOfBirth}" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="8"/>
+
+                <Label Grid.Row="8" Grid.Column="3" Content="Pekerjaan" FontSize="14" VerticalAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.Occupation}" Grid.Column="4" Grid.Row="8"/>
+
+                <Label Grid.Row="10" Grid.Column="0" Content="Tipe" FontSize="14" VerticalAlignment="Center" />
+                <ComboBox Grid.Column="1" Grid.Row="10" FontSize="14" ItemsSource="{Binding UserTypeList}" SelectedItem="{Binding SelectedUserType}" VerticalContentAlignment="Center"/>
+
+                <Label Grid.Row="12" Content="Alamat" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.AddressLine}" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="12"/>
+
+                <Label Grid.Row="14" Content="Kelurahan" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.SubDistrict}" Grid.Column="1" Grid.Row="14"/>
+
+                <Label Grid.Row="14" Grid.Column="3" Content="Kecamatan" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.District}" Grid.Column="4" Grid.Row="14"/>
+
+                <Label Grid.Row="16" Content="Kota/Kabupaten" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.Regency}" Grid.Column="1" Grid.Row="16"/>
+
+                <Label Grid.Row="18" Content="Email" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.Email}" Grid.Column="1" Grid.Row="18"/>
+
+                <Label Grid.Row="20" Content="No. Telpon" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.Phone}" Grid.Column="1" Grid.Row="20"/>
+
+                <Label Grid.Row="18" Grid.Column="3" Content="No. HP" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.CellPhone01}" Grid.Column="4" Grid.Row="18"/>
+
+                <Label Grid.Row="20" Grid.Column="3" Content="No. HP" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding CustomerDTO.CellPhone02}" Grid.Column="4" Grid.Row="20"/>
+
+                <StackPanel Margin="12" Grid.Row="22" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}" IsEnabled="{Binding CustomerDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="24 0 0 0" Command="{Binding CancelCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

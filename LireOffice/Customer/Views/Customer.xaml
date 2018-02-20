@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="LireOffice.Views.Customer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:LireOffice.Views"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="72"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}"/>
+                <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}"/>
+                <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus" Height="30" Width="100" FontSize="14" Command="{Binding DeleteCommand}"/>
+            </StackPanel>
+            <ListView Grid.Row="1" Width="200" HorizontalAlignment="Right" Background="Lime" ItemsSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding RegisterId}"/>
+                            <TextBlock Text="{Binding Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding DoubleClickCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>
