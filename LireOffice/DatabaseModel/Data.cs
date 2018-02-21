@@ -169,6 +169,7 @@ namespace LireOffice.DatabaseModel
         public decimal BuyPrice { get; set; }
         public decimal Discount { get; set; }
         public decimal SubTotal { get; set; }
+        public decimal Tax { get; set; }
     }
     
     public class Sales : EntityData

@@ -72,9 +72,10 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedVendor, value,()=> 
             {
                 if (_selectedVendor != null)
+                {
                     ReceivedGoodDTO.Description = "Penjualan, Kepada " + _selectedVendor.Name;
-                if (ReceivedGoodDTO != null)
                     ReceivedGoodDTO.VendorId = _selectedVendor.Id;
+                }                    
             }, nameof(SelectedVendor));
         }
 
@@ -331,10 +332,34 @@ namespace LireOffice.ViewModels
         private void AddData()
         {
             ReceivedGood receivedGood = Mapper.Map<ReceivedGoodDetailContext, ReceivedGood>(ReceivedGoodDTO);
+            Collection<ReceivedGoodItem> receivedGoodItemList = new Collection<ReceivedGoodItem>();
+
             if (ReceivedGoodItemList.Count > 0)
             {
-                
+                foreach (var item in ReceivedGoodItemList)
+                {
+                    ReceivedGoodItem receivedGoodItem = new ReceivedGoodItem
+                    {
+                        ReceivedGoodId = receivedGood.Id,
+                        ProductId = item.ProductId,
+                        UnitTypeId = item.UnitTypeId,
+                        TaxId = item.TaxId,
+                        Barcode = item.Barcode,
+                        Name = item.Name,
+                        Quantity = item.Quantity,
+                        UnitType = item.UnitType,
+                        BuyPrice = item.BuyPrice,
+                        Discount = item.Discount,
+                        SubTotal = item.SubTotal,
+                        Tax = item.Tax
+                    };
+
+                    receivedGoodItemList.Add(receivedGoodItem);
+                }
             }
+
+            var test = receivedGood;
+            var test01 = receivedGoodItemList;
         }
 
         private void UpdateData()
