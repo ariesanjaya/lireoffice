@@ -215,6 +215,7 @@ namespace LireOffice.ViewModels
                 case "ContentRegion":
                     regionManager.Regions["Option01Region"].RemoveAll();
                     eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(false);
+                    eventAggregator.GetEvent<ProductDataGridFocusEvent>().Publish("Focus Receveid Good Item List");
                     break;
             }
         }

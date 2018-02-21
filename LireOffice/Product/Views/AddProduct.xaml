@@ -9,6 +9,9 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d" >
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}"/>
+    </UserControl.InputBindings>
     <Grid Background="Black">
         <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid Margin="8 8 16 8">

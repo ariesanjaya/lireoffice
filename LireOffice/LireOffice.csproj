@@ -133,8 +133,16 @@
     <Compile Include="Employee\Views\Employee.xaml.cs">
       <DependentUpon>Employee.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ledger\ViewModels\AccountViewModel.cs" />
+    <Compile Include="Ledger\ViewModels\AddAccountViewModel.cs" />
     <Compile Include="Ledger\ViewModels\AddTaxViewModel.cs" />
     <Compile Include="Ledger\ViewModels\MainLedgerViewModel.cs" />
+    <Compile Include="Ledger\Views\Account.xaml.cs">
+      <DependentUpon>Account.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ledger\Views\AddAccount.xaml.cs">
+      <DependentUpon>AddAccount.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ledger\Views\AddTax.xaml.cs">
       <DependentUpon>AddTax.xaml</DependentUpon>
     </Compile>
@@ -246,6 +254,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Employee\Views\Employee.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\Account.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\AddAccount.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

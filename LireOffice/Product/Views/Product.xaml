@@ -8,7 +8,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" IsTabStop="False" KeyboardNavigation.TabNavigation="Cycle">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -16,12 +16,12 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="24 0" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus" Height="30" Width="100" FontSize="14" Command="{Binding DeleteCommand}"/>
+            <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" IsTabStop="True" Command="{Binding AddCommand}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" IsTabStop="False" Command="{Binding UpdateCommand}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus" Height="30" Width="100" FontSize="14" IsTabStop="False" Command="{Binding DeleteCommand}"/>
         </StackPanel>
 
-        <syncfusion:SfDataGrid Grid.Row="1"
+        <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid"
                                ItemsSource="{Binding ProductList}"
                                SelectedItem="{Binding SelectedProduct}"
                                FontSize="14"
@@ -32,6 +32,7 @@
                                NavigationMode="Row"
                                EnableDataVirtualization="True"
                                ScrollMode="Async" 
+                               ShowRowHeader="True"
                                HeaderRowHeight="32">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="120" HorizontalHeaderContentAlignment="Left"/>

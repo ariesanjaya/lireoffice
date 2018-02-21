@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="LireOffice.Views.AddAccount"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LireOffice.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             mc:Ignorable="d" 
+             IsTabStop="False" KeyboardNavigation.TabNavigation="Cycle">
+    <Grid Background="Black">
+        <Grid Background="azure" Height="auto" Width="500" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Margin="24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Tambah Akun" FontSize="18" VerticalAlignment="Center"/>
+                
+                <Grid Grid.Row="1" Margin="0 12 0 0" HorizontalAlignment="Left">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="12"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="12"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="No. Referensi" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBox x:Name="ReferenceTextBox" FontSize="14" Grid.Column="1" Width="200" Text="{Binding AccountDTO.ReferenceId}" HorizontalAlignment="Left"/>
+
+                    <Label Content="Nama" Grid.Row="2" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="14" Width="200" Text="{Binding AccountDTO.Name}" HorizontalAlignment="Left"/>
+
+                    <Label Content="Kategori" Grid.Row="4" FontSize="14" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" FontSize="14" Width="200" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" HorizontalAlignment="Left"/>
+
+                    <Label Content="Deskripsi" Grid.Row="6" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" FontSize="14" Text="{Binding AccountDTO.Description}"/>                    
+                </Grid>
+
+                <StackPanel Margin="15" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}" IsEnabled="{Binding AccountDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="24 0 0 0" Command="{Binding CancelCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>        
+    </Grid>
+</UserControl>

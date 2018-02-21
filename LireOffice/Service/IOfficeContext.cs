@@ -48,7 +48,7 @@ namespace LireOffice.Service
         /// </summary>
         /// <param name="customer"></param>
         void UpdateCustomer(User customer);
-        
+
         /// <summary>
         /// Delete specified customer
         /// </summary>
@@ -131,7 +131,7 @@ namespace LireOffice.Service
 
         ProductCategory GetCategoryById(ObjectId id);
         #endregion
-        
+
         #region Sales Methods
         IEnumerable<Sales> GetSales();
 
@@ -173,5 +173,16 @@ namespace LireOffice.Service
         #region GoodReturnItem Methods
 
         #endregion
+
+        #region Account Methods
+        void AddAccount(Account account);
+
+        void UpdateAccount(Account account);
+
+        IEnumerable<Account> GetAccounts();
+
+        Account GetAccountById(ObjectId id);
+        #endregion
+
     }
 }

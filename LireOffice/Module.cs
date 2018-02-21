@@ -27,6 +27,7 @@ namespace LireOffice
             container.RegisterTypeForNavigation<Customer>();
             container.RegisterTypeForNavigation<Employee>();
             container.RegisterTypeForNavigation<MainLedger>();
+            container.RegisterTypeForNavigation<Account>();
             container.RegisterTypeForNavigation<Product>();
             container.RegisterTypeForNavigation<Vendor>();
             container.RegisterTypeForNavigation<SalesSummary>();

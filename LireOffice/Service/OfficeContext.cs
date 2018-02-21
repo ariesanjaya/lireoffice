@@ -396,5 +396,27 @@ namespace LireOffice.Service
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindById(id);
         }
         #endregion
+
+        #region Account Methods
+        public void AddAccount(Account account)
+        {
+            db.GetCollection<Account>("Accounts").Insert(account);
+        }
+
+        public void UpdateAccount(Account account)
+        {
+            db.GetCollection<Account>("Accounts").Update(account);
+        }
+
+        public IEnumerable<Account> GetAccounts()
+        {
+            return db.GetCollection<Account>("Accounts").FindAll();
+        }
+
+        public Account GetAccountById(ObjectId id)
+        {
+            return db.GetCollection<Account>("Accounts").FindById(id);
+        }
+        #endregion
     }
 }

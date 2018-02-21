@@ -3,15 +3,141 @@ using LiteDB;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace LireOffice.DatabaseModel
 {
+    public class AccountContext : BindableBase, IDataErrorInfo
+    {
+        public ObjectId Id { get; set; }
+
+        private string _referenceId;
+
+        public string ReferenceId
+        {
+            get => _referenceId;
+            set => SetProperty(ref _referenceId, value, CheckBtnAvailability, nameof(ReferenceId));
+        }
+
+        private string _name;
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value, CheckBtnAvailability, nameof(Name));
+        }
+
+        private string _category;
+
+        public string Category
+        {
+            get => _category;
+            set => SetProperty(ref _category, value, nameof(Category));
+        }
+
+        private string _description;
+
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value, nameof(Description));
+        }
+
+        private bool _isBtnEnabled;
+
+        public bool IsBtnEnabled
+        {
+            get => _isBtnEnabled;
+            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
+        }
+
+        public string Error => null;
+
+        public string this[string propertyName]
+        {
+            get
+            {
+                switch (propertyName)
+                {
+                    case nameof(ReferenceId):
+                        break;
+                    case nameof(Name):
+
+                        break;
+                }
+                return string.Empty;
+            }
+        }
+
+        private void CheckBtnAvailability()
+        {
+            if (!string.IsNullOrEmpty(ReferenceId) || !string.IsNullOrEmpty(Name))
+                IsBtnEnabled = true;
+            else
+                IsBtnEnabled = false;
+        }
+    }
+
+    public class AccountInfoContext : BindableBase
+    {
+        public ObjectId Id { get; set; }
+
+        private string _referenceId;
+
+        public string ReferenceId
+        {
+            get => _referenceId;
+            set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
+        }
+        
+        private string _name;
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value, nameof(Name));
+        }
+
+        private decimal _balance;
+
+        public decimal Balance
+        {
+            get => _balance;
+            set => SetProperty(ref _balance, value, nameof(Balance));
+        }                
+    }
+
+    public class AccountDetailContext : BindableBase
+    {
+        public ObjectId Id { get; set; }
+        public ObjectId AccountId { get; set; }
+
+        private string _referenceId;
+
+        public string ReferenceId
+        {
+            get => _referenceId;
+            set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
+        }
+
+        private string _description;
+
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value, nameof(Description));
+        }
+
+        private decimal _balance;
+
+        public decimal Balance
+        {
+            get => _balance;
+            set => SetProperty(ref _balance, value, nameof(Balance));
+        }
+    }
+
     public class UserProfileContext : BindableBase
     {
         public ObjectId Id { get; set; }
@@ -47,7 +173,7 @@ namespace LireOffice.DatabaseModel
             get => _phone;
             set => SetProperty(ref _phone, value, nameof(Phone));
         }
-        
+
         private BitmapImage _imageSource;
 
         public BitmapImage ImageSource
@@ -68,7 +194,7 @@ namespace LireOffice.DatabaseModel
             get => _registerId;
             set => SetProperty(ref _registerId, value, nameof(RegisterId));
         }
-        
+
         private string _name;
 
         public string Name
@@ -77,7 +203,7 @@ namespace LireOffice.DatabaseModel
             set => SetProperty(ref _name, value, nameof(Name));
         }
     }
-        
+
     public class ReceivedGoodInfoContext : BindableBase
     {
         public string Id { get; set; }
@@ -134,7 +260,7 @@ namespace LireOffice.DatabaseModel
             get => _receivedDate;
             set => SetProperty(ref _receivedDate, value, nameof(ReceivedDate));
         }
-        
+
         private string _invoiceId;
 
         public string InvoiceId
@@ -150,7 +276,7 @@ namespace LireOffice.DatabaseModel
             get => _description;
             set => SetProperty(ref _description, value, nameof(Description));
         }
-        
+
         private decimal _additionalCost;
 
         public decimal AdditionalCost
@@ -207,7 +333,7 @@ namespace LireOffice.DatabaseModel
             set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
         }
     }
-        
+
     public class ReceivedGoodItemContext : BindableBase
     {
         private readonly IEventAggregator eventAggregator;
@@ -330,7 +456,7 @@ namespace LireOffice.DatabaseModel
         public ObjectId ProductId { get; set; }
         public ObjectId UnitTypeId { get; set; }
         public ObjectId TaxId { get; set; }
-        
+
         private string _barcode;
 
         public string Barcode
@@ -376,11 +502,11 @@ namespace LireOffice.DatabaseModel
         public decimal Discount
         {
             get => _discount;
-            set => SetProperty(ref _discount, value,()=>
-            {
-                CalculateDiscount();
-                CalculateSubTotal();
-            }, nameof(Discount));
+            set => SetProperty(ref _discount, value, () =>
+             {
+                 CalculateDiscount();
+                 CalculateSubTotal();
+             }, nameof(Discount));
         }
 
         private decimal _subTotal;
@@ -396,19 +522,19 @@ namespace LireOffice.DatabaseModel
         public decimal Tax
         {
             get => _tax;
-            set => SetProperty(ref _tax, value,()=> 
-            {
-                CalculateTax();
-                CalculateSubTotal();
-            }, nameof(Tax));
+            set => SetProperty(ref _tax, value, () =>
+             {
+                 CalculateTax();
+                 CalculateSubTotal();
+             }, nameof(Tax));
         }
-        
+
         private void CalculateTax()
         {
             if (Tax <= 100)
             {
                 Tax = ((decimal)Quantity * SellPrice - Discount) * (decimal)Tax / 100;
-            }            
+            }
         }
 
         private void CalculateDiscount()
@@ -575,7 +701,7 @@ namespace LireOffice.DatabaseModel
             get => _subTotal;
             set => SetProperty(ref _subTotal, value, nameof(SubTotal));
         }
-                
+
         private void CalculateDiscount()
         {
             if (Discount <= 100)
@@ -609,7 +735,7 @@ namespace LireOffice.DatabaseModel
             get => _salesDate;
             set => SetProperty(ref _salesDate, value, nameof(SalesDate));
         }
-        
+
         private string _invoiceId;
 
         public string InvoiceId
@@ -665,7 +791,7 @@ namespace LireOffice.DatabaseModel
             get => _total;
             set => SetProperty(ref _total, value, nameof(Total));
         }
-        
+
         private bool _isPosted;
 
         public bool IsPosted
@@ -682,7 +808,6 @@ namespace LireOffice.DatabaseModel
             set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
         }
 
-
         public string Error => null;
 
         public string this[string propertyName]
@@ -697,6 +822,7 @@ namespace LireOffice.DatabaseModel
                             return "Kotak ini harus diisi !!";
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -785,9 +911,9 @@ namespace LireOffice.DatabaseModel
         {
             get => _sellSubTotal;
             set => SetProperty(ref _sellSubTotal, value, nameof(SellSubTotal));
-        }        
+        }
     }
-    
+
     public class UserContext : BindableBase, IDataErrorInfo
     {
         public UserContext()
@@ -822,7 +948,7 @@ namespace LireOffice.DatabaseModel
             get => _selfId;
             set => SetProperty(ref _selfId, value, nameof(SelfId));
         }
-        
+
         private string _taxId;
 
         public string TaxId
@@ -950,7 +1076,7 @@ namespace LireOffice.DatabaseModel
             get => _isBtnEnabled;
             set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
         }
-        
+
         public string Error => null;
 
         public string this[string propertyName]
@@ -966,6 +1092,7 @@ namespace LireOffice.DatabaseModel
                             return "Kotak ini harus diisi !!";
                         }
                         break;
+
                     case nameof(Name):
                         if (string.IsNullOrEmpty(Name))
                         {
@@ -977,11 +1104,11 @@ namespace LireOffice.DatabaseModel
                 return string.Empty;
             }
         }
-        
+
         private void CheckBtnAvailability()
         {
             if (!string.IsNullOrEmpty(RegisterId) && !string.IsNullOrEmpty(Name))
-                IsBtnEnabled = true;            
+                IsBtnEnabled = true;
             else
                 IsBtnEnabled = false;
         }
@@ -1013,7 +1140,7 @@ namespace LireOffice.DatabaseModel
             get => _isActive;
             set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
-                
+
         private bool _isBtnEnabled;
 
         public bool IsBtnEnabled
@@ -1050,7 +1177,7 @@ namespace LireOffice.DatabaseModel
         }
     }
 
-    public class ProductCategoryContext : BindableBase , IDataErrorInfo
+    public class ProductCategoryContext : BindableBase, IDataErrorInfo
     {
         public ProductCategoryContext()
         {
@@ -1082,7 +1209,7 @@ namespace LireOffice.DatabaseModel
             get => _isBtnEnabled;
             set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
         }
-        
+
         public string Error => null;
 
         public string this[string propertyName]
@@ -1091,7 +1218,7 @@ namespace LireOffice.DatabaseModel
             {
                 switch (propertyName)
                 {
-                    case nameof(Name) :
+                    case nameof(Name):
                         if (string.IsNullOrEmpty(Name))
                         {
                             return "Kotak ini harus diisi !!";
@@ -1201,6 +1328,7 @@ namespace LireOffice.DatabaseModel
                             return "Kotak ini harus diisi !!";
                         }
                         break;
+
                     case nameof(Barcode):
                         if (string.IsNullOrEmpty(Barcode))
                         {
@@ -1261,7 +1389,7 @@ namespace LireOffice.DatabaseModel
             get => _isActive;
             set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
-        
+
         private bool _isBtnEnabled;
 
         public bool IsBtnEnabled
@@ -1297,5 +1425,4 @@ namespace LireOffice.DatabaseModel
                 IsBtnEnabled = false;
         }
     }
-    
 }

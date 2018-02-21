@@ -94,7 +94,7 @@ namespace LireOffice.ViewModels
             get => _selectedEmployee;
             set => SetProperty(ref _selectedEmployee, value,()=> 
             {
-                if (ReceivedGoodDTO != null)
+                if (ReceivedGoodDTO != null && _selectedEmployee != null)
                     ReceivedGoodDTO.EmployeeId = _selectedEmployee.Id;
             }, nameof(SelectedEmployee));
         }
@@ -198,7 +198,8 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option01Region"];
             region.Add(view, "AddVendor");
 
-            regionManager.RequestNavigate("Option01Region", "AddVendor");
+            var parameter = new NavigationParameters { { "Instigator", "ContentRegion" } };
+            regionManager.RequestNavigate("Option01Region", "AddVendor", parameter);
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
 
@@ -208,7 +209,8 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option01Region"];
             region.Add(view, "AddEmployee");
 
-            regionManager.RequestNavigate("Option01Region", "AddEmployee");
+            var parameter = new NavigationParameters { { "Instigator", "ContentRegion" } };
+            regionManager.RequestNavigate("Option01Region", "AddEmployee", parameter);
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
         
@@ -369,8 +371,6 @@ namespace LireOffice.ViewModels
 
         private void ResetValue()
         {
-            SelectedVendor = null;
-            SelectedEmployee = null;
             ReceivedGoodDTO = new ReceivedGoodDetailContext();
             ReceivedGoodItemList.Clear();
         }
