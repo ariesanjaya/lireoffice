@@ -34,7 +34,6 @@ namespace LireOffice
             container.RegisterTypeForNavigation<SalesInvoiceSummary>();
             container.RegisterTypeForNavigation<SalesDetail>();
             container.RegisterTypeForNavigation<DebtSummary>();
-            container.RegisterTypeForNavigation<DebtDetail>();
             container.RegisterTypeForNavigation<ReceivedGoodSummary>();
             container.RegisterTypeForNavigation<ReceivedGoodDetail>();
 

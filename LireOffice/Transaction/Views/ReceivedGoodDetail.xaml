@@ -185,13 +185,13 @@
         </Grid>
 
         <StackPanel Margin="16" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal">
-            <syncfusion:ButtonAdv Label="Tambah Item" Command="{Binding AddItemCommand}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Ubah Item" Command="{Binding UpdateItemCommand}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus Item" Command="{Binding DeleteItemCommand}"/>
+            <syncfusion:ButtonAdv Label="Tambah Item" Height="30" Command="{Binding AddItemCommand}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Ubah Item" Command="{Binding UpdateItemCommand}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Hapus Item" Command="{Binding DeleteItemCommand}"/>
 
-            <syncfusion:ButtonAdv Margin="48 0 0 0" Label="Rekam" Command="{Binding SaveCommand}" IsEnabled="{Binding ReceivedGoodDTO.IsBtnEnabled}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Rekam Draft" Command="{Binding SaveDraftCommand}"/>
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Batal" Command="{Binding CancelCommand}"/>
+            <syncfusion:ButtonAdv Margin="48 0 0 0" Height="30" Label="Rekam" Command="{Binding SaveCommand}" IsEnabled="{Binding ReceivedGoodDTO.IsBtnEnabled}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Rekam Draft" Command="{Binding SaveDraftCommand}"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Batal" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -10,6 +10,32 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Label Content="Debt Summary" FontSize="32"/>
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Debt Summary" FontSize="32"/>
+
+            <syncfusion:SfDataGrid x:Name="dataGrid" 
+                                   
+                                   Grid.Row="1"
+                                   FontSize="14"
+                                   AutoGenerateColumns="False"
+                                   ColumnSizer="Star"
+                                   HeaderRowHeight="32"
+                                   RowHeight="36"
+                                   NavigationMode="Row"
+                                   EnableDataVirtualization="True"
+                                   ScrollMode="Async">
+                <syncfusion:SfDataGrid.Columns>
+                    <syncfusion:GridTextColumn HeaderText="Tgl" Width="160"/>
+                    <syncfusion:GridTextColumn HeaderText="Nama Pemasok"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Total Hutang" Width="200"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Hutang Terbayar" Width="200"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Sisa Hutang" Width="200"/>
+                </syncfusion:SfDataGrid.Columns>
+            </syncfusion:SfDataGrid>
+        </Grid>        
     </Grid>
 </UserControl>

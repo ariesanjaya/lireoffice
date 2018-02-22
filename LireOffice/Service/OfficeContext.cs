@@ -352,17 +352,22 @@ namespace LireOffice.Service
 
         public IEnumerable<ReceivedGood> GetReceivedGood()
         {
-            return null;
+            return db.GetCollection<ReceivedGood>("ReceivedGoods").FindAll();
         }
 
         public ReceivedGood GetReceivedGoodById(ObjectId id)
         {
-            return null;
+            return db.GetCollection<ReceivedGood>("ReceivedGoods").FindById(id);
         }
         #endregion
 
         #region ReceivedGoodItem Methods
         public void AddReceivedGoodItem(ReceivedGoodItem receivedGoodItem)
+        {
+            db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Insert(receivedGoodItem);
+        }
+
+        public void AddBulkReceivedGoodItem(ReceivedGoodItem receivedGoodItem)
         {
             db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Insert(receivedGoodItem);
         }
@@ -386,9 +391,9 @@ namespace LireOffice.Service
             }
         }
 
-        public IEnumerable<ReceivedGoodItem> GetReceivedGoodItem()
+        public IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id)
         {
-            return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindAll();
+            return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Find(Query.EQ("ReceivedGoodId", Id));
         }
 
         public ReceivedGoodItem GetReceivedGoodByIdItem(ObjectId id)

@@ -138,7 +138,7 @@ namespace LireOffice.ViewModels
 
         public DelegateCommand CalculateBuyPriceCommand => new DelegateCommand(OnCalculateBuyPrice);
 
-        private void AddReceivedGoodItem(Tuple<ProductInfoContext, int, bool> productIndex)
+        private void AddReceivedGoodItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*isUpdated*/> productIndex)
         {
             var product = productIndex.Item1;
             ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
@@ -360,8 +360,10 @@ namespace LireOffice.ViewModels
                 }
             }
 
-            var test = receivedGood;
-            var test01 = receivedGoodItemList;
+            //var test = receivedGood;
+            //var test01 = receivedGoodItemList;
+            context.AddReceivedGood(receivedGood);
+            context.AddBulkReceivedGoodItem(receivedGoodItemList);            
         }
 
         private void UpdateData()

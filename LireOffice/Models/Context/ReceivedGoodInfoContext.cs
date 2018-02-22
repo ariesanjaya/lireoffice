@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,13 @@ namespace LireOffice.Models
 {
     public class ReceivedGoodInfoContext : BindableBase
     {
+        public ReceivedGoodInfoContext()
+        {
+            FirstDetailList = new ObservableCollection<ReceivedGoodItemContext>();
+        }
+
         public ObjectId Id { get; set; }
+        public ObjectId VendorId { get; set; }
 
         private DateTime _receivedDate;
 
@@ -20,12 +27,12 @@ namespace LireOffice.Models
             set => SetProperty(ref _receivedDate, value, nameof(ReceivedDate));
         }
 
-        private string _vendorName;
+        private string _description;
 
-        public string VendorName
+        public string Description
         {
-            get => _vendorName;
-            set => SetProperty(ref _vendorName, value, nameof(VendorName));
+            get => _description;
+            set => SetProperty(ref _description, value, nameof(Description));
         }
 
         private decimal _total;
@@ -35,6 +42,15 @@ namespace LireOffice.Models
             get => _total;
             set => SetProperty(ref _total, value, nameof(Total));
         }
+
+        private ObservableCollection<ReceivedGoodItemContext> _firstDetailList;
+
+        public ObservableCollection<ReceivedGoodItemContext> FirstDetailList
+        {
+            get => _firstDetailList;
+            set => SetProperty(ref _firstDetailList, value, nameof(FirstDetailList));
+        }
+
 
         private bool _isPosted;
 

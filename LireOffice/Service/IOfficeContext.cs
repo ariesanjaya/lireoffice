@@ -157,11 +157,13 @@ namespace LireOffice.Service
         #region ReceivedGoodItem Methods
         void AddReceivedGoodItem(ReceivedGoodItem receivedGoodItem);
 
+        void AddBulkReceivedGoodItem(IEnumerable<ReceivedGoodItem> receivedGoodItem);
+
         void UpdateReceivedGoodItem(ReceivedGoodItem receivedGoodItem);
 
-        void DeleteReceivedGoodItem(ObjectId id);
+        void DeleteReceivedGoodItem(ObjectId Id);
 
-        IEnumerable<ReceivedGoodItem> GetReceivedGoodItem();
+        IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id);
 
         ReceivedGoodItem GetReceivedGoodByIdItem(ObjectId id);
         #endregion

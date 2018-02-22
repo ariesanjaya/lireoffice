@@ -86,9 +86,12 @@ namespace LireOffice
                 #endregion
 
                 #region ReceivedGood Configuration
+                config.CreateMap<ReceivedGood, ReceivedGoodInfoContext>();
+
                 config.CreateMap<ReceivedGoodDetailContext, ReceivedGood>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 //.ForMember(dest => dest.)
+                                
                 #endregion
 
                 #region Account Configuration

@@ -241,9 +241,6 @@
     <Compile Include="Transaction\Views\AddSalesItem.xaml.cs">
       <DependentUpon>AddSalesItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Transaction\Views\DebtDetail.xaml.cs">
-      <DependentUpon>DebtDetail.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Transaction\Views\DebtSummary.xaml.cs">
       <DependentUpon>DebtSummary.xaml</DependentUpon>
     </Compile>
@@ -345,10 +342,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Transaction\Views\AddSalesItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Transaction\Views\DebtDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

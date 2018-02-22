@@ -1,10 +1,6 @@
 ﻿using LiteDB;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Models
 {
@@ -42,6 +38,14 @@ namespace LireOffice.Models
         {
             get => _paidDebt;
             set => SetProperty(ref _paidDebt, value, nameof(PaidDebt));
+        }
+
+        private decimal _unpaidDebt;
+
+        public decimal UnpaidDebt
+        {
+            get => _unpaidDebt;
+            set => SetProperty(ref _unpaidDebt, value, nameof(UnpaidDebt));
         }
     }
 }
