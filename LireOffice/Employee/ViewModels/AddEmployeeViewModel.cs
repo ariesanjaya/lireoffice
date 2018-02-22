@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LireOffice.DatabaseModel;
+using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LiteDB;
@@ -90,9 +90,7 @@ namespace LireOffice.ViewModels
         {
             var employee = context.GetEmployeeById(_employee.Id);
             if (employee != null)
-            {
                 EmployeeDTO = Mapper.Map<User, UserContext>(employee);
-            }            
         }
         
         public void OnNavigatedTo(NavigationContext navigationContext)

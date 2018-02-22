@@ -1,4 +1,4 @@
-﻿using LireOffice.DatabaseModel;
+﻿using LireOffice.Models;
 using LiteDB;
 using Prism.Events;
 using System;
@@ -13,6 +13,7 @@ namespace LireOffice.Utilities
     public class Option02VisibilityEvent : PubSubEvent<bool> { }
     public class Option03VisibilityEvent : PubSubEvent<bool> { }
 
+    public class AccountListUpdateEvent : PubSubEvent<string> { }
     public class EmployeeListUpdateEvent : PubSubEvent<string> { }
     public class CustomerListUpdatedEvent : PubSubEvent<string> { }
     public class VendorListUpdatedEvent : PubSubEvent<string> { }

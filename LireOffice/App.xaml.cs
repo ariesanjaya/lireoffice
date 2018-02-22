@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LireOffice.DatabaseModel;
+using LireOffice.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -88,7 +88,15 @@ namespace LireOffice
                 #region ReceivedGood Configuration
                 config.CreateMap<ReceivedGoodDetailContext, ReceivedGood>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                        //.ForMember(dest => dest.)
+                //.ForMember(dest => dest.)
+                #endregion
+
+                #region Account Configuration
+                config.CreateMap<Account, AccountInfoContext>();
+
+                config.CreateMap<Account, AccountContext>();
+                config.CreateMap<AccountContext, Account>()
+                        .ForMember(dest => dest.Id, opt => opt.Ignore());
                 #endregion
             });
 

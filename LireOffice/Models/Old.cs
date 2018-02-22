@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LireOffice.DatabaseModel.Old
+namespace LireOffice.Models.Old
 {
     public class EntityData
     {

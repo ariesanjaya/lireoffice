@@ -37,10 +37,10 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Content="No. Referensi" FontSize="14" VerticalAlignment="Center"/>
-                    <TextBox x:Name="ReferenceTextBox" FontSize="14" Grid.Column="1" Width="200" Text="{Binding AccountDTO.ReferenceId}" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="ReferenceTextBox" FontSize="14" Grid.Column="1" Width="200" Text="{Binding AccountDTO.ReferenceId, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
 
                     <Label Content="Nama" Grid.Row="2" FontSize="14" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="14" Width="200" Text="{Binding AccountDTO.Name}" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="14" Width="200" Text="{Binding AccountDTO.Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
 
                     <Label Content="Kategori" Grid.Row="4" FontSize="14" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="4" Grid.Column="1" FontSize="14" Width="200" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" HorizontalAlignment="Left"/>

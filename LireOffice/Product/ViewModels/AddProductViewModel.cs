@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LireOffice.DatabaseModel;
+using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
@@ -222,7 +222,7 @@ namespace LireOffice.ViewModels
 
         private void AddData()
         {
-            DatabaseModel.Product product = Mapper.Map<ProductContext, DatabaseModel.Product>(ProductDTO);
+            Models.Product product = Mapper.Map<ProductContext, Models.Product>(ProductDTO);
 
             if (SelectedCategory != null)
                 product.CategoryId = SelectedCategory.Id;
@@ -277,10 +277,10 @@ namespace LireOffice.ViewModels
        
         private void LoadData(ProductInfoContext _product)
         {
-            DatabaseModel.Product product = context.GetProductById(_product.Id);
+            Models.Product product = context.GetProductById(_product.Id);
             if (product != null)
             {
-                ProductDTO = Mapper.Map<DatabaseModel.Product, ProductContext>(product);
+                ProductDTO = Mapper.Map<Models.Product, ProductContext>(product);
             }
                         
             IsUnitTypeBtnActive = true;

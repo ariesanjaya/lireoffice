@@ -122,9 +122,41 @@
     <Compile Include="Dashboard\Views\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseModel\Context.cs" />
-    <Compile Include="DatabaseModel\Data.cs" />
-    <Compile Include="DatabaseModel\Old.cs" />
+    <Compile Include="Models\Context\AccountContext.cs" />
+    <Compile Include="Models\Context\AccountInfoContext.cs" />
+    <Compile Include="Models\Context\GoodReturnItemContext.cs" />
+    <Compile Include="Models\Context\ProductCategoryContext.cs" />
+    <Compile Include="Models\Context\ProductContext.cs" />
+    <Compile Include="Models\Context\ProductInfoContext.cs" />
+    <Compile Include="Models\Context\ReceivedGoodDetailContext.cs" />
+    <Compile Include="Models\Context\ReceivedGoodInfoContext.cs" />
+    <Compile Include="Models\Context\ReceivedGoodItemContext.cs" />
+    <Compile Include="Models\Context\SalesDetailContext.cs" />
+    <Compile Include="Models\Context\SalesInfoContext.cs" />
+    <Compile Include="Models\Context\SalesInvoiceInfoContext.cs" />
+    <Compile Include="Models\Context\SalesItemContext.cs" />
+    <Compile Include="Models\Context\TaxContext.cs" />
+    <Compile Include="Models\Context\UnitTypeContext.cs" />
+    <Compile Include="Models\Context\UserContext.cs" />
+    <Compile Include="Models\Context\UserProfileContext.cs" />
+    <Compile Include="Models\Context\UserSimpleContext.cs" />
+    <Compile Include="Models\Data\Account.cs" />
+    <Compile Include="Models\Data\Address.cs" />
+    <Compile Include="Models\Data\EntityData.cs" />
+    <Compile Include="Models\Data\GoodReturn.cs" />
+    <Compile Include="Models\Data\GoodReturnItem.cs" />
+    <Compile Include="Models\Data\Image.cs" />
+    <Compile Include="Models\Data\Product.cs" />
+    <Compile Include="Models\Data\ProductCategory.cs" />
+    <Compile Include="Models\Data\ProductTransfer.cs" />
+    <Compile Include="Models\Data\ReceivedGood.cs" />
+    <Compile Include="Models\Data\ReceivedGoodItem.cs" />
+    <Compile Include="Models\Data\Sales.cs" />
+    <Compile Include="Models\Data\SalesItem.cs" />
+    <Compile Include="Models\Data\Tax.cs" />
+    <Compile Include="Models\Data\UnitType.cs" />
+    <Compile Include="Models\Data\User.cs" />
+    <Compile Include="Models\Old.cs" />
     <Compile Include="Employee\ViewModels\AddEmployeeViewModel.cs" />
     <Compile Include="Employee\ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Employee\Views\AddEmployee.xaml.cs">
@@ -163,7 +195,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="DatabaseModel\OfficeDatabase.cs" />
+    <Compile Include="Models\OfficeDatabase.cs" />
     <Compile Include="Product\ViewModels\AddCategoryViewModel.cs" />
     <Compile Include="Product\ViewModels\AddProductViewModel.cs" />
     <Compile Include="Product\ViewModels\AddUnitTypeViewModel.cs" />

@@ -40,12 +40,13 @@
                                        HeaderRowHeight="32">
                     <syncfusion:SfDataGrid.Columns>
                         <syncfusion:GridTextColumn HeaderText="No. Referensi" Width="180"/>
+                        <syncfusion:GridTextColumn HeaderText="Tgl" Width="140"/>
                         <syncfusion:GridTextColumn HeaderText="Deskripsi"/>
                         <syncfusion:GridCurrencyColumn HeaderText="Total" Width="180"/>
                     </syncfusion:SfDataGrid.Columns>
                 </syncfusion:SfDataGrid>
                 
-                <ListView Grid.Column="2">
+                <ListView Grid.Column="2" ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -55,6 +56,11 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding DoubleClickCommand}"/>
+                        </i:EventTrigger>    
+                    </i:Interaction.Triggers>                    
                 </ListView>
             </Grid>
         </Grid>

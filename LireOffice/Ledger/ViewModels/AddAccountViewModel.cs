@@ -1,4 +1,5 @@
-﻿using LireOffice.DatabaseModel;
+﻿using AutoMapper;
+using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using Prism.Commands;
@@ -59,9 +60,12 @@ namespace LireOffice.ViewModels
         public string SelectedCategory
         {
             get => _selectedCategory;
-            set => SetProperty(ref _selectedCategory, value, nameof(SelectedCategory));
+            set => SetProperty(ref _selectedCategory, value,()=> 
+            {
+                if (_selectedCategory != null && AccountDTO != null)
+                    AccountDTO.Category = _selectedCategory;
+            }, nameof(SelectedCategory));
         }
-
         #endregion
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
@@ -69,7 +73,34 @@ namespace LireOffice.ViewModels
 
         private void OnSave()
         {
+            if (!IsUpdated)
+                AddData();
+            else
+                UpdateData();
+        }
 
+        private void AddData()
+        {
+            Account account = Mapper.Map<AccountContext, Account>(AccountDTO);
+            context.AddAccount(account);
+
+            OnCancel();
+            eventAggregator.GetEvent<AccountListUpdateEvent>().Publish("Update Account List");
+        }
+
+        private void UpdateData()
+        {
+            var result = context.GetAccountById(AccountDTO.Id);
+            if (result != null)
+            {
+                result = Mapper.Map(AccountDTO, result);
+                result.Version += 1;
+                result.UpdatedAt = DateTime.Now;
+                context.UpdateAccount(result);
+            }
+
+            OnCancel();
+            eventAggregator.GetEvent<AccountListUpdateEvent>().Publish("Update Account List");
         }
 
         private void OnCancel()
@@ -80,7 +111,12 @@ namespace LireOffice.ViewModels
 
         private void LoadData(AccountInfoContext _account)
         {
-            
+            var account = context.GetAccountById(_account.Id);
+            if (account != null)
+            {
+                AccountDTO = Mapper.Map<Account, AccountContext>(account);
+                SelectedCategory = AccountDTO.Category;
+            }
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

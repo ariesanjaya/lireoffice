@@ -1,4 +1,4 @@
-﻿using LireOffice.DatabaseModel;
+﻿using LireOffice.Models;
 using LiteDB;
 using System;
 using System.Collections.Generic;
@@ -184,5 +184,8 @@ namespace LireOffice.Service
         Account GetAccountById(ObjectId id);
         #endregion
 
+        #region Account History Methods
+        
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LireOffice.DatabaseModel;
+using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LiteDB;

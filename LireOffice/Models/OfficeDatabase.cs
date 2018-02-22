@@ -1,6 +1,6 @@
 namespace LireOffice
 {
-    using LireOffice.DatabaseModel;
+    using LireOffice.Models;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;

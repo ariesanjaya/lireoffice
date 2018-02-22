@@ -1,4 +1,4 @@
-﻿using LireOffice.DatabaseModel;
+﻿using LireOffice.Models;
 using LireOffice.Service;
 using Prism.Commands;
 using Prism.Events;
