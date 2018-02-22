@@ -124,6 +124,8 @@
     </Compile>
     <Compile Include="Models\Context\AccountContext.cs" />
     <Compile Include="Models\Context\AccountInfoContext.cs" />
+    <Compile Include="Models\Context\DebtDetailInfoContext.cs" />
+    <Compile Include="Models\Context\DebtSummaryInfoContext.cs" />
     <Compile Include="Models\Context\GoodReturnItemContext.cs" />
     <Compile Include="Models\Context\ProductCategoryContext.cs" />
     <Compile Include="Models\Context\ProductContext.cs" />
@@ -224,6 +226,7 @@
     <Compile Include="Transaction\ViewModels\AddGoodReturnViewModel.cs" />
     <Compile Include="Transaction\ViewModels\AddReceivedGoodItemViewModel.cs" />
     <Compile Include="Transaction\ViewModels\AddSalesItemViewModel.cs" />
+    <Compile Include="Transaction\ViewModels\DebtSummaryViewModel.cs" />
     <Compile Include="Transaction\ViewModels\ReceivedGoodDetailViewModel.cs" />
     <Compile Include="Transaction\ViewModels\ReceivedGoodSummaryViewModel.cs" />
     <Compile Include="Transaction\ViewModels\SalesDetailViewModel.cs" />
