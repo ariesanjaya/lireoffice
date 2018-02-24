@@ -49,7 +49,7 @@
                     <Button Content="Supplier" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Vendor"/>
                     <Button Content="Karyawan" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Employee"/>
                     <Button Content="Terima Barang" Height="32" Command="{Binding NavigateCommand}" CommandParameter="ReceivedGoodSummary"/>
-                    <Button Content="Penjualan" Height="32" Command="{Binding NavigateCommand}" CommandParameter="SalesSummary"/>
+                    <Button Content="Penjualan" Height="32" Command="{Binding NavigateCommand}" CommandParameter="SalesInvoiceSummary"/>
                     <Button Content="Hutang" Height="32" Command="{Binding NavigateCommand}" CommandParameter="DebtSummary"/>
                                         
                     <Button Content="Add Product" Margin="0 16 0 0" Height="32" Command="{Binding NavigateCommand}" CommandParameter="AddProduct"/>

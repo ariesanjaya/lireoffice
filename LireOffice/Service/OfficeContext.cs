@@ -334,6 +334,11 @@ namespace LireOffice.Service
             db.GetCollection<Sales>("Sales").Delete(Id);
         }
 
+        public IEnumerable<Sales> GetSales()
+        {
+            return db.GetCollection<Sales>("Sales").FindAll();
+        }
+
         public IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate)
         {
             return db.GetCollection<Sales>("Sales")

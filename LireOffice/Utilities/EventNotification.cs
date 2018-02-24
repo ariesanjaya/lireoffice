@@ -2,10 +2,6 @@
 using LiteDB;
 using Prism.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Utilities
 {
@@ -21,6 +17,7 @@ namespace LireOffice.Utilities
     public class CategoryListUpdatedEvent : PubSubEvent<string> { }
 
     public class ReceivedGoodListUpdatedEvent : PubSubEvent<string> { }
+    public class SalesListUpdatedEvent : PubSubEvent<string> { }
 
     public class UnitTypeListUpdatedEvent : PubSubEvent<ObjectId> { }
 

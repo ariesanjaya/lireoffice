@@ -35,6 +35,8 @@ namespace LireOffice.ViewModels
             // ----------------------
 
             SalesInfoList = new ObservableCollection<SalesSummaryContext>();
+
+            LoadSalesList();
         }
 
         #region Binding Properties
@@ -103,11 +105,9 @@ namespace LireOffice.ViewModels
                     var itemList = context.GetSalesItem(salesInfo.Id).ToList();
 
                     if (itemList.Count > 0)
-                    {
-                        
+                    {                        
                         foreach (var item in itemList)
                         {
-
                             SalesItemContext salesItem = new SalesItemContext(eventAggregator)
                             {
                                 Id = item.Id
@@ -124,11 +124,11 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadSalesList()
+        private async void LoadSalesSummaryList()
         {
             SalesInfoList.Clear();
                         
-            var tempSalesList = await Task.Run(()=> 
+            var tempSalesSummaryList = await Task.Run(()=> 
             {
                 Collection<SalesSummaryContext> _salesList = new Collection<SalesSummaryContext>();
                 var salesList = context.GetSalesSummary(MinSalesDate, MaxSalesDate).OrderBy(c => c.SalesDate).ToList();
@@ -151,6 +151,18 @@ namespace LireOffice.ViewModels
             });
 
             //SalesInfoList.AddRange(tempSalesList);
+        }
+
+        private async void LoadSalesList()
+        {
+            var tempSalesList = await Task.Run(()=> 
+            {
+                Collection<SalesDetailContext> _salesList = new Collection<SalesDetailContext>();
+                var salesList = context.GetSales().ToList();
+
+                var test = salesList;
+                return _salesList;
+            });
         }
     }
 }

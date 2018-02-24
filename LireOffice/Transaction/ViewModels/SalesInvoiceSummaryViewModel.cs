@@ -1,4 +1,5 @@
-﻿using LireOffice.Models;
+﻿using AutoMapper;
+using LireOffice.Models;
 using LireOffice.Service;
 using Prism.Commands;
 using Prism.Events;
@@ -25,24 +26,24 @@ namespace LireOffice.ViewModels
             regionManager = rm;
             this.context = context;
 
-            SalesInvoiceList = new ObservableCollection<SalesInvoiceInfoContext>();
+            SalesInfoList = new ObservableCollection<SalesDetailContext>();
         }
 
         #region Binding Properties
-        private ObservableCollection<SalesInvoiceInfoContext> _salesInvoiceList;
+        private ObservableCollection<SalesDetailContext> _salesInfoList;
 
-        public ObservableCollection<SalesInvoiceInfoContext> SalesInvoiceList
+        public ObservableCollection<SalesDetailContext> SalesInfoList
         {
-            get => _salesInvoiceList;
-            set => SetProperty(ref _salesInvoiceList, value, nameof(SalesInvoiceList));
+            get => _salesInfoList;
+            set => SetProperty(ref _salesInfoList, value, nameof(SalesInfoList));
         }
 
-        private SalesInvoiceInfoContext _selectedSalesInvoiceInfo;
+        private SalesDetailContext _selectedSalesInfo;
 
-        public SalesInvoiceInfoContext SelectedSalesInvoiceInfo
+        public SalesDetailContext SelectedSalesInfo
         {
-            get => _selectedSalesInvoiceInfo;
-            set => SetProperty(ref _selectedSalesInvoiceInfo, value, nameof(SelectedSalesInvoiceInfo));
+            get => _selectedSalesInfo;
+            set => SetProperty(ref _selectedSalesInfo, value, nameof(SelectedSalesInfo));
         }
         
         #endregion
@@ -58,6 +59,30 @@ namespace LireOffice.ViewModels
         private void OnDetail()
         {
 
+        }
+
+        private async void LoadSalesList()
+        {
+            SalesInfoList.Clear();
+
+            var tempSalesList = await Task.Run(()=> 
+            {
+                Collection<SalesDetailContext> _salesList = new Collection<SalesDetailContext>();
+                var salesList = context.GetSales().ToList();
+
+                if (salesList.Count > 0)
+                {
+                    foreach (var _sales in salesList)
+                    {
+                        var sales = Mapper.Map<Sales, SalesDetailContext>(_sales);
+                        _salesList.Add(sales);
+                    }
+                }
+
+                return _salesList;
+            });
+
+            SalesInfoList.AddRange(tempSalesList);
         }
                 
         public void OnNavigatedTo(NavigationContext navigationContext)

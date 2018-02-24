@@ -139,6 +139,8 @@ namespace LireOffice.Service
 
         void DeleteSales(ObjectId id);
 
+        IEnumerable<Sales> GetSales();
+
         IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate);
 
         IEnumerable<Sales> GetSalesSummary(DateTime minSalesDate, DateTime maxSalesDate);

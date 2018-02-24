@@ -259,6 +259,7 @@ namespace LireOffice.ViewModels
                 UpdateData();
 
             OnCancel();
+            eventAggregator.GetEvent<SalesListUpdatedEvent>().Publish("Load Sales List");
         }
 
         private void OnCancel()
@@ -395,6 +396,10 @@ namespace LireOffice.ViewModels
             LoadEmployeeList();
 
             var parameter = navigationContext.Parameters;
+            if (parameter["SelectedSales"] is SalesInfoContext salesInfo)
+            {
+
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -403,8 +408,6 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            
-        }
+        {}
     }
 }
