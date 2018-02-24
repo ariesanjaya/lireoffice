@@ -82,7 +82,7 @@ namespace LireOffice
                 config.CreateMap<SalesSummary, SalesSummaryContext>();
                 config.CreateMap<SalesDetailContext, Sales>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                config.CreateMap<Sales, SalesDetailContext>();
+                config.CreateMap<Sales, SalesInvoiceInfoContext>();
                 #endregion
 
                 #region ReceivedGood Configuration

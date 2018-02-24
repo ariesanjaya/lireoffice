@@ -26,21 +26,21 @@ namespace LireOffice.ViewModels
             regionManager = rm;
             this.context = context;
 
-            SalesInfoList = new ObservableCollection<SalesDetailContext>();
+            SalesInfoList = new ObservableCollection<SalesInvoiceInfoContext>();
         }
 
         #region Binding Properties
-        private ObservableCollection<SalesDetailContext> _salesInfoList;
+        private ObservableCollection<SalesInvoiceInfoContext> _salesInfoList;
 
-        public ObservableCollection<SalesDetailContext> SalesInfoList
+        public ObservableCollection<SalesInvoiceInfoContext> SalesInfoList
         {
             get => _salesInfoList;
             set => SetProperty(ref _salesInfoList, value, nameof(SalesInfoList));
         }
 
-        private SalesDetailContext _selectedSalesInfo;
+        private SalesInvoiceInfoContext _selectedSalesInfo;
 
-        public SalesDetailContext SelectedSalesInfo
+        public SalesInvoiceInfoContext SelectedSalesInfo
         {
             get => _selectedSalesInfo;
             set => SetProperty(ref _selectedSalesInfo, value, nameof(SelectedSalesInfo));
@@ -48,17 +48,51 @@ namespace LireOffice.ViewModels
         
         #endregion
 
-        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
-        public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
+        public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
+
+        public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
         
-        private void OnAdd()
+        private void OnCellDoubleTapped()
         {
 
         }
 
-        private void OnDetail()
+        private async void OnDetailsViewExpanding(object _item)
         {
+            if (_item is SalesInvoiceInfoContext sales)
+            {
+                SelectedSalesInfo.FirstDetailList.Clear();
 
+                var tempFirstDetailList = await Task.Run(()=> 
+                {
+                    Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
+                    var itemList = context.GetSalesItem(sales.Id).ToList();
+
+                    if (itemList.Count > 0)
+                    {
+                        foreach (var item in itemList)
+                        {
+                            SalesItemContext salesItem = new SalesItemContext(eventAggregator)
+                            {
+                                Id = item.Id,
+                                Barcode = item.Barcode,
+                                Name = item.Name,
+                                Quantity = item.Quantity,
+                                UnitType = item.UnitType,
+                                SellPrice = item.SellPrice,
+                                Discount = item.Discount,
+                                SubTotal = item.SubTotal,
+                                Tax = item.Tax
+                            };
+
+                            _itemList.Add(salesItem);
+                        }
+                    }
+                    return _itemList;
+                });
+
+                SelectedSalesInfo.FirstDetailList.AddRange(tempFirstDetailList);
+            }
         }
 
         private async void LoadSalesList()
@@ -67,14 +101,19 @@ namespace LireOffice.ViewModels
 
             var tempSalesList = await Task.Run(()=> 
             {
-                Collection<SalesDetailContext> _salesList = new Collection<SalesDetailContext>();
+                Collection<SalesInvoiceInfoContext> _salesList = new Collection<SalesInvoiceInfoContext>();
                 var salesList = context.GetSales().ToList();
-
+                
                 if (salesList.Count > 0)
                 {
                     foreach (var _sales in salesList)
                     {
-                        var sales = Mapper.Map<Sales, SalesDetailContext>(_sales);
+                        var sales = Mapper.Map<Sales, SalesInvoiceInfoContext>(_sales);
+                        var customer = context.GetCustomerById(sales.CustomerId);
+
+                        if (customer != null)
+                            sales.CustomerName = customer.Name;
+
                         _salesList.Add(sales);
                     }
                 }
@@ -87,7 +126,7 @@ namespace LireOffice.ViewModels
                 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+            LoadSalesList();    
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

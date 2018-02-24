@@ -8,7 +8,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -28,8 +28,12 @@
             <TextBox Margin="24 0 0 0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <syncfusion:SfDataGrid Grid.Row="1"
+        <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid"
+                               ItemsSource="{Binding SalesInfoList}"
+                               SelectedItem="{Binding SelectedSalesInfo}"
                                AutoGenerateColumns="False"
+                               AutoGenerateRelations="False"
+                               FontSize="14"
                                NavigationMode="Row"
                                ScrollMode="Async"
                                EnableDataVirtualization="True"
@@ -37,12 +41,12 @@
                                AllowEditing="False"
                                AllowSorting="True"
                                ColumnSizer="Star"
-                               RowHeight="32" HeaderRowHeight="32">
+                               RowHeight="40" HeaderRowHeight="40">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn HeaderText="No. Invoice" MappingName="InvoiceId" Width="160" AllowFiltering="True"/>
-                <syncfusion:GridTextColumn HeaderText="Nama Pelanggan" MappingName="CustomerName" AllowFiltering="True"/>
-                <syncfusion:GridCurrencyColumn HeaderText="Total" Width="240" MappingName="Total" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
-                <syncfusion:GridCheckBoxColumn HeaderText="Status" Width="80" MappingName="IsPosted" AllowFiltering="True"/>
+                <syncfusion:GridTextColumn HeaderText="No. Invoice" MappingName="InvoiceId" Width="160"/>
+                <syncfusion:GridTextColumn HeaderText="Nama Pelanggan" MappingName="CustomerName"/>
+                <syncfusion:GridCurrencyColumn HeaderText="Total" Width="220" MappingName="Total" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
+                <syncfusion:GridCheckBoxColumn HeaderText="Status" Width="80" MappingName="IsPosted"/>
             </syncfusion:SfDataGrid.Columns>
             <syncfusion:SfDataGrid.DetailsViewDefinition>
                 <syncfusion:GridViewDefinition RelationalColumn="FirstDetailList">
@@ -74,6 +78,9 @@
                 <local:EnterKeyDownEventTrigger EventName="KeyUp">
                     <i:InvokeCommandAction Command="{Binding DoubleClickCommand}"/>
                 </local:EnterKeyDownEventTrigger>
+                <i:EventTrigger EventName="DetailsViewExpanding">
+                    <i:InvokeCommandAction Command="{Binding DetailsViewExpandingCommand}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDataGrid>
     </Grid>
