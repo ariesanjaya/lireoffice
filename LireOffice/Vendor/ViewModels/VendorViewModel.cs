@@ -104,6 +104,7 @@ namespace LireOffice.ViewModels
 
             var parameter = new NavigationParameters
             {
+                { "Instigator", "ContentRegion" },
                 { "SelectedVendor", SelectedVendor }
             };
 

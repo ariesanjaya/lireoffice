@@ -233,6 +233,7 @@ namespace LireOffice.ViewModels
                 UpdateData();
 
             OnCancel();
+            eventAggregator.GetEvent<ReceivedGoodListUpdatedEvent>().Publish("Load ReceivedGood List");
         }
 
         private void OnCancel()

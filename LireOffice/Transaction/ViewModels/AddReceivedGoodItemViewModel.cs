@@ -167,7 +167,7 @@ namespace LireOffice.ViewModels
             var tempItemList = await Task.Run(() =>
             {
                 Collection<ProductInfoContext> _productList = new Collection<ProductInfoContext>();
-                var productList = context.GetProducts().ToList();
+                var productList = context.GetProducts().OrderBy(c => c.Name).ToList();
                 if (productList.Count > 0)
                 {
                     foreach (var product in productList)

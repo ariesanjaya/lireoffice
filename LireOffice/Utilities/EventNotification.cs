@@ -24,15 +24,13 @@ namespace LireOffice.Utilities
 
     public class UnitTypeListUpdatedEvent : PubSubEvent<ObjectId> { }
 
-
-
     public class ProductDataGridFocusEvent : PubSubEvent<string> { }
     public class TransactionDetailDataGridFocusEvent : PubSubEvent<string> { }
     public class GoodReturnDetailDataGridFocusEvent : PubSubEvent<string> { }
 
     public class AddGoodReturnItemEvent : PubSubEvent<Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/>> { }
     public class AddReceivedGoodItemEvent : PubSubEvent<Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/>> { }
-    public class AddSalesItemEvent : PubSubEvent<object> { }
+    public class AddSalesItemEvent : PubSubEvent<Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/>> { }
 
     public class CalculateSalesDetailTotalEvent : PubSubEvent<string> { }
     public class CalculateReceivedGoodDetailTotalEvent : PubSubEvent<string> { }

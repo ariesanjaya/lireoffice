@@ -137,6 +137,7 @@
     <Compile Include="Models\Context\SalesInfoContext.cs" />
     <Compile Include="Models\Context\SalesInvoiceInfoContext.cs" />
     <Compile Include="Models\Context\SalesItemContext.cs" />
+    <Compile Include="Models\Context\SalesSummaryContext.cs" />
     <Compile Include="Models\Context\TaxContext.cs" />
     <Compile Include="Models\Context\UnitTypeContext.cs" />
     <Compile Include="Models\Context\UserContext.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Models\Data\ReceivedGoodItem.cs" />
     <Compile Include="Models\Data\Sales.cs" />
     <Compile Include="Models\Data\SalesItem.cs" />
+    <Compile Include="Models\Data\SalesSummary.cs" />
     <Compile Include="Models\Data\Tax.cs" />
     <Compile Include="Models\Data\UnitType.cs" />
     <Compile Include="Models\Data\User.cs" />
