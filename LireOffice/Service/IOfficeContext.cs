@@ -133,13 +133,31 @@ namespace LireOffice.Service
         #endregion
 
         #region Sales Methods
-        IEnumerable<Sales> GetSales();
+        void AddSales(Sales sales);
+
+        void UpdateSales(Sales sales);
+
+        void DeleteSales(ObjectId id);
+
+        IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate);
+
+        IEnumerable<Sales> GetSalesSummary(DateTime minSalesDate, DateTime maxSalesDate);
 
         Sales GetSalesById(ObjectId id);
         #endregion
 
         #region SalesItem Methods
+        void AddSalesItem(SalesItem salesItem);
 
+        void AddBulkSalesItem(IEnumerable<SalesItem> salesItem);
+
+        void UpdateSalesItem(SalesItem salesItem);
+
+        void DeleteSalesItem(ObjectId Id);
+
+        IEnumerable<SalesItem> GetSalesItem(ObjectId Id);
+
+        SalesItem GetSalesItemById(ObjectId id);
         #endregion
 
         #region ReceivedGood Methods
@@ -150,6 +168,7 @@ namespace LireOffice.Service
         void DeleteReceivedGood(ObjectId id);
 
         IEnumerable<ReceivedGood> GetReceivedGood();
+        IEnumerable<ReceivedGood> GetReceivedGood(string text);
 
         ReceivedGood GetReceivedGoodById(ObjectId id);
         #endregion
@@ -165,7 +184,7 @@ namespace LireOffice.Service
 
         IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id);
 
-        ReceivedGoodItem GetReceivedGoodByIdItem(ObjectId id);
+        ReceivedGoodItem GetReceivedGoodItemById(ObjectId id);
         #endregion
 
         #region GoodReturn Methods

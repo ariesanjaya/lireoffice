@@ -20,6 +20,14 @@
             <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Rincian" Height="30" Width="100" Command="{Binding DetailCommand}"/>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <DatePicker Height="30" Width="130" SelectedDate="{Binding MinSalesDate}" FontSize="14" VerticalAlignment="Center"/>
+            <Button x:Name="DateAssignBtn" Width="30" Height="30" Margin="8 0 0 0" Command="{Binding DateAssignCommand}"/>
+            <DatePicker Margin="8 0 0 0" Height="30" Width="130" SelectedDate="{Binding MaxSalesDate}" FontSize="14" VerticalAlignment="Center"/>
+            <Button x:Name="RefreshBtn" Width="30" Height="30" Margin="8 0 0 0" Command="{Binding RefreshCommand}"/>
+            <syncfusion:SfTextBoxExt Margin="24 0 0 0" Watermark="Cari" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
+        </StackPanel>
+
         <syncfusion:SfDataGrid Grid.Row="1"
                                AutoGenerateColumns="False"
                                NavigationMode="Row"
@@ -36,6 +44,29 @@
                 <syncfusion:GridCurrencyColumn HeaderText="Total" Width="240" MappingName="Total" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
                 <syncfusion:GridCheckBoxColumn HeaderText="Status" Width="80" MappingName="IsPosted" AllowFiltering="True"/>
             </syncfusion:SfDataGrid.Columns>
+            <syncfusion:SfDataGrid.DetailsViewDefinition>
+                <syncfusion:GridViewDefinition RelationalColumn="FirstDetailList">
+                    <syncfusion:GridViewDefinition.DataGrid>
+                        <syncfusion:SfDataGrid x:Name="FirstLevelNestedGrid" 
+                                               AutoGenerateColumns="False" 
+                                               FontSize="14"
+                                               RowHeight="40"
+                                               HeaderRowHeight="40"
+                                               ColumnSizer="Star">
+                            <syncfusion:SfDataGrid.Columns>
+                                <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="160" FilterRowEditorType="MultiSelectComboBox"/>
+                                <syncfusion:GridTextColumn HeaderText="Nama Barang" MappingName="Name" FilterRowEditorType="MultiSelectComboBox"/>
+                                <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="80"/>
+                                <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="100" FilterRowEditorType="MultiSelectComboBox"/>
+                                <syncfusion:GridCurrencyColumn HeaderText="Harga Jual" MappingName="SellPrice" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
+                                <syncfusion:GridCurrencyColumn HeaderText="Diskon" MappingName="Discount" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
+                                <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
+                                <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
+                            </syncfusion:SfDataGrid.Columns>   
+                        </syncfusion:SfDataGrid>
+                    </syncfusion:GridViewDefinition.DataGrid>
+                </syncfusion:GridViewDefinition>
+            </syncfusion:SfDataGrid.DetailsViewDefinition>
             <i:Interaction.Behaviors>
                 <local:SelectionController/>
             </i:Interaction.Behaviors>

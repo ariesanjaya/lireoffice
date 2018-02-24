@@ -44,12 +44,12 @@ namespace LireOffice.Models
             set => SetProperty(ref _description, value, nameof(Description));
         }
 
-        private decimal _additionalCost;
+        private decimal _totalAdditionalCost;
 
-        public decimal AdditionalCost
+        public decimal TotalAdditionalCost
         {
-            get => _additionalCost;
-            set => SetProperty(ref _additionalCost, value, nameof(AdditionalCost));
+            get => _totalAdditionalCost;
+            set => SetProperty(ref _totalAdditionalCost, value, nameof(TotalAdditionalCost));
         }
 
         public decimal _totalDiscount;
@@ -67,15 +67,7 @@ namespace LireOffice.Models
             get => _totalTax;
             set => SetProperty(ref _totalTax, value, nameof(TotalTax));
         }
-
-        private decimal _subTotal;
-
-        public decimal SubTotal
-        {
-            get => _subTotal;
-            set => SetProperty(ref _subTotal, value, nameof(SubTotal));
-        }
-
+        
         private decimal _total;
 
         public decimal Total

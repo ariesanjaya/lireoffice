@@ -41,21 +41,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <!--<syncfusion:SfMultiColumnDropDownControl Grid.Row="1" 
-                                                         ItemsSource="{Binding VendorList}"
-                                                         SelectedItem="{Binding SelectedVendor}"
-                                                         Width="180" Height="30" 
-                                                         FontSize="14"
-                                                         DisplayMember="Name"
-                                                         PopupWidth="360"
-                                                         GridColumnSizer="Star"
-                                                         AutoGenerateColumns="False">
-                        <syncfusion:SfMultiColumnDropDownControl.Columns>
-                            <syncfusion:GridTextColumn HeaderText="No. Register" Width="120" MappingName="RegisterId"/>
-                            <syncfusion:GridTextColumn HeaderText="Nama Pemasok" MappingName="Name"/>
-                        </syncfusion:SfMultiColumnDropDownControl.Columns>
-                    </syncfusion:SfMultiColumnDropDownControl>-->
-                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" IsFilter="False" FontSize="14"/>
+                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" IsFilter="True" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddVendorCommand}"/>
                 </Grid>
 
@@ -83,21 +69,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <!--<syncfusion:SfMultiColumnDropDownControl 
-                                                         ItemsSource="{Binding EmployeeList}"
-                                                         SelectedItem="{Binding SelectedEmployee}"
-                                                         Width="180" Height="30" 
-                                                         FontSize="14"
-                                                         DisplayMember="Name"
-                                                         PopupWidth="360"
-                                                         AutoGenerateColumns="False"
-                                                         GridColumnSizer="Star">
-                        <syncfusion:SfMultiColumnDropDownControl.Columns>
-                            <syncfusion:GridTextColumn HeaderText="No. Register" Width="120" MappingName="RegisterId"/>
-                            <syncfusion:GridTextColumn HeaderText="Nama Petugas" MappingName="Name"/>
-                        </syncfusion:SfMultiColumnDropDownControl.Columns>
-                    </syncfusion:SfMultiColumnDropDownControl>-->
-                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="False" FontSize="14"/>
+                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="True" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddEmployeeCommand}"/>
                 </Grid>
 

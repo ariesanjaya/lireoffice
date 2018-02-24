@@ -28,6 +28,8 @@ namespace LireOffice.ViewModels
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
 
+        private bool IsUpdated = false;
+
         public SalesDetailViewModel(IRegionManager rm, IEventAggregator ea, IUnityContainer container, IOfficeContext context)
         {
             regionManager = rm;
@@ -70,7 +72,15 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedCustomer
         {
             get => _selectedCustomer;
-            set => SetProperty(ref _selectedCustomer, value, nameof(SelectedCustomer));
+            set => SetProperty(ref _selectedCustomer, value,()=> 
+            {
+                if (_selectedCustomer != null)
+                {
+                    SalesDTO.Description = "Penjualan, Kepada " + _selectedCustomer.Name;
+                    SalesDTO.CustomerId = _selectedCustomer.Id;
+                }
+
+            }, nameof(SelectedCustomer));
         }
                 
         private ObservableCollection<UserSimpleContext> _employeeList;
@@ -86,7 +96,12 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedEmployee
         {
             get => _selectedEmployee;
-            set => SetProperty(ref _selectedEmployee, value, nameof(SelectedEmployee));
+            set => SetProperty(ref _selectedEmployee, value,()=> 
+            {
+                if (_selectedEmployee != null)
+                    SalesDTO.EmployeeId = _selectedEmployee.Id;
+
+            }, nameof(SelectedEmployee));
         }
         
         private ObservableCollection<SalesItemContext> _salesItemList;
@@ -138,6 +153,7 @@ namespace LireOffice.ViewModels
         }
         #endregion
 
+        #region Delegate Command Properties
         public DelegateCommand AddCustomerCommand => new DelegateCommand(OnAddCustomer);
         public DelegateCommand AddEmployeeCommand => new DelegateCommand(OnAddEmployee);
 
@@ -150,32 +166,34 @@ namespace LireOffice.ViewModels
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
-        public DelegateCommand AddAddtionalCostCommand => new DelegateCommand(OnAddAdditionalCost);
+        public DelegateCommand AddtionalCostCommand => new DelegateCommand(OnAdditionalCost);
+        #endregion
 
-        public DelegateCommand CustomerSelectionChangedCommand => new DelegateCommand(() =>
+        private void AddSalesItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/> productIndex)
         {
-            SalesDTO.Description = "Penjualan, Kepada " + SelectedCustomer.Name;
-        });
-
-        private void AddSalesItem(object item)
-        {
-            if (item is ProductInfoContext product)
+            var product = productIndex.Item1;
+                        
+            SalesItemContext salesItem = new SalesItemContext(eventAggregator)
             {
-                SalesItemContext salesItem = new SalesItemContext(eventAggregator)
-                {
-                    Id = ObjectId.NewObjectId(),
-                    ProductId = product.Id,
-                    TaxId = product.TaxId,
-                    UnitTypeId = product.UnitTypeId,
-                    Barcode = product.Barcode,
-                    Name = product.Name,
-                    UnitType = product.UnitType,
-                    Quantity = product.Quantity,
-                    SellPrice = product.SellPrice,
-                    Tax = product.Tax
-                };
-                SalesItemList.Add(salesItem);                
+                Id = ObjectId.NewObjectId(),
+                ProductId = product.Id,
+                TaxId = product.TaxId,
+                UnitTypeId = product.UnitTypeId,
+                Barcode = product.Barcode,
+                Name = product.Name,
+                UnitType = product.UnitType,
+                Quantity = product.Quantity,
+                SellPrice = product.SellPrice,
+                Tax = product.Tax
+            };
+
+            if (productIndex.Item3)
+            {
+                SalesItemList.RemoveAt(productIndex.Item2);
+                SalesItemList.Insert(productIndex.Item2, salesItem);
             }
+            else
+                SalesItemList.Add(salesItem);
         }
 
         private void CalculateTotal()
@@ -184,12 +202,12 @@ namespace LireOffice.ViewModels
             SalesDTO.TotalTax = 0;
             SalesDTO.Total = 0;
 
-            foreach (var item in SalesItemList)
+            Parallel.ForEach(SalesItemList, (SalesItemContext item) => 
             {
                 SalesDTO.TotalDiscount += item.Discount;
                 SalesDTO.TotalTax += item.Tax;
                 SalesDTO.Total += item.SubTotal;
-            }
+            });
         }
 
         private void OnAddCustomer()
@@ -235,38 +253,48 @@ namespace LireOffice.ViewModels
 
         private void OnSaveDraft()
         {
-            regionManager.RequestNavigate("ContentRegion", "SalesSummary");
+            if (!IsUpdated)
+                AddData();
+            else
+                UpdateData();
+
+            OnCancel();
         }
 
         private void OnCancel()
         {
+            ResetValue();
             regionManager.RequestNavigate("ContentRegion", "SalesSummary");
         }
 
         private void OnCellDoubleTapped()
         {
+            //--------------------
+            // Create UserControl View using View Injection
             var view = container.Resolve<AddSalesItem>();
             IRegion region = regionManager.Regions["Option01Region"];
             region.Add(view);
+            //--------------------
+
+            //--------------------
+            // passing parameter to destination view
+            var parameter = new NavigationParameters { { "Instigator", "ContentRegion" } };
 
             if (SelectedSalesItem != null)
-            {
-                var parameter = new NavigationParameters
-                {
-                    { "SelectedSalesItem", SelectedSalesItem }
-                };
-
-                regionManager.RequestNavigate("Option01Region", "AddSalesItem", parameter);
-            }
+                parameter.Add("Product", Tuple.Create(SelectedSalesItem.UnitTypeId/*object*/, SalesItemList.IndexOf(SelectedSalesItem)/*index*/, true/*IsUpdated*/));
             else
-            {
-                regionManager.RequestNavigate("Option01Region", "AddSalesItem");
-            }
+                parameter.Add("Product", Tuple.Create(ObjectId.NewObjectId()/*object*/, 0/*index*/, false/*IsUpdated*/));
+            //--------------------
 
+            //--------------------
+            // Navigate to destination view with additional parameter
+            regionManager.RequestNavigate("Option01Region", "AddSalesItem", parameter);
+            
+            // Notify Main ViewModel to show Option01 ContentControl in Main View
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
 
-        private void OnAddAdditionalCost()
+        private void OnAdditionalCost()
         {
 
         }
@@ -315,6 +343,50 @@ namespace LireOffice.ViewModels
             });
 
             EmployeeList.AddRange(tempEmployeeList);
+        }
+
+        private void AddData()
+        {
+            Sales sales = Mapper.Map<SalesDetailContext, Sales>(SalesDTO);
+            Collection<SalesItem> salesItemList = new Collection<SalesItem>();
+
+            if (SalesItemList.Count > 0)
+            {
+                foreach (var item in SalesItemList)
+                {
+                    SalesItem salesItem = new SalesItem
+                    {
+                        SalesId = sales.Id,
+                        ProductId = item.ProductId,
+                        UnitTypeId = item.UnitTypeId,
+                        TaxId = item.TaxId,
+                        Barcode = item.Barcode,
+                        Name = item.Name,
+                        Quantity = item.Quantity,
+                        UnitType = item.UnitType,
+                        SellPrice = item.SellPrice,
+                        Discount = item.Discount,
+                        SubTotal = item.SubTotal,
+                        Tax = item.Tax
+                    };
+
+                    salesItemList.Add(salesItem);
+                }
+
+                context.AddSales(sales);
+                context.AddBulkSalesItem(salesItemList);
+            }
+        }
+
+        private void UpdateData()
+        {
+
+        }
+
+        private void ResetValue()
+        {
+            SalesDTO = new SalesDetailContext();
+            SalesItemList.Clear();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

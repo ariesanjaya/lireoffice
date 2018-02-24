@@ -42,24 +42,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:SfMultiColumnDropDownControl Grid.Row="1" x:Name="CustomerList"
-                                                         ItemsSource="{Binding CustomerList}"
-                                                         Width="180" Height="30" 
-                                                         FontSize="14"
-                                                         DisplayMember="Name"
-                                                         PopupWidth="360"
-                                                         GridColumnSizer="Star"
-                                                         AutoGenerateColumns="False">
-                        <syncfusion:SfMultiColumnDropDownControl.Columns>
-                            <syncfusion:GridTextColumn HeaderText="No. Register" Width="120" MappingName="RegisterId"/>
-                            <syncfusion:GridTextColumn HeaderText="Nama Pelanggan" MappingName="Name"/>
-                        </syncfusion:SfMultiColumnDropDownControl.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding CustomerSelectionChangedCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </syncfusion:SfMultiColumnDropDownControl>
+                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}" DisplayMemberPath="Name" IsFilter="True" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddCustomerCommand}"/>
                 </Grid>
                 
@@ -87,19 +70,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:SfMultiColumnDropDownControl 
-                                                         ItemsSource="{Binding EmployeeList}"
-                                                         Width="180" Height="30" 
-                                                         FontSize="14"
-                                                         DisplayMember="Name"
-                                                         PopupWidth="360"
-                                                         AutoGenerateColumns="False"
-                                                         GridColumnSizer="Star">
-                        <syncfusion:SfMultiColumnDropDownControl.Columns>
-                            <syncfusion:GridTextColumn HeaderText="No. Register" Width="120" MappingName="RegisterId"/>
-                            <syncfusion:GridTextColumn HeaderText="Nama Petugas" MappingName="Name"/>
-                        </syncfusion:SfMultiColumnDropDownControl.Columns>
-                    </syncfusion:SfMultiColumnDropDownControl>
+                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="False" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddEmployeeCommand}"/>
                 </Grid>
                 
@@ -116,14 +87,14 @@
                                ColumnSizer="Star"
                                NavigationMode="Cell"
                                SelectionUnit="Cell"
-                               FontSize="14"
+                               FontSize="14" 
                                RowHeight="32" HeaderRowHeight="32">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="130"/>
                 <syncfusion:GridTextColumn HeaderText="Nama Barang" MappingName="Name"/>
                 <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="70" AllowEditing="True"/>
                 <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="80"/>
-                <syncfusion:GridCurrencyColumn HeaderText="Harga" MappingName="SellPrice" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
+                <syncfusion:GridCurrencyColumn HeaderText="Harga" MappingName="SellPrice" AllowEditing="False" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
                 <syncfusion:GridCurrencyColumn HeaderText="Diskon (Rp)" MappingName="Discount" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="160" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
                 <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="120" AllowEditing="True" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
@@ -138,6 +109,9 @@
                 <local:EnterKeyDownEventTrigger EventName="KeyUp">
                     <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
                 </local:EnterKeyDownEventTrigger>
+                <i:EventTrigger EventName="CellDoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDataGrid>
 
@@ -158,8 +132,8 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="Tambahan Biaya" FontSize="14"/>
-            <syncfusion:CurrencyTextBox IsReadOnly="True" IsTabStop="False" Grid.Column="1" FontSize="14" Height="30" Value="{Binding AdditionalCost}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
-            <Button Grid.Column="2" Command="{Binding AddAdditionalCostCommand}"/>
+            <syncfusion:CurrencyTextBox IsReadOnly="True" IsTabStop="False" Grid.Column="1" FontSize="14" Height="30" Value="{Binding SalesDTO.TotalAdditionalCost}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
+            <Button Grid.Column="2" Command="{Binding AdditionalCostCommand}"/>
 
             <Label Grid.Row="2" Content="Total Diskon (Rp)" FontSize="14"/>
             <syncfusion:CurrencyTextBox  IsReadOnly="True" IsTabStop="False" Grid.Row="2" Grid.Column="1" FontSize="14" Height="30" Value="{Binding SalesDTO.TotalDiscount}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>

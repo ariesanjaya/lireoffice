@@ -319,14 +319,80 @@ namespace LireOffice.Service
         #endregion
 
         #region Sales Methods
-        public IEnumerable<Sales> GetSales()
+        public void AddSales(Sales sales)
         {
-            return db.GetCollection<Sales>("Sales").FindAll();
+            db.GetCollection<Sales>("Sales").Insert(sales);
+        }
+
+        public void UpdateSales(Sales sales)
+        {
+            db.GetCollection<Sales>("Sales").Update(sales);
+        }
+
+        public void DeleteSales(ObjectId Id)
+        {
+            db.GetCollection<Sales>("Sales").Delete(Id);
+        }
+
+        public IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate)
+        {
+            return db.GetCollection<Sales>("Sales")
+                .Find(Query.And(
+                    Query.EQ("EmployeeId", employeeId),
+                    Query.And(
+                        Query.GTE("SalesDate", minSalesDate), 
+                        Query.LTE("SalesDate", maxSalesDate)
+                        )
+                    )
+                );
+        }
+
+        public IEnumerable<Sales> GetSalesSummary(DateTime minSalesDate, DateTime maxSalesDate)
+        {
+            var tempData = db.GetCollection<Sales>("Sales").FindAll();
+
+            return null;
         }
 
         public Sales GetSalesById(ObjectId id)
         {
             return db.GetCollection<Sales>("Sales").FindById(id);
+        }
+        #endregion
+
+        #region SalesItem Methods
+        public void AddSalesItem(SalesItem salesItem)
+        {
+            db.GetCollection<SalesItem>("SalesItems").Insert(salesItem);
+        }
+
+        public void AddBulkSalesItem(IEnumerable<SalesItem> salesItem)
+        {
+            db.GetCollection<SalesItem>("SalesItems").InsertBulk(salesItem);
+        }
+
+        public void UpdateSalesItem(SalesItem salesItem)
+        {
+            db.GetCollection<SalesItem>("SalesItems").Update(salesItem);
+        }
+
+        public void DeleteSalesItem(ObjectId Id)
+        {
+            var result = db.GetCollection<SalesItem>("SalesItems").FindById(Id);
+            if (result != null)
+            {
+                db.GetCollection<SalesItem>("SalesItems").Delete(result.Id);
+            }
+        }
+
+        public IEnumerable<SalesItem> GetSalesItem(ObjectId Id)
+        {
+            return db.GetCollection<SalesItem>("SalesItems").Find(Query.EQ("SalesId", Id));
+        }
+
+        public SalesItem GetSalesItemById(ObjectId id)
+        {
+            return db.GetCollection<SalesItem>("SalesItems").FindById(id);
         }
         #endregion
 
@@ -353,6 +419,11 @@ namespace LireOffice.Service
         public IEnumerable<ReceivedGood> GetReceivedGood()
         {
             return db.GetCollection<ReceivedGood>("ReceivedGoods").FindAll();
+        }
+
+        public IEnumerable<ReceivedGood> GetReceivedGood(string text)
+        {
+            return db.GetCollection<ReceivedGood>("ReceivedGoods").Find(Query.Where("Description", c => c.AsString.ToLower().Contains(text.ToLower())));
         }
 
         public ReceivedGood GetReceivedGoodById(ObjectId id)
@@ -396,7 +467,7 @@ namespace LireOffice.Service
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Find(Query.EQ("ReceivedGoodId", Id));
         }
 
-        public ReceivedGoodItem GetReceivedGoodByIdItem(ObjectId id)
+        public ReceivedGoodItem GetReceivedGoodItemById(ObjectId id)
         {
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindById(id);
         }

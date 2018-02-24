@@ -233,7 +233,6 @@ namespace LireOffice.ViewModels
                 UpdateData();
 
             OnCancel();
-            regionManager.RequestNavigate("ContentRegion", "ReceivedGoodSummary");
         }
 
         private void OnCancel()
@@ -358,12 +357,10 @@ namespace LireOffice.ViewModels
 
                     receivedGoodItemList.Add(receivedGoodItem);
                 }
-            }
 
-            //var test = receivedGood;
-            //var test01 = receivedGoodItemList;
-            context.AddReceivedGood(receivedGood);
-            context.AddBulkReceivedGoodItem(receivedGoodItemList);            
+                context.AddReceivedGood(receivedGood);
+                context.AddBulkReceivedGoodItem(receivedGoodItemList);
+            }                      
         }
 
         private void UpdateData()

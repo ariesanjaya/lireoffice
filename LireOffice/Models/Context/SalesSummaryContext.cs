@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace LireOffice.Models
 {
-    public class SalesInfoContext : BindableBase
+    public class SalesSummaryContext : BindableBase
     {
-        public SalesInfoContext()
+        public SalesSummaryContext()
         {
             FirstDetailList = new ObservableCollection<SalesItemContext>();
         }
@@ -27,12 +27,12 @@ namespace LireOffice.Models
             set => SetProperty(ref _salesDate, value, nameof(SalesDate));
         }
 
-        private string _employeeName;
+        private string _name;
 
-        public string EmployeeName
+        public string Name
         {
-            get => _employeeName;
-            set => SetProperty(ref _employeeName, value, nameof(EmployeeName));
+            get => _name;
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
         private decimal _total;

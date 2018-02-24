@@ -24,39 +24,104 @@ namespace LireOffice.ViewModels
             regionManager = rm;
             eventAggregator = ea;
             this.context = context;
+            
+            // ----------------------
+            int month = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+            int dayInMonth = DateTime.DaysInMonth(year, month);
 
-            SalesInfoList = new ObservableCollection<SalesInfoContext>();
+            MinSalesDate = new DateTime(year, month, 1);
+            MaxSalesDate = new DateTime(year, month, dayInMonth);
+            // ----------------------
+
+            SalesInfoList = new ObservableCollection<SalesSummaryContext>();
         }
 
         #region Binding Properties
-        private ObservableCollection<SalesInfoContext> _salesInfoList;
+        private ObservableCollection<SalesSummaryContext> _salesInfoList;
 
-        public ObservableCollection<SalesInfoContext> SalesInfoList
+        public ObservableCollection<SalesSummaryContext> SalesInfoList
         {
             get => _salesInfoList;
             set => SetProperty(ref _salesInfoList, value, nameof(SalesInfoList));
         }
 
-        private SalesInfoContext _selectedSalesInfo;
+        private SalesSummaryContext _selectedSalesInfo;
 
-        public SalesInfoContext SelectedSalesInfo
+        public SalesSummaryContext SelectedSalesInfo
         {
             get => _selectedSalesInfo;
             set => SetProperty(ref _selectedSalesInfo, value, nameof(SelectedSalesInfo));
         }
+
+        private DateTime _minSalesDate;
+
+        public DateTime MinSalesDate
+        {
+            get => _minSalesDate;
+            set => SetProperty(ref _minSalesDate, value, nameof(MinSalesDate));
+        }
+
+        private DateTime _maxSalesDate;
+
+        public DateTime MaxSalesDate
+        {
+            get => _maxSalesDate;
+            set => SetProperty(ref _maxSalesDate, value, nameof(MaxSalesDate));
+        }
+
         #endregion
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
-        public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
+        public DelegateCommand DetailCommand => new DelegateCommand(OnCellDoubleTapped);
+        public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
+
+        public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
 
         private void OnAdd()
         {
             regionManager.RequestNavigate("ContentRegion", "SalesDetail");
         }
-
-        private void OnDetail()
+        
+        private void OnCellDoubleTapped()
         {
-            regionManager.RequestNavigate("ContentRegion", "SalesInvoiceSummary");
+            if (SelectedSalesInfo != null)
+            {
+                regionManager.RequestNavigate("ContentRegion", "SalesInvoiceSummary");
+            }
+        }
+
+        private async void OnDetailsViewExpanding(object _item)
+        {
+            if (_item is SalesInfoContext salesInfo)
+            {
+                SelectedSalesInfo.FirstDetailList.Clear();
+
+                var tempFirstDetailList = await Task.Run(() => 
+                {
+                    Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
+                    var itemList = context.GetSalesItem(salesInfo.Id).ToList();
+
+                    if (itemList.Count > 0)
+                    {
+                        
+                        foreach (var item in itemList)
+                        {
+
+                            SalesItemContext salesItem = new SalesItemContext(eventAggregator)
+                            {
+                                Id = item.Id
+                            };
+
+
+                        }
+                    }
+
+                    return _itemList;
+                });
+
+                SelectedSalesInfo.FirstDetailList.AddRange(tempFirstDetailList);
+            }
         }
 
         private async void LoadSalesList()
@@ -65,17 +130,17 @@ namespace LireOffice.ViewModels
                         
             var tempSalesList = await Task.Run(()=> 
             {
-                Collection<SalesInfoContext> _salesList = new Collection<SalesInfoContext>();
-                var salesList = context.GetSales().OrderBy(c => c.SalesDate).ToList();
+                Collection<SalesSummaryContext> _salesList = new Collection<SalesSummaryContext>();
+                var salesList = context.GetSalesSummary(MinSalesDate, MaxSalesDate).OrderBy(c => c.SalesDate).ToList();
                 if (salesList.Count > 0)
                 {
                     foreach (var sales in salesList)
                     {
-                        SalesInfoContext item = new SalesInfoContext();
+                        SalesSummaryContext item = new SalesSummaryContext();
                         var employee = context.GetEmployeeById(sales.EmployeeId);
                         if (employee != null)
                         {
-                            item.EmployeeName = employee.Name;
+                            item.Name = employee.Name;
                         }
 
                         item.Id = sales.Id;
@@ -85,7 +150,7 @@ namespace LireOffice.ViewModels
                 return _salesList;
             });
 
-            SalesInfoList.AddRange(tempSalesList);
+            //SalesInfoList.AddRange(tempSalesList);
         }
     }
 }

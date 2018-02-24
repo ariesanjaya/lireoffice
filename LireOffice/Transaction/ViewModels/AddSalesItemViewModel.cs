@@ -13,6 +13,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LiteDB;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace LireOffice.ViewModels
 {
@@ -22,6 +25,11 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
+
+        private bool IsProductListLoaded = false;
+        private Tuple<ObjectId, int, bool> productIndex;
+
+        private DispatcherTimer timer;
 
         public AddSalesItemViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
         {
@@ -99,7 +107,13 @@ namespace LireOffice.ViewModels
         {
             if (SelectedProduct != null)
             {
-                eventAggregator.GetEvent<AddSalesItemEvent>().Publish(SelectedProduct);
+                if (productIndex.Item3)
+                {
+                    MessageBoxResult result = MessageBox.Show("Data ini akan merubah data yg lama!! Lanjutkan?", "Perubahan Data", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.No)
+                        return;
+                }
+                eventAggregator.GetEvent<AddSalesItemEvent>().Publish(Tuple.Create(SelectedProduct/*Object*/, productIndex.Item2/*index*/, productIndex.Item3/*IsUpdated*/));
                 OnCancel();
             }
         }
@@ -154,8 +168,46 @@ namespace LireOffice.ViewModels
             ProductList.AddRange(tempItemList);
         }
         
+        private void SearchProduct()
+        {
+            if (timer == null)
+            {
+                timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
+
+                timer.Tick += async (o, ae) =>
+                {
+                    if (timer == null) return;
+
+                    // Check if Product List is Loaded
+                    if (!IsProductListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    var tempSelectedProduct = await Task.Run(() =>
+                    {
+                        var _selectedProduct = ProductList.Where(c => c.Name.ToLower().Contains(SearchText.ToLower())).FirstOrDefault();
+
+                        return _selectedProduct;
+                    });
+
+                    SelectedProduct = tempSelectedProduct;
+
+                    timer.Stop();
+                };
+            }
+
+            timer.Stop();
+            timer.Start();
+        }
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            var parameter = navigationContext.Parameters;
+            if (parameter["Product"] is Tuple<ObjectId, int, bool> productIndex)
+                this.productIndex = productIndex;
+
             LoadProductList();
         }
 

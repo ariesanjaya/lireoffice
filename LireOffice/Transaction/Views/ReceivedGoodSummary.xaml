@@ -21,6 +21,10 @@
             <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus" Height="30" Width="100" Command="{Binding DeleteCommand}"/>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <syncfusion:SfTextBoxExt Margin="24 0 0 0" Watermark="Cari" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
+        </StackPanel>
+
         <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid"
                                ItemsSource="{Binding ReceivedGoodInfoList}"
                                SelectedItem="{Binding SelectedReceivedGoodInfo}"
@@ -46,7 +50,6 @@
                     <syncfusion:GridViewDefinition.DataGrid>
                         <syncfusion:SfDataGrid x:Name="FirstLevelNestedGrid" 
                                                AutoGenerateColumns="False" 
-                                               FilterRowPosition="FixedTop"
                                                FontSize="14"
                                                RowHeight="40"
                                                HeaderRowHeight="40"

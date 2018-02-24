@@ -26,7 +26,7 @@ namespace LireOffice.ViewModels
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
 
-        private bool IsProductListLoad = false;
+        private bool IsProductListLoaded = false;
         private string Instigator;
         private Tuple<ObjectId, int, bool> productIndex;
 
@@ -208,7 +208,7 @@ namespace LireOffice.ViewModels
             });
 
             ProductList.AddRange(tempItemList);
-            IsProductListLoad = true;
+            IsProductListLoaded = true;
 
             if (productIndex.Item3)
                 SelectedProduct = ProductList.SingleOrDefault(c => c.UnitTypeId == productIndex.Item1);
@@ -225,7 +225,7 @@ namespace LireOffice.ViewModels
                     if (timer == null) return;
 
                     // Check if Product List is Loaded
-                    if (!IsProductListLoad)
+                    if (!IsProductListLoaded)
                     {
                         timer.Stop();
                         return;

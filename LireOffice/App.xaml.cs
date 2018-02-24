@@ -78,11 +78,10 @@ namespace LireOffice
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 #endregion
 
-                #region SalesItem Configuration
-                //config.CreateMap<ProductInfoContext, SalesItemContext>()
-                //        .ForMember(dest => dest.Id, opt => opt.Ignore())
-                //        .ForMember(dest => dest.ProductId, m => m.MapFrom(c => c.Id))
-                //        .ForMember(dest => dest.SubTotal, opt => opt.Ignore());
+                #region Sales Configuration
+                config.CreateMap<SalesSummary, SalesSummaryContext>();
+                config.CreateMap<SalesDetailContext, Sales>()
+                        .ForMember(dest => dest.Id, opt => opt.Ignore());
                 #endregion
 
                 #region ReceivedGood Configuration

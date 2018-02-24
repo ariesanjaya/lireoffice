@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -21,6 +22,9 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IOfficeContext context;
 
+        private bool IsReceivedGoodListLoaded = false;
+        private DispatcherTimer timer;
+
         public ReceivedGoodSummaryViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
         {
             eventAggregator = ea;
@@ -28,7 +32,16 @@ namespace LireOffice.ViewModels
             this.context = context;
 
             ReceivedGoodInfoList = new ObservableCollection<ReceivedGoodInfoContext>();
-            
+
+            // ----------------------
+            int month = DateTime.Now.Month;
+            int year = DateTime.Now.Year;
+            int dayInMonth = DateTime.DaysInMonth(year, month);
+
+            MinSalesDate = new DateTime(year, month, 1);
+            MaxSalesDate = new DateTime(year, month, dayInMonth);
+            // ----------------------
+
             LoadReceivedGoodList();
             eventAggregator.GetEvent<ReceivedGoodListUpdatedEvent>().Subscribe((string text) => LoadReceivedGoodList());
         }
@@ -49,31 +62,42 @@ namespace LireOffice.ViewModels
             get => _selectedReceivedGoodInfo;
             set => SetProperty(ref _selectedReceivedGoodInfo, value, nameof(SelectedReceivedGoodInfo));
         }
-        
-        private ObservableCollection<GoodReturnItemContext> _goodReturnList;
 
-        public ObservableCollection<GoodReturnItemContext> GoodReturnList
+        private DateTime _minSalesDate;
+
+        public DateTime MinSalesDate
         {
-            get => _goodReturnList;
-            set => SetProperty(ref _goodReturnList, value, nameof(GoodReturnList));
+            get => _minSalesDate;
+            set => SetProperty(ref _minSalesDate, value, nameof(MinSalesDate));
         }
 
-        private GoodReturnItemContext _selectedGoodReturn;
+        private DateTime _maxSalesDate;
 
-        public GoodReturnItemContext SelectedGoodReturn
+        public DateTime MaxSalesDate
         {
-            get => _selectedGoodReturn;
-            set => SetProperty(ref _selectedGoodReturn, value, nameof(SelectedGoodReturn));
+            get => _maxSalesDate;
+            set => SetProperty(ref _maxSalesDate, value, nameof(MaxSalesDate));
         }
-        
+
+        private string _searchText;
+
+        public string SearchText
+        {
+            get => _searchText;
+            set => SetProperty(ref _searchText, value, SearchReceivedGoodList, nameof(SearchText));
+        }
+
         #endregion
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxSalesDate = MinSalesDate );
+        public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadReceivedGoodList());
 
+        public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
+        
         private void OnAdd()
         {
             regionManager.RequestNavigate("ContentRegion", "ReceivedGoodDetail");
@@ -127,15 +151,22 @@ namespace LireOffice.ViewModels
                 SelectedReceivedGoodInfo.FirstDetailList.AddRange(tempFirstDetailList);
             }
         }
+        
 
-        private async void LoadReceivedGoodList()
+        private async void LoadReceivedGoodList(string text = null)
         {
             ReceivedGoodInfoList.Clear();
             
             var tempReceivedGoodList = await Task.Run(()=> 
             {
                 Collection<ReceivedGoodInfoContext> _receivedGoodList = new Collection<ReceivedGoodInfoContext>();
-                var receivedGoodList = context.GetReceivedGood().ToList();
+                List<ReceivedGood> receivedGoodList;
+
+                if (!string.IsNullOrEmpty(text))
+                    receivedGoodList = context.GetReceivedGood(text).ToList();
+                else
+                    receivedGoodList = context.GetReceivedGood().ToList();
+
                 if (receivedGoodList.Count > 0)
                 {
                     foreach (var _item in receivedGoodList)
@@ -150,6 +181,35 @@ namespace LireOffice.ViewModels
             });
 
             ReceivedGoodInfoList.AddRange(tempReceivedGoodList);
+            IsReceivedGoodListLoaded = true;
+        }
+
+        private void SearchReceivedGoodList()
+        {
+            if (timer == null)
+            {
+                timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
+
+                timer.Tick += (o, ae) =>
+                {
+                    if (timer == null) return;
+
+                    // Check if ReceivedGoodList is Loaded
+                    if (!IsReceivedGoodListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    ReceivedGoodInfoList.Clear();
+                    LoadReceivedGoodList(SearchText);
+
+                    timer.Stop();
+                };
+            }
+
+            timer.Stop();
+            timer.Start();
         }
     }
 }
