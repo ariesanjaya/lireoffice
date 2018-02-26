@@ -32,7 +32,7 @@
                                ColumnSizer="Star"
                                EnableDataVirtualization="True"
                                NavigationMode="Row"
-                               ScrollMode="Async"                               
+                               ScrollMode="Async"                                
                                RowHeight="32" HeaderRowHeight="32">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridTextColumn HeaderText="Barcode" MappingName="Barcode" Width="100" HorizontalHeaderContentAlignment="Left"/>
@@ -48,6 +48,9 @@
                     <local:EnterKeyDownEventTrigger EventName="KeyUp">
                         <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}"/>
                     </local:EnterKeyDownEventTrigger>
+                    <i:EventTrigger EventName="CellDoubleTapped">
+                        <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}"/>
+                    </i:EventTrigger>
                 </i:Interaction.Triggers>
             </syncfusion:SfDataGrid>
 

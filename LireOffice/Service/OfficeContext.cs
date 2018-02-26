@@ -352,13 +352,16 @@ namespace LireOffice.Service
                 );
         }
 
-        public IEnumerable<Sales> GetSalesSummary(DateTime minSalesDate, DateTime maxSalesDate)
+        public IEnumerable<Sales> GetSales(DateTime minSalesDate, DateTime maxSalesDate)
         {
-            var tempData = db.GetCollection<Sales>("Sales").FindAll();
-
-            return null;
+            return db.GetCollection<Sales>("Sales")
+                .Find(Query.And(
+                        Query.GTE("SalesDate", minSalesDate),
+                        Query.LTE("SalesDate", maxSalesDate)
+                        )
+                 );            
         }
-
+        
         public Sales GetSalesById(ObjectId id)
         {
             return db.GetCollection<Sales>("Sales").FindById(id);
@@ -498,6 +501,7 @@ namespace LireOffice.Service
         {
             return db.GetCollection<Account>("Accounts").FindById(id);
         }
+
         #endregion
     }
 }

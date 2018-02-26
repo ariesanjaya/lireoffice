@@ -21,9 +21,9 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <DatePicker Height="30" Width="130" SelectedDate="{Binding MinSalesDate}" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker Height="30" Width="130" SelectedDate="{Binding MinDate}" FontSize="14" VerticalAlignment="Center"/>
             <Button x:Name="DateAssignBtn" Width="30" Height="30" Margin="8 0 0 0" Command="{Binding DateAssignCommand}"/>
-            <DatePicker Margin="8 0 0 0" Height="30" Width="130" SelectedDate="{Binding MaxSalesDate}" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker Margin="8 0 0 0" Height="30" Width="130" SelectedDate="{Binding MaxDate}" FontSize="14" VerticalAlignment="Center"/>
             <Button x:Name="RefreshBtn" Width="30" Height="30" Margin="8 0 0 0" Command="{Binding RefreshCommand}"/>
             <TextBox Margin="24 0 0 0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
         </StackPanel>
@@ -43,8 +43,8 @@
                                ColumnSizer="Star"
                                RowHeight="40" HeaderRowHeight="40">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn HeaderText="Tgl" MappingName="SalesDate" Width="160"/>
-                <syncfusion:GridTextColumn HeaderText="Nama Kasir" MappingName="EmployeeName"/>
+                <syncfusion:GridDateTimeColumn Pattern="ShortDate" HeaderText="Tgl" MappingName="SalesDate" Width="160"/>
+                <syncfusion:GridTextColumn HeaderText="Nama Kasir" MappingName="Name"/>
                 <syncfusion:GridCurrencyColumn HeaderText="Total" Width="240" MappingName="Total" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
                 <syncfusion:GridCheckBoxColumn HeaderText="" Width="60" MappingName="IsPosted"/>
             </syncfusion:SfDataGrid.Columns>
@@ -78,6 +78,9 @@
                 <local:EnterKeyDownEventTrigger EventName="KeyUp">
                     <i:InvokeCommandAction Command="{Binding DoubleClickCommand}"/>
                 </local:EnterKeyDownEventTrigger>
+                <i:EventTrigger EventName="DetailsViewExpanding">
+                    <i:InvokeCommandAction Command="{Binding DetailsViewExpandingCommand}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDataGrid>
     </Grid>

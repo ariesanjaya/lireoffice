@@ -143,7 +143,7 @@ namespace LireOffice.Service
 
         IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate);
 
-        IEnumerable<Sales> GetSalesSummary(DateTime minSalesDate, DateTime maxSalesDate);
+        IEnumerable<Sales> GetSales(DateTime minSalesDate, DateTime maxSalesDate);
 
         Sales GetSalesById(ObjectId id);
         #endregion

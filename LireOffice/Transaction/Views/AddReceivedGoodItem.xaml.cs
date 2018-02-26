@@ -26,7 +26,6 @@ namespace LireOffice.Views
 
             SearchTextBox.KeyUp += SearchTextBox_KeyUp;
             SearchTextBox.GotFocus += SearchTextBox_GotFocus;
-            //dataGrid.KeyUp += DataGrid_KeyUp;
             Loaded += AddReceivedGoodItem_Loaded;
         }
 
@@ -39,15 +38,7 @@ namespace LireOffice.Views
         {            
             SearchTextBox.Focus();
         }
-
-        private void DataGrid_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Return || e.Key == Key.Enter) return;
-
-            SearchTextBox.Focus();
-            SearchTextBox.SelectAll();                        
-        }
-
+        
         private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Up || e.Key == Key.Down)

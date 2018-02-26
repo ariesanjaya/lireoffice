@@ -1,15 +1,16 @@
 ﻿using LireOffice.Models;
 using LireOffice.Service;
+using LireOffice.Utilities;
+using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -18,6 +19,9 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IOfficeContext context;
+
+        private DispatcherTimer timer;
+        private bool IsSalesListLoaded = false;
 
         public SalesSummaryViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
         {
@@ -30,13 +34,15 @@ namespace LireOffice.ViewModels
             int year = DateTime.Now.Year;
             int dayInMonth = DateTime.DaysInMonth(year, month);
 
-            MinSalesDate = new DateTime(year, month, 1);
-            MaxSalesDate = new DateTime(year, month, dayInMonth);
+            MinDate = new DateTime(year, month, 1);
+            MaxDate = new DateTime(year, month, dayInMonth);
             // ----------------------
 
             SalesInfoList = new ObservableCollection<SalesSummaryContext>();
 
             LoadSalesList();
+
+            eventAggregator.GetEvent<SalesListUpdatedEvent>().Subscribe((string text) => LoadSalesList());
         }
 
         #region Binding Properties
@@ -56,20 +62,28 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedSalesInfo, value, nameof(SelectedSalesInfo));
         }
 
-        private DateTime _minSalesDate;
+        private DateTime _minDate;
 
-        public DateTime MinSalesDate
+        public DateTime MinDate
         {
-            get => _minSalesDate;
-            set => SetProperty(ref _minSalesDate, value, nameof(MinSalesDate));
+            get => _minDate;
+            set => SetProperty(ref _minDate, value, nameof(MinDate));
         }
 
-        private DateTime _maxSalesDate;
+        private DateTime _maxDate;
 
-        public DateTime MaxSalesDate
+        public DateTime MaxDate
         {
-            get => _maxSalesDate;
-            set => SetProperty(ref _maxSalesDate, value, nameof(MaxSalesDate));
+            get => _maxDate;
+            set => SetProperty(ref _maxDate, value, nameof(MaxDate));
+        }
+
+        private string _searchText;
+
+        public string SearchText
+        {
+            get => _searchText;
+            set => SetProperty(ref _searchText, value, SearchSalesList, nameof(SearchText));
         }
 
         #endregion
@@ -77,6 +91,9 @@ namespace LireOffice.ViewModels
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand DetailCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
+
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
+        public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadSalesList());
 
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
 
@@ -93,27 +110,46 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void OnDetailsViewExpanding(object _item)
+        private async void OnDetailsViewExpanding(object _salesInfo)
         {
-            if (_item is SalesInfoContext salesInfo)
+            if (_salesInfo is SalesSummaryContext salesInfo)
             {
                 SelectedSalesInfo.FirstDetailList.Clear();
-
+                
                 var tempFirstDetailList = await Task.Run(() => 
                 {
                     Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
-                    var itemList = context.GetSalesItem(salesInfo.Id).ToList();
-
-                    if (itemList.Count > 0)
+                    var salesList = context.GetSales(salesInfo.EmployeeId, salesInfo.SalesDate, salesInfo.SalesDate).OrderBy(c => c.SalesDate.Date).ToList();
+                    
+                    if (salesList.Count > 0)
                     {                        
-                        foreach (var item in itemList)
+                        foreach (var sales in salesList)
                         {
-                            SalesItemContext salesItem = new SalesItemContext(eventAggregator)
+                            var salesItemList = context.GetSalesItem(sales.Id).ToList();
+
+                            if (salesItemList.Count > 0)
                             {
-                                Id = item.Id
-                            };
+                                foreach (var item in salesItemList)
+                                {
+                                    SalesItemContext _item = new SalesItemContext(eventAggregator)
+                                    {
+                                        Id = item.Id,
+                                        ProductId = item.ProductId,
+                                        UnitTypeId = item.UnitTypeId,
+                                        Barcode = item.Barcode,
+                                        Name = item.Name,
+                                        Quantity = item.Quantity,
+                                        UnitType = item.UnitType,
+                                        SellPrice = item.SellPrice,
+                                        Discount = item.Discount,
+                                        SubTotal = item.SubTotal,
+                                        Tax = item.Tax,
+                                        TaxId = item.TaxId
+                                    };
 
-
+                                    _itemList.Add(_item);
+                                }
+                            }
                         }
                     }
 
@@ -124,45 +160,91 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadSalesSummaryList()
+        private async void LoadSalesList(string text = null)
         {
             SalesInfoList.Clear();
-                        
-            var tempSalesSummaryList = await Task.Run(()=> 
+            ObjectId tempEmployeeId = ObjectId.NewObjectId();
+            DateTime tempDate = new DateTime(1900, 1, 1);            
+
+            var tempSalesList = await Task.Run(()=> 
             {
                 Collection<SalesSummaryContext> _salesList = new Collection<SalesSummaryContext>();
-                var salesList = context.GetSalesSummary(MinSalesDate, MaxSalesDate).OrderBy(c => c.SalesDate).ToList();
+                var salesList = context.GetSales(MinDate, MaxDate).OrderBy(c => c.SalesDate.Date).ThenBy(c => c.EmployeeId).ToList();
                 if (salesList.Count > 0)
                 {
-                    foreach (var sales in salesList)
-                    {
-                        SalesSummaryContext item = new SalesSummaryContext();
-                        var employee = context.GetEmployeeById(sales.EmployeeId);
-                        if (employee != null)
+                   foreach (var sales in salesList)
+                   {
+                        SalesSummaryContext item = new SalesSummaryContext
                         {
+                            Id = sales.Id,
+                            EmployeeId = sales.EmployeeId,
+                            SalesDate = sales.SalesDate,
+                            Total = sales.Total
+                        };
+
+                        var employee = context.GetEmployeeById(sales.EmployeeId);
+
+                        if (employee != null)
                             item.Name = employee.Name;
+
+                        if ((tempDate.Date != item.SalesDate.Date || tempEmployeeId != item.EmployeeId))
+                        {
+                            if (!string.IsNullOrEmpty(text))
+                            {
+                                if (item.Name.ToLower().Contains(text.ToLower()))
+                                {
+                                    _salesList.Add(item);
+                                }
+                            }
+                            else
+                                _salesList.Add(item);
+
+                            tempEmployeeId = item.EmployeeId;
+                            tempDate = item.SalesDate;
                         }
-
-                        item.Id = sales.Id;
-
+                        else
+                        {
+                            foreach (var _sales in _salesList)
+                            {
+                                if (_sales.SalesDate.Date == item.SalesDate.Date && _sales.EmployeeId == item.EmployeeId)
+                                {
+                                    _sales.Total += item.Total;
+                                }
+                            }
+                        }
                     }
                 }
                 return _salesList;
             });
 
-            //SalesInfoList.AddRange(tempSalesList);
-        }
-
-        private async void LoadSalesList()
+            SalesInfoList.AddRange(tempSalesList);
+            IsSalesListLoaded = true;
+        }   
+        
+        private void SearchSalesList()
         {
-            var tempSalesList = await Task.Run(()=> 
+            if (timer == null)
             {
-                Collection<SalesDetailContext> _salesList = new Collection<SalesDetailContext>();
-                var salesList = context.GetSales().ToList();
+                timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
 
-                var test = salesList;
-                return _salesList;
-            });
+                timer.Tick += (o, ae) => 
+                {
+                    if (timer == null) return;
+
+                    if (!IsSalesListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    LoadSalesList(SearchText);
+
+                    timer.Stop();
+                };
+            }
+
+            timer.Stop();
+            timer.Start();
         }
     }
 }

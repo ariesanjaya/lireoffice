@@ -40,6 +40,7 @@ namespace LireOffice.ViewModels
 
             ProductList = new ObservableCollection<ProductInfoContext>();
 
+            eventAggregator.GetEvent<ProductListUpdatedEvent>().Subscribe((string text) => LoadProductList());
         }
 
         #region Binding Properties
@@ -82,10 +83,7 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option02Region"];
             region.Add(view, "AddProduct");
 
-            var parameter = new NavigationParameters
-            {
-                { "Instigator", "Option01Region" }
-            };
+            var parameter = new NavigationParameters{ { "Instigator", "Option01Region" } };
             
             regionManager.RequestNavigate("Option02Region", "AddProduct", parameter);
             eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
@@ -93,7 +91,21 @@ namespace LireOffice.ViewModels
 
         private void OnUpdate()
         {
+            if (SelectedProduct != null)
+            {
+                var view = container.Resolve<AddProduct>();
+                IRegion region = regionManager.Regions["Option02Region"];
+                region.Add(view, "AddProduct");
 
+                var parameter = new NavigationParameters
+                {
+                    { "Instigator", "Option01Region" },
+                    { "SelectedProduct", SelectedProduct}
+                };
+
+                regionManager.RequestNavigate("Option02Region", "AddProduct", parameter);
+                eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
+            }            
         }
 
         private void OnCancel()

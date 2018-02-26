@@ -63,20 +63,20 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedReceivedGoodInfo, value, nameof(SelectedReceivedGoodInfo));
         }
 
-        private DateTime _minSalesDate;
+        private DateTime _minDate;
 
         public DateTime MinDate
         {
-            get => _minSalesDate;
-            set => SetProperty(ref _minSalesDate, value, nameof(MinDate));
+            get => _minDate;
+            set => SetProperty(ref _minDate, value, nameof(MinDate));
         }
 
-        private DateTime _maxSalesDate;
+        private DateTime _maxDate;
 
         public DateTime MaxDate
         {
-            get => _maxSalesDate;
-            set => SetProperty(ref _maxSalesDate, value, nameof(MaxDate));
+            get => _maxDate;
+            set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
         private string _searchText;
@@ -201,7 +201,6 @@ namespace LireOffice.ViewModels
                         return;
                     }
 
-                    ReceivedGoodInfoList.Clear();
                     LoadReceivedGoodList(SearchText);
 
                     timer.Stop();
