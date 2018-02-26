@@ -45,16 +45,23 @@ namespace LireOffice.ViewModels
             get => _selectedSalesInfo;
             set => SetProperty(ref _selectedSalesInfo, value, nameof(SelectedSalesInfo));
         }
-        
+
         #endregion
 
+        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
+        public DelegateCommand DetailCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
 
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
         
+        private void OnAdd()
+        {
+            regionManager.RequestNavigate("ContentRegion", "SalesDetail");
+        }
+
         private void OnCellDoubleTapped()
         {
-
+            regionManager.RequestNavigate("ContentRegion", "SalesDetail");
         }
 
         private async void OnDetailsViewExpanding(object _item)

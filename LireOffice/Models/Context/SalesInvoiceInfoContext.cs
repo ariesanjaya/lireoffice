@@ -20,6 +20,14 @@ namespace LireOffice.Models
         public ObjectId EmployeeId { get; set; }
         public ObjectId CustomerId { get; set; }
 
+        private DateTime _salesDate;
+
+        public DateTime SalesDate
+        {
+            get => _salesDate;
+            set => SetProperty(ref _salesDate, value, nameof(SalesDate));
+        }
+        
         private string _invoiceId;
 
         public string InvoiceId

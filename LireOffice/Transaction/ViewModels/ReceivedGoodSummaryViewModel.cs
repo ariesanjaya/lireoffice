@@ -38,8 +38,8 @@ namespace LireOffice.ViewModels
             int year = DateTime.Now.Year;
             int dayInMonth = DateTime.DaysInMonth(year, month);
 
-            MinSalesDate = new DateTime(year, month, 1);
-            MaxSalesDate = new DateTime(year, month, dayInMonth);
+            MinDate = new DateTime(year, month, 1);
+            MaxDate = new DateTime(year, month, dayInMonth);
             // ----------------------
 
             LoadReceivedGoodList();
@@ -65,18 +65,18 @@ namespace LireOffice.ViewModels
 
         private DateTime _minSalesDate;
 
-        public DateTime MinSalesDate
+        public DateTime MinDate
         {
             get => _minSalesDate;
-            set => SetProperty(ref _minSalesDate, value, nameof(MinSalesDate));
+            set => SetProperty(ref _minSalesDate, value, nameof(MinDate));
         }
 
         private DateTime _maxSalesDate;
 
-        public DateTime MaxSalesDate
+        public DateTime MaxDate
         {
             get => _maxSalesDate;
-            set => SetProperty(ref _maxSalesDate, value, nameof(MaxSalesDate));
+            set => SetProperty(ref _maxSalesDate, value, nameof(MaxDate));
         }
 
         private string _searchText;
@@ -93,7 +93,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxSalesDate = MinSalesDate );
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate );
         public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadReceivedGoodList());
 
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);

@@ -265,7 +265,7 @@ namespace LireOffice.ViewModels
         private void OnCancel()
         {
             ResetValue();
-            regionManager.RequestNavigate("ContentRegion", "SalesSummary");
+            regionManager.RequestNavigate("ContentRegion", "SalesInvoiceSummary");
         }
 
         private void OnCellDoubleTapped()

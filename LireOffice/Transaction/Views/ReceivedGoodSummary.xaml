@@ -8,7 +8,7 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" d:DesignWidth="1024">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -22,7 +22,11 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <TextBox Margin="24 0 0 0" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding MinDate}" FontSize="14" Width="120" VerticalAlignment="Center"/>
+            <Button Margin="8 0" Width="30" Height="30" Command="{Binding DateAssignCommand}"/>
+            <DatePicker SelectedDate="{Binding MaxDate}" FontSize="14" Width="120" VerticalAlignment="Center"/>
+            <Button Margin="8 0 16 0" Width="30" Height="30" Command="{Binding RefreshCommand}"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center"/>
         </StackPanel>
 
         <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid"
