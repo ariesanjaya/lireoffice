@@ -27,7 +27,11 @@ namespace LireOffice.Views
             InitializeComponent();
 
             ea.GetEvent<TransactionDetailDataGridFocusEvent>().Subscribe((string text) => dataGrid.Focus());
-
+            ea.GetEvent<ResetValueEvent>().Subscribe((string text) =>
+            {
+                VendorBox.Text = null;
+                EmployeeBox.Text = null;
+            });
         }
     }
 }

@@ -106,7 +106,8 @@ namespace LireOffice.ViewModels
         {
             if (SelectedSalesInfo != null)
             {
-                regionManager.RequestNavigate("ContentRegion", "SalesInvoiceSummary");
+                var parameter = new NavigationParameters { { "SelectedEmployee", SelectedSalesInfo } };
+                regionManager.RequestNavigate("ContentRegion", "SalesInvoiceSummary", parameter);
             }
         }
 
@@ -115,7 +116,8 @@ namespace LireOffice.ViewModels
             if (_salesInfo is SalesSummaryContext salesInfo)
             {
                 SelectedSalesInfo.FirstDetailList.Clear();
-                
+                ObjectId tempUnitTypeId = ObjectId.NewObjectId();
+
                 var tempFirstDetailList = await Task.Run(() => 
                 {
                     Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
@@ -125,7 +127,7 @@ namespace LireOffice.ViewModels
                     {                        
                         foreach (var sales in salesList)
                         {
-                            var salesItemList = context.GetSalesItem(sales.Id).ToList();
+                            var salesItemList = context.GetSalesItem(sales.Id).OrderBy(c => c.Name).ToList();
 
                             if (salesItemList.Count > 0)
                             {
@@ -147,7 +149,21 @@ namespace LireOffice.ViewModels
                                         TaxId = item.TaxId
                                     };
 
-                                    _itemList.Add(_item);
+                                    if (tempUnitTypeId != _item.UnitTypeId)
+                                    {
+                                        _itemList.Add(_item);
+                                        tempUnitTypeId = _item.UnitTypeId;
+                                    }
+                                    else
+                                    {
+                                        foreach (var _salesItem in _itemList)
+                                        {
+                                            if (_salesItem.UnitTypeId == _item.UnitTypeId)
+                                            {
+                                                _salesItem.Quantity += _item.Quantity;
+                                            }
+                                        }
+                                    }                                    
                                 }
                             }
                         }

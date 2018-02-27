@@ -55,17 +55,14 @@
                                                AutoGenerateColumns="False" 
                                                FontSize="14"
                                                RowHeight="40"
-                                               HeaderRowHeight="40"
+                                               HeaderRowHeight="40" 
                                                ColumnSizer="Star">
                             <syncfusion:SfDataGrid.Columns>
                                 <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="160"/>
                                 <syncfusion:GridTextColumn HeaderText="Nama Barang" MappingName="Name"/>
                                 <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="80"/>
                                 <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="100"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Harga Jual" MappingName="SellPrice" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Diskon" MappingName="Discount" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
                                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
                             </syncfusion:SfDataGrid.Columns>
                         </syncfusion:SfDataGrid>
                     </syncfusion:GridViewDefinition.DataGrid>
@@ -80,6 +77,9 @@
                 </local:EnterKeyDownEventTrigger>
                 <i:EventTrigger EventName="DetailsViewExpanding">
                     <i:InvokeCommandAction Command="{Binding DetailsViewExpandingCommand}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CellDoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDataGrid>

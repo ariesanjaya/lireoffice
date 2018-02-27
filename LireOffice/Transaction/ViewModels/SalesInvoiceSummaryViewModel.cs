@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LireOffice.Models;
 using LireOffice.Service;
+using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -48,20 +49,17 @@ namespace LireOffice.ViewModels
 
         #endregion
 
-        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
-        public DelegateCommand DetailCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
 
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
-        
-        private void OnAdd()
-        {
-            regionManager.RequestNavigate("ContentRegion", "SalesDetail");
-        }
-
+                
         private void OnCellDoubleTapped()
         {
-            regionManager.RequestNavigate("ContentRegion", "SalesDetail");
+            if (SelectedSalesInfo != null)
+            {
+                var parameter = new NavigationParameters { { "SalesId", SelectedSalesInfo.Id } };
+                regionManager.RequestNavigate("ContentRegion", "SalesDetail", parameter);
+            }            
         }
 
         private async void OnDetailsViewExpanding(object _item)
@@ -69,11 +67,12 @@ namespace LireOffice.ViewModels
             if (_item is SalesInvoiceInfoContext sales)
             {
                 SelectedSalesInfo.FirstDetailList.Clear();
+                ObjectId tempUnitTypeId = ObjectId.NewObjectId();
 
                 var tempFirstDetailList = await Task.Run(()=> 
                 {
                     Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
-                    var itemList = context.GetSalesItem(sales.Id).ToList();
+                    var itemList = context.GetSalesItem(sales.Id).OrderBy(c => c.Name).ToList();
 
                     if (itemList.Count > 0)
                     {
@@ -82,6 +81,9 @@ namespace LireOffice.ViewModels
                             SalesItemContext salesItem = new SalesItemContext(eventAggregator)
                             {
                                 Id = item.Id,
+                                ProductId = item.ProductId,
+                                UnitTypeId = item.UnitTypeId,
+                                TaxId = item.TaxId,
                                 Barcode = item.Barcode,
                                 Name = item.Name,
                                 Quantity = item.Quantity,
@@ -92,7 +94,21 @@ namespace LireOffice.ViewModels
                                 Tax = item.Tax
                             };
 
-                            _itemList.Add(salesItem);
+                            if (tempUnitTypeId != salesItem.UnitTypeId)
+                            {
+                                _itemList.Add(salesItem);
+                                tempUnitTypeId = salesItem.UnitTypeId;
+                            }
+                            else
+                            {
+                                foreach (var _salesItem in _itemList)
+                                {
+                                    if (_salesItem.UnitTypeId == salesItem.UnitTypeId)
+                                    {
+                                        _salesItem.Quantity += salesItem.Quantity;
+                                    }
+                                }
+                            }
                         }
                     }
                     return _itemList;
@@ -102,14 +118,14 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadSalesList()
+        private async void LoadSalesList(ObjectId employeeId, DateTime salesDate)
         {
             SalesInfoList.Clear();
 
             var tempSalesList = await Task.Run(()=> 
             {
                 Collection<SalesInvoiceInfoContext> _salesList = new Collection<SalesInvoiceInfoContext>();
-                var salesList = context.GetSales().ToList();
+                var salesList = context.GetSales(employeeId, salesDate, salesDate).ToList();
                 
                 if (salesList.Count > 0)
                 {
@@ -133,7 +149,11 @@ namespace LireOffice.ViewModels
                 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            LoadSalesList();    
+            var parameter = navigationContext.Parameters;
+            if (parameter["SelectedEmployee"] is SalesSummaryContext sales)
+            {
+                LoadSalesList(sales.EmployeeId, sales.SalesDate);
+            }   
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

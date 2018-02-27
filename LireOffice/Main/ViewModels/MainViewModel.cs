@@ -64,13 +64,22 @@ namespace LireOffice.ViewModels
             get => _imageSource;
             set => SetProperty(ref _imageSource, value, nameof(ImageSource));
         }
+
+        private string _viewDescription;
+
+        public string ViewDescription
+        {
+            get => _viewDescription;
+            set => SetProperty(ref _viewDescription, value, nameof(ViewDescription));
+        }
+
         #endregion
 
         public DelegateCommand<string> NavigateCommand => new DelegateCommand<string>(OnNavigate);
         
         private void OnNavigate(string text)
         {            
-            regionManager.RequestNavigate("ContentRegion", text);
+            regionManager.RequestNavigate("ContentRegion", text);            
         }        
     }
 }

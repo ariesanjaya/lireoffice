@@ -201,6 +201,9 @@ namespace LireOffice.ViewModels
                 AddData();
             else
                 UpdateData();
+
+            OnCancel();
+            eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
         private void OnCancel()
@@ -240,9 +243,7 @@ namespace LireOffice.ViewModels
             }
 
             context.AddProduct(product);
-
-            OnCancel();
-            eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");            
+                                 
         }
 
         private void UpdateData()
@@ -269,10 +270,7 @@ namespace LireOffice.ViewModels
                         context.UpdateUnitType(unitTypeResult);
                     }
                 }
-            }
-
-            OnCancel();
-            eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Update Product List");           
+            }            
         }
        
         private void LoadData(ProductInfoContext _product)
@@ -456,7 +454,7 @@ namespace LireOffice.ViewModels
 
             if (categoryId != null)
             {
-                SelectedCategory = CategoryList.Where(c => c.Id == categoryId).SingleOrDefault();
+                SelectedCategory = CategoryList.FirstOrDefault(c => c.Id == categoryId);
             }
         }
 

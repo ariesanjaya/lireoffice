@@ -42,7 +42,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}" DisplayMemberPath="Name" IsFilter="True" FontSize="14"/>
+                    <syncfusion:AutoComplete x:Name="CustomerBox" Height="30" Width="180" CustomSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}" DisplayMemberPath="Name" IsFilter="True" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddCustomerCommand}"/>
                 </Grid>
                 
@@ -70,7 +70,7 @@
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:AutoComplete Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="False" FontSize="14"/>
+                    <syncfusion:AutoComplete x:Name="EmployeeBox" Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="False" FontSize="14"/>
                     <Button Grid.Column="1" Command="{Binding AddEmployeeCommand}"/>
                 </Grid>
                 

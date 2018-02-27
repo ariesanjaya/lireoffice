@@ -80,6 +80,8 @@ namespace LireOffice
 
                 #region Sales Configuration
                 config.CreateMap<SalesSummary, SalesSummaryContext>();
+
+                config.CreateMap<Sales, SalesDetailContext>();
                 config.CreateMap<SalesDetailContext, Sales>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 config.CreateMap<Sales, SalesInvoiceInfoContext>();

@@ -32,4 +32,7 @@ namespace LireOffice.Utilities
     public class CalculateSalesDetailTotalEvent : PubSubEvent<string> { }
     public class CalculateReceivedGoodDetailTotalEvent : PubSubEvent<string> { }
     public class CalculateReturnGoodTotalEvent : PubSubEvent<string> { }
+
+    public class ResetValueEvent : PubSubEvent<string> { }
+    public class MenuDescriptionEvent : PubSubEvent<string> { }
 }

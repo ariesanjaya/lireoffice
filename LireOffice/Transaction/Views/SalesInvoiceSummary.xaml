@@ -54,10 +54,7 @@
                                 <syncfusion:GridTextColumn HeaderText="Nama Barang" MappingName="Name" FilterRowEditorType="MultiSelectComboBox"/>
                                 <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="80"/>
                                 <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="100" FilterRowEditorType="MultiSelectComboBox"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Harga Jual" MappingName="SellPrice" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Diskon" MappingName="Discount" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
                                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
-                                <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3"/>
                             </syncfusion:SfDataGrid.Columns>   
                         </syncfusion:SfDataGrid>
                     </syncfusion:GridViewDefinition.DataGrid>
@@ -72,6 +69,9 @@
                 </local:EnterKeyDownEventTrigger>
                 <i:EventTrigger EventName="DetailsViewExpanding">
                     <i:InvokeCommandAction Command="{Binding DetailsViewExpandingCommand}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="CellDoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </syncfusion:SfDataGrid>

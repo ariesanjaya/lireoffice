@@ -157,7 +157,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand AddCustomerCommand => new DelegateCommand(OnAddCustomer);
         public DelegateCommand AddEmployeeCommand => new DelegateCommand(OnAddEmployee);
 
-        public DelegateCommand AddItemCommand => new DelegateCommand(OnAddItem);
+        public DelegateCommand AddItemCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand UpdateItemCommand => new DelegateCommand(OnUpdateItem);
         public DelegateCommand DeleteItemCommand => new DelegateCommand(OnDeleteItem);
 
@@ -169,6 +169,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand AddtionalCostCommand => new DelegateCommand(OnAdditionalCost);
         #endregion
 
+        #region EventAggregator Function
         private void AddSalesItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/> productIndex)
         {
             var product = productIndex.Item1;
@@ -202,14 +203,16 @@ namespace LireOffice.ViewModels
             SalesDTO.TotalTax = 0;
             SalesDTO.Total = 0;
 
-            Parallel.ForEach(SalesItemList, (SalesItemContext item) => 
+            foreach(var item in SalesItemList)
             {
                 SalesDTO.TotalDiscount += item.Discount;
                 SalesDTO.TotalTax += item.Tax;
                 SalesDTO.Total += item.SubTotal;
-            });
+            }
         }
+        #endregion
 
+        #region Delegate Command Function
         private void OnAddCustomer()
         {
             var view = container.Resolve<AddCustomer>();
@@ -229,12 +232,7 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option01Region", "AddEmployee");
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
-
-        private void OnAddItem()
-        {
-            OnCellDoubleTapped();
-        }
-
+        
         private void OnUpdateItem()
         {
 
@@ -299,9 +297,11 @@ namespace LireOffice.ViewModels
         {
 
         }
+        #endregion
 
-        private async void LoadCustomerList()
+        private async void LoadCustomerList(ObjectId customerId = null)
         {
+            SelectedCustomer = null;
             CustomerList.Clear();
 
             var tempCustomerList = await Task.Run(()=> 
@@ -321,9 +321,14 @@ namespace LireOffice.ViewModels
             });
 
             CustomerList.AddRange(tempCustomerList);
+
+            if (customerId != null)
+            {
+                SelectedCustomer = CustomerList.FirstOrDefault(c => c.Id == customerId);
+            }
         }
 
-        private async void LoadEmployeeList()
+        private async void LoadEmployeeList(ObjectId employeeId = null)
         {
             EmployeeList.Clear();
 
@@ -344,6 +349,42 @@ namespace LireOffice.ViewModels
             });
 
             EmployeeList.AddRange(tempEmployeeList);
+
+            if (employeeId != null)
+            {
+                SelectedEmployee = EmployeeList.FirstOrDefault(c => c.Id == employeeId);
+            }
+        }
+
+        private void LoadSalesItemList(ObjectId salesId)
+        {
+            SalesItemList.Clear();
+
+            var salesItemList = context.GetSalesItem(salesId).ToList();
+            if (salesItemList.Count > 0)
+            {
+                foreach (var salesItem in salesItemList)
+                {
+                    SalesItemContext item = new SalesItemContext(eventAggregator)
+                    {
+                        Id = salesItem.Id,
+                        ProductId = salesItem.ProductId,
+                        TaxId = salesItem.TaxId,
+                        UnitTypeId = salesItem.UnitTypeId,
+                        Barcode = salesItem.Barcode,
+                        Name = salesItem.Name,
+                        UnitType = salesItem.UnitType,
+                        SellPrice = salesItem.SellPrice,
+                        Quantity = salesItem.Quantity,
+                        Discount = salesItem.Discount,
+                        Tax = salesItem.Tax
+                    };
+                
+                    SalesItemList.Add(item);
+                }
+            }
+
+            CalculateTotal();
         }
 
         private void AddData()
@@ -381,24 +422,82 @@ namespace LireOffice.ViewModels
 
         private void UpdateData()
         {
+            var salesResult = context.GetSalesById(SalesDTO.Id);
+            if (salesResult != null)
+            {
+                salesResult = Mapper.Map(SalesDTO, salesResult);
+                salesResult.Version += 1;
+                salesResult.UpdatedAt = DateTime.Now;
+                context.UpdateSales(salesResult);
+            }
 
+            if (SalesItemList.Count > 0)
+            {
+                foreach (var item in SalesItemList)
+                {
+                    var salesItemResult = context.GetSalesItemById(item.Id);
+                    if (salesItemResult != null)
+                    {
+                        salesItemResult.Version += 1;
+                        salesItemResult.UpdatedAt = DateTime.Now;
+                        salesItemResult.ProductId = item.ProductId;
+                        salesItemResult.UnitTypeId = item.UnitTypeId;
+                        salesItemResult.TaxId = item.TaxId;
+                        salesItemResult.Barcode = item.Barcode;
+                        salesItemResult.Name = item.Name;
+                        salesItemResult.Quantity = item.Quantity;
+                        salesItemResult.UnitType = item.UnitType;
+                        salesItemResult.SellPrice = item.SellPrice;
+                        salesItemResult.Discount = item.Discount;
+                        salesItemResult.SubTotal = item.SubTotal;
+                        salesItemResult.Tax = item.Tax;
+
+                        context.UpdateSalesItem(salesItemResult);
+                    }
+                }
+            }
+        }
+
+        private void LoadData(ObjectId salesId = null)
+        {
+            if (salesId != null)
+            {
+                var sales = context.GetSalesById(salesId);
+                if (sales != null)
+                {
+                    SalesDTO = Mapper.Map<Sales, SalesDetailContext>(sales);
+
+                    LoadCustomerList(SalesDTO.CustomerId);
+                    LoadEmployeeList(SalesDTO.EmployeeId);
+
+                    LoadSalesItemList(salesId);
+                }
+            }            
         }
 
         private void ResetValue()
         {
             SalesDTO = new SalesDetailContext();
+            SelectedCustomer = null;
+            SelectedEmployee = null;
             SalesItemList.Clear();
+            SelectedSalesItem = null;
+            eventAggregator.GetEvent<ResetValueEvent>().Publish("Reset Value");
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            LoadCustomerList();
-            LoadEmployeeList();
-
+        {            
             var parameter = navigationContext.Parameters;
-            if (parameter["SelectedSales"] is SalesInfoContext salesInfo)
+            if (parameter["SalesId"] is ObjectId salesId)
             {
+                IsUpdated = true;
 
+                LoadData(salesId);
+            }
+            else
+            {
+                LoadCustomerList();
+                LoadEmployeeList();
             }
         }
 
