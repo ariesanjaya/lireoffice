@@ -43,6 +43,8 @@
                 <StackPanel>
                     <Button Content="Dashboard" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"/>
                     <Button Content="Buku Besar" Height="32" Command="{Binding NavigateCommand}" CommandParameter="MainLedger"/>
+                    <Button Content="Kas Masuk" Height="32" Command="{Binding NavigateCommand}" CommandParameter="LedgerIn"/>
+                    <Button Content="Kas Keluar" Height="32" Command="{Binding NavigateCommand}" CommandParameter="LedgerOut"/>
                     <Button Content="Data Akun" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Account"/>
                     <Button Content="Pelanggan" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Customer"/>
                     <Button Content="Product" Height="32" Command="{Binding NavigateCommand}" CommandParameter="Product"/>

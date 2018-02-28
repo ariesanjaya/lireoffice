@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -24,6 +25,8 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
+        
+        private DispatcherTimer timer;
 
         public ProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
         {
@@ -52,6 +55,14 @@ namespace LireOffice.ViewModels
         {
             get => _selectedProduct;
             set => SetProperty(ref _selectedProduct, value, nameof(SelectedProduct));
+        }
+
+        private string _searchText;
+
+        public string SearchText
+        {
+            get => _searchText;
+            set => SetProperty(ref _searchText, value, nameof(SearchText));
         }
         #endregion
 
@@ -152,6 +163,17 @@ namespace LireOffice.ViewModels
             });
 
             ProductList.AddRange(tempProductList);
+        }
+
+        private void SearchProduct()
+        {
+            if (timer == null)
+            {
+
+            }
+
+            timer.Stop();
+            timer.Start();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

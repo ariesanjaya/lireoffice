@@ -1,13 +1,13 @@
 ﻿using LireOffice.Service;
-using LiveCharts;
-using LiveCharts.Wpf;
+using LireOffice.Utilities;
+using LireOffice.Views;
+using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,19 +15,21 @@ using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
-    public class MainLedgerViewModel : BindableBase
+    public class LedgerOutViewModel : BindableBase
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
+        private readonly IUnityContainer container;
         private readonly IOfficeContext context;
 
         private DispatcherTimer timer;
         private bool IsLedgerListLoaded = false;
 
-        public MainLedgerViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
+        public LedgerOutViewModel(IRegionManager rm, IEventAggregator ea, IUnityContainer container, IOfficeContext context)
         {
-            regionManager = rm;
             eventAggregator = ea;
+            regionManager = rm;
+            this.container = container;
             this.context = context;
 
             // ----------------------
@@ -38,18 +40,6 @@ namespace LireOffice.ViewModels
             MinDate = new DateTime(year, month, 1);
             MaxDate = new DateTime(year, month, dayInMonth);
             // ----------------------
-
-            SeriesCollection = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = new ChartValues<double> { 3, 5, 7, 4 }
-                },
-                new ColumnSeries
-                {
-                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
-                }
-            };
         }
 
         #region Binding Properties
@@ -58,7 +48,7 @@ namespace LireOffice.ViewModels
         public string SearchText
         {
             get => _searchText;
-            set => SetProperty(ref _searchText, value, SearchData, nameof(SearchText));
+            set => SetProperty(ref _searchText, value, nameof(SearchText));
         }
 
         private DateTime _minDate;
@@ -77,38 +67,38 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
-        private ObservableCollection<string> _ledgerList;
-
-        public ObservableCollection<string> LedgerList
-        {
-            get => _ledgerList;
-            set => SetProperty(ref _ledgerList, value, nameof(LedgerList));
-        }
-
-        private string _selectedLedger;
-
-        public string SelectedLedger
-        {
-            get => _selectedLedger;
-            set => SetProperty(ref _selectedLedger, value, nameof(SelectedLedger));
-        }
-
-        private SeriesCollection _seriesCollection;
-
-        public SeriesCollection SeriesCollection
-        {
-            get => _seriesCollection;
-            set => SetProperty(ref _seriesCollection, value, nameof(SeriesCollection));
-        }
-
         #endregion
 
-        public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
+        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
+        public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
+        public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(()=> MaxDate = MinDate );
+        public DelegateCommand DateAssignCommand => new DelegateCommand(OnDateAssign);
         public DelegateCommand RefreshCommand => new DelegateCommand(OnRefresh);
 
-        private void OnDetail()
+        #region Delegate Command Methods
+
+        private void OnAdd()
+        {
+            var view = container.Resolve<AddLedgerOut>();
+            IRegion region = regionManager.Regions["Option01Region"];
+            region.Add(view, "AddLedgerOut");
+
+            regionManager.RequestNavigate("Option01Region", "AddLedgerOut");
+            eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
+        }
+
+        private void OnUpdate()
+        {
+
+        }
+
+        private void OnDelete()
+        {
+
+        }
+
+        private void OnDateAssign()
         {
 
         }
@@ -118,9 +108,11 @@ namespace LireOffice.ViewModels
 
         }
 
+        #endregion
+
         private void LoadLedgerList()
         {
-            IsLedgerListLoaded = true;
+
         }
 
         private void SearchData()
@@ -133,6 +125,20 @@ namespace LireOffice.ViewModels
                 {
                     if (timer == null) return;
 
+                    // Check if Ledger List is Loaded
+                    if (!IsLedgerListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    //---------------------
+
+
+
+                    //---------------------
+
+                    timer.Stop();
                 };
             }
 

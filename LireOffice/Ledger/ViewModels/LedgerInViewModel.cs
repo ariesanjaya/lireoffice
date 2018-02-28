@@ -1,13 +1,10 @@
 ﻿using LireOffice.Service;
-using LiveCharts;
-using LiveCharts.Wpf;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +12,7 @@ using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
-    public class MainLedgerViewModel : BindableBase
+    public class LedgerInViewModel : BindableBase
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
@@ -24,10 +21,10 @@ namespace LireOffice.ViewModels
         private DispatcherTimer timer;
         private bool IsLedgerListLoaded = false;
 
-        public MainLedgerViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
+        public LedgerInViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
         {
-            regionManager = rm;
             eventAggregator = ea;
+            regionManager = rm;
             this.context = context;
 
             // ----------------------
@@ -38,18 +35,6 @@ namespace LireOffice.ViewModels
             MinDate = new DateTime(year, month, 1);
             MaxDate = new DateTime(year, month, dayInMonth);
             // ----------------------
-
-            SeriesCollection = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = new ChartValues<double> { 3, 5, 7, 4 }
-                },
-                new ColumnSeries
-                {
-                    Values = new ChartValues<decimal> { 5, 6, 2, 7 }
-                }
-            };
         }
 
         #region Binding Properties
@@ -58,7 +43,7 @@ namespace LireOffice.ViewModels
         public string SearchText
         {
             get => _searchText;
-            set => SetProperty(ref _searchText, value, SearchData, nameof(SearchText));
+            set => SetProperty(ref _searchText, value, nameof(SearchText));
         }
 
         private DateTime _minDate;
@@ -77,50 +62,42 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
-        private ObservableCollection<string> _ledgerList;
-
-        public ObservableCollection<string> LedgerList
-        {
-            get => _ledgerList;
-            set => SetProperty(ref _ledgerList, value, nameof(LedgerList));
-        }
-
-        private string _selectedLedger;
-
-        public string SelectedLedger
-        {
-            get => _selectedLedger;
-            set => SetProperty(ref _selectedLedger, value, nameof(SelectedLedger));
-        }
-
-        private SeriesCollection _seriesCollection;
-
-        public SeriesCollection SeriesCollection
-        {
-            get => _seriesCollection;
-            set => SetProperty(ref _seriesCollection, value, nameof(SeriesCollection));
-        }
-
         #endregion
 
-        public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
+        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
+        public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
+        public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(()=> MaxDate = MinDate );
+        public DelegateCommand DateAssignCommand => new DelegateCommand(()=> MaxDate = MinDate);
         public DelegateCommand RefreshCommand => new DelegateCommand(OnRefresh);
 
-        private void OnDetail()
+        #region Delegate Command Methods
+
+        private void OnAdd()
         {
 
         }
 
+        private void OnUpdate()
+        {
+
+        }
+
+        private void OnDelete()
+        {
+
+        }
+        
         private void OnRefresh()
         {
 
         }
 
+        #endregion
+
         private void LoadLedgerList()
         {
-            IsLedgerListLoaded = true;
+
         }
 
         private void SearchData()
@@ -133,6 +110,20 @@ namespace LireOffice.ViewModels
                 {
                     if (timer == null) return;
 
+                    // Check if Ledger List is Loaded
+                    if (!IsLedgerListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    //---------------------
+
+
+
+                    //---------------------
+
+                    timer.Stop();
                 };
             }
 

@@ -46,6 +46,12 @@
     <Reference Include="LiteDB, Version=4.1.1.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\packages\LiteDB.4.1.1\lib\net40\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -122,11 +128,27 @@
     <Compile Include="Dashboard\Views\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ledger\ViewModels\AddLedgerOutViewModel.cs" />
+    <Compile Include="Ledger\ViewModels\LedgerInViewModel.cs" />
+    <Compile Include="Ledger\ViewModels\LedgerOutViewModel.cs" />
+    <Compile Include="Ledger\Views\AddLedgerIn.xaml.cs">
+      <DependentUpon>AddLedgerIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ledger\Views\AddLedgerOut.xaml.cs">
+      <DependentUpon>AddLedgerOut.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ledger\Views\LedgerIn.xaml.cs">
+      <DependentUpon>LedgerIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ledger\Views\LedgerOut.xaml.cs">
+      <DependentUpon>LedgerOut.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Context\AccountContext.cs" />
     <Compile Include="Models\Context\AccountInfoContext.cs" />
     <Compile Include="Models\Context\DebtDetailInfoContext.cs" />
     <Compile Include="Models\Context\DebtSummaryInfoContext.cs" />
     <Compile Include="Models\Context\GoodReturnItemContext.cs" />
+    <Compile Include="Models\Context\LedgerContext.cs" />
     <Compile Include="Models\Context\ProductCategoryContext.cs" />
     <Compile Include="Models\Context\ProductContext.cs" />
     <Compile Include="Models\Context\ProductInfoContext.cs" />
@@ -149,6 +171,8 @@
     <Compile Include="Models\Data\GoodReturn.cs" />
     <Compile Include="Models\Data\GoodReturnItem.cs" />
     <Compile Include="Models\Data\Image.cs" />
+    <Compile Include="Models\Data\LedgerIn.cs" />
+    <Compile Include="Models\Data\LedgerOut.cs" />
     <Compile Include="Models\Data\Product.cs" />
     <Compile Include="Models\Data\ProductCategory.cs" />
     <Compile Include="Models\Data\ProductTransfer.cs" />
@@ -299,7 +323,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Ledger\Views\AddLedgerIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\AddLedgerOut.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ledger\Views\AddTax.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\LedgerIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\LedgerOut.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
