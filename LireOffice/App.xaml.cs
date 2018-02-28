@@ -103,6 +103,22 @@ namespace LireOffice
                 config.CreateMap<AccountContext, Account>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 #endregion
+
+                #region Ledger Configuration
+                config.CreateMap<LedgerContext, LedgerIn>()
+                        .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+                config.CreateMap<LedgerContext, LedgerOut>()
+                        .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+                config.CreateMap<LedgerIn, LedgerContext>();
+
+                config.CreateMap<LedgerOut, LedgerContext>();
+
+                config.CreateMap<LedgerIn, LedgerSummaryContext>();
+
+                config.CreateMap<LedgerOut, LedgerSummaryContext>();
+                #endregion
             });
 
             base.OnStartup(e);

@@ -46,5 +46,13 @@ namespace LireOffice.Models
             set => SetProperty(ref _valueString, value, nameof(ValueString));
         }
 
+        private bool _isPosted;
+
+        public bool IsPosted
+        {
+            get => _isPosted;
+            set => SetProperty(ref _isPosted, value, nameof(IsPosted));
+        }
+
     }
 }

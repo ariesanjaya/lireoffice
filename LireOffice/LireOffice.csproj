@@ -149,6 +149,7 @@
     <Compile Include="Models\Context\DebtSummaryInfoContext.cs" />
     <Compile Include="Models\Context\GoodReturnItemContext.cs" />
     <Compile Include="Models\Context\LedgerContext.cs" />
+    <Compile Include="Models\Context\LedgerSummaryContext.cs" />
     <Compile Include="Models\Context\ProductCategoryContext.cs" />
     <Compile Include="Models\Context\ProductContext.cs" />
     <Compile Include="Models\Context\ProductInfoContext.cs" />

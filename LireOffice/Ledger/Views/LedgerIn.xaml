@@ -39,14 +39,14 @@
                                    EnableDataVirtualization="True"
                                    AllowFiltering="False"
                                    AllowEditing="False"
-                                   AllowSorting="True"
+                                   AllowSorting="False"
                                    ColumnSizer="Star" 
                                    RowHeight="40" HeaderRowHeight="40">
                 <syncfusion:SfDataGrid.Columns>
                     <syncfusion:GridDateTimeColumn Pattern="ShortDate" HeaderText="Tgl" Width="100"/>
                     <syncfusion:GridTextColumn HeaderText="No. Referensi" Width="120"/>
                     <syncfusion:GridTextColumn HeaderText="Deskripsi"/>
-                    <syncfusion:GridTextColumn HeaderText="Diberikan Dari" Width="140"/>
+                    <syncfusion:GridTextColumn HeaderText="Petugas" Width="160"/>
                     <syncfusion:GridCurrencyColumn HeaderText="Jumlah" Width="120"/>
                     <syncfusion:GridCurrencyColumn HeaderText="Total" Width="160"/>
                 </syncfusion:SfDataGrid.Columns>
