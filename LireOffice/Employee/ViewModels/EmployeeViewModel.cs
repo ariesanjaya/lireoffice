@@ -3,18 +3,13 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
@@ -40,6 +35,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<UserProfileContext> _employeeList;
 
         public ObservableCollection<UserProfileContext> EmployeeList
@@ -56,7 +52,8 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedEmployee, value, nameof(SelectedEmployee));
         }
 
-        #endregion
+        #endregion Binding Properties
+
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
@@ -82,7 +79,7 @@ namespace LireOffice.ViewModels
 
         private void OnDelete()
         {
-            if(SelectedEmployee != null)
+            if (SelectedEmployee != null)
             {
                 context.DeleteEmployee(SelectedEmployee.Id);
             }
@@ -110,7 +107,7 @@ namespace LireOffice.ViewModels
             EmployeeList.Clear();
 
             // Async Method using CPU Bound because all the task is procceded on CPU background
-            var tempProfileList = await Task.Run(() => 
+            var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
                 var employeeList = context.GetEmployee().ToList();
@@ -126,6 +123,6 @@ namespace LireOffice.ViewModels
             });
 
             EmployeeList.AddRange(tempProfileList);
-        }        
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace LireOffice.ViewModels
             regionManager = rm;
             eventAggregator = ea;
             this.context = context;
-            
+
             // ----------------------
             int month = DateTime.Now.Month;
             int year = DateTime.Now.Year;
@@ -46,6 +46,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<SalesSummaryContext> _salesInfoList;
 
         public ObservableCollection<SalesSummaryContext> SalesInfoList
@@ -86,7 +87,7 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _searchText, value, SearchSalesList, nameof(SearchText));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand DetailCommand => new DelegateCommand(OnCellDoubleTapped);
@@ -101,7 +102,7 @@ namespace LireOffice.ViewModels
         {
             regionManager.RequestNavigate("ContentRegion", "SalesDetail");
         }
-        
+
         private void OnCellDoubleTapped()
         {
             if (SelectedSalesInfo != null)
@@ -118,13 +119,13 @@ namespace LireOffice.ViewModels
                 SelectedSalesInfo.FirstDetailList.Clear();
                 ObjectId tempUnitTypeId = ObjectId.NewObjectId();
 
-                var tempFirstDetailList = await Task.Run(() => 
+                var tempFirstDetailList = await Task.Run(() =>
                 {
                     Collection<SalesItemContext> _itemList = new Collection<SalesItemContext>();
                     var salesList = context.GetSales(salesInfo.EmployeeId, salesInfo.SalesDate, salesInfo.SalesDate).OrderBy(c => c.SalesDate.Date).ToList();
-                    
+
                     if (salesList.Count > 0)
-                    {                        
+                    {
                         foreach (var sales in salesList)
                         {
                             var salesItemList = context.GetSalesItem(sales.Id).OrderBy(c => c.Name).ToList();
@@ -163,7 +164,7 @@ namespace LireOffice.ViewModels
                                                 _salesItem.Quantity += _item.Quantity;
                                             }
                                         }
-                                    }                                    
+                                    }
                                 }
                             }
                         }
@@ -180,16 +181,16 @@ namespace LireOffice.ViewModels
         {
             SalesInfoList.Clear();
             ObjectId tempEmployeeId = ObjectId.NewObjectId();
-            DateTime tempDate = new DateTime(1900, 1, 1);            
+            DateTime tempDate = new DateTime(1900, 1, 1);
 
-            var tempSalesList = await Task.Run(()=> 
+            var tempSalesList = await Task.Run(() =>
             {
                 Collection<SalesSummaryContext> _salesList = new Collection<SalesSummaryContext>();
                 var salesList = context.GetSales(MinDate, MaxDate).OrderBy(c => c.SalesDate.Date).ThenBy(c => c.EmployeeId).ToList();
                 if (salesList.Count > 0)
                 {
-                   foreach (var sales in salesList)
-                   {
+                    foreach (var sales in salesList)
+                    {
                         SalesSummaryContext item = new SalesSummaryContext
                         {
                             Id = sales.Id,
@@ -235,15 +236,15 @@ namespace LireOffice.ViewModels
 
             SalesInfoList.AddRange(tempSalesList);
             IsSalesListLoaded = true;
-        }   
-        
+        }
+
         private void SearchSalesList()
         {
             if (timer == null)
             {
                 timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
 
-                timer.Tick += (o, ae) => 
+                timer.Tick += (o, ae) =>
                 {
                     if (timer == null) return;
 

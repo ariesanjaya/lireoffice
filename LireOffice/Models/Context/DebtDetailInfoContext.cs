@@ -1,10 +1,6 @@
 ﻿using LiteDB;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Models
 {
@@ -43,7 +39,7 @@ namespace LireOffice.Models
             get => _balance02;
             set => SetProperty(ref _balance02, value, nameof(Balance02));
         }
-        
+
         private decimal _balance03;
 
         public decimal Balance03

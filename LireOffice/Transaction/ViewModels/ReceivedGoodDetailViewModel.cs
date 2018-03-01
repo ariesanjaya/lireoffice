@@ -10,10 +10,8 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -48,6 +46,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ReceivedGoodDetailContext _receivedGoodDTO;
 
         public ReceivedGoodDetailContext ReceivedGoodDTO
@@ -55,7 +54,7 @@ namespace LireOffice.ViewModels
             get => _receivedGoodDTO;
             set => SetProperty(ref _receivedGoodDTO, value, nameof(ReceivedGoodDTO));
         }
-        
+
         private ObservableCollection<UserSimpleContext> _vendorList;
 
         public ObservableCollection<UserSimpleContext> VendorList
@@ -69,14 +68,14 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedVendor
         {
             get => _selectedVendor;
-            set => SetProperty(ref _selectedVendor, value,()=> 
-            {
-                if (_selectedVendor != null)
-                {
-                    ReceivedGoodDTO.Description = "Penjualan, Kepada " + _selectedVendor.Name;
-                    ReceivedGoodDTO.VendorId = _selectedVendor.Id;
-                }                    
-            }, nameof(SelectedVendor));
+            set => SetProperty(ref _selectedVendor, value, () =>
+             {
+                 if (_selectedVendor != null)
+                 {
+                     ReceivedGoodDTO.Description = "Penjualan, Kepada " + _selectedVendor.Name;
+                     ReceivedGoodDTO.VendorId = _selectedVendor.Id;
+                 }
+             }, nameof(SelectedVendor));
         }
 
         private ObservableCollection<UserSimpleContext> _employeeList;
@@ -92,11 +91,11 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedEmployee
         {
             get => _selectedEmployee;
-            set => SetProperty(ref _selectedEmployee, value,()=> 
-            {
-                if (ReceivedGoodDTO != null && _selectedEmployee != null)
-                    ReceivedGoodDTO.EmployeeId = _selectedEmployee.Id;
-            }, nameof(SelectedEmployee));
+            set => SetProperty(ref _selectedEmployee, value, () =>
+             {
+                 if (ReceivedGoodDTO != null && _selectedEmployee != null)
+                     ReceivedGoodDTO.EmployeeId = _selectedEmployee.Id;
+             }, nameof(SelectedEmployee));
         }
 
         private ObservableCollection<ReceivedGoodItemContext> _receivedGoodItemList;
@@ -113,8 +112,9 @@ namespace LireOffice.ViewModels
         {
             get => _selectedReceivedGoodItem;
             set => SetProperty(ref _selectedReceivedGoodItem, value, nameof(SelectedReceivedGoodItem));
-        }        
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand AddVendorCommand => new DelegateCommand(OnAddVendor);
         public DelegateCommand AddEmployeeCommand => new DelegateCommand(OnAddEmployee);
@@ -131,7 +131,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand AdditionalCostCommand => new DelegateCommand(OnAdditionalCost);
         public DelegateCommand GoodReturnCommand => new DelegateCommand(OnGoodReturn);
 
-        public DelegateCommand VendorSelectionChangedCommand => new DelegateCommand(()=> 
+        public DelegateCommand VendorSelectionChangedCommand => new DelegateCommand(() =>
         {
             ReceivedGoodDTO.Description = "Pembelian, dari " + SelectedVendor.Name;
         });
@@ -169,7 +169,7 @@ namespace LireOffice.ViewModels
             ReceivedGoodDTO.TotalTax = 0;
             ReceivedGoodDTO.Total = 0;
 
-            Parallel.ForEach(ReceivedGoodItemList, (ReceivedGoodItemContext item) => 
+            Parallel.ForEach(ReceivedGoodItemList, (ReceivedGoodItemContext item) =>
             {
                 ReceivedGoodDTO.TotalDiscount += item.Discount;
                 ReceivedGoodDTO.TotalTax += item.Tax;
@@ -213,7 +213,7 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option01Region", "AddEmployee", parameter);
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
-        
+
         private void OnDeleteItem()
         {
             if (SelectedReceivedGoodItem != null)
@@ -241,7 +241,7 @@ namespace LireOffice.ViewModels
             ResetValue();
             regionManager.RequestNavigate("ContentRegion", "ReceivedGoodSummary");
         }
-        
+
         private void OnCellDoubleTapped()
         {
             //--------------------
@@ -253,10 +253,10 @@ namespace LireOffice.ViewModels
 
             //--------------------
             // passing parameter to destination view
-            var parameter = new NavigationParameters{ { "Instigator", "ContentRegion" } };
+            var parameter = new NavigationParameters { { "Instigator", "ContentRegion" } };
 
             if (SelectedReceivedGoodItem != null)
-                parameter.Add("Product", Tuple.Create(SelectedReceivedGoodItem.UnitTypeId/*object*/, ReceivedGoodItemList.IndexOf(SelectedReceivedGoodItem)/*index*/,true/*IsUpdated*/));
+                parameter.Add("Product", Tuple.Create(SelectedReceivedGoodItem.UnitTypeId/*object*/, ReceivedGoodItemList.IndexOf(SelectedReceivedGoodItem)/*index*/, true/*IsUpdated*/));
             else
                 parameter.Add("Product", Tuple.Create(ObjectId.NewObjectId()/*object*/, 0/*index*/, false/*IsUpdated*/));
             //--------------------
@@ -271,7 +271,6 @@ namespace LireOffice.ViewModels
 
         private void OnAdditionalCost()
         {
-
         }
 
         private void OnGoodReturn()
@@ -280,7 +279,7 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option01Region"];
             region.Add(view, "AddGoodReturn");
 
-            var parameter = new NavigationParameters { { "Instigator", "ContentRegion"} };
+            var parameter = new NavigationParameters { { "Instigator", "ContentRegion" } };
             regionManager.RequestNavigate("Option01Region", "AddGoodReturn", parameter);
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
@@ -289,7 +288,7 @@ namespace LireOffice.ViewModels
         {
             VendorList.Clear();
 
-            var tempVendorList = await Task.Run(() => 
+            var tempVendorList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> _vendorList = new Collection<UserSimpleContext>();
                 var vendorList = context.GetVendor().ToList();
@@ -361,12 +360,11 @@ namespace LireOffice.ViewModels
 
                 context.AddReceivedGood(receivedGood);
                 context.AddBulkReceivedGoodItem(receivedGoodItemList);
-            }                      
+            }
         }
 
         private void UpdateData()
         {
-
         }
 
         private void ResetValue()
@@ -380,7 +378,6 @@ namespace LireOffice.ViewModels
             var parameter = navigationContext.Parameters;
             //if (parameter["SelectedInvoice"] is )
             //{
-
             //}
             LoadVendorList();
             LoadEmployeeList();
@@ -392,7 +389,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {            
+        {
         }
     }
 }

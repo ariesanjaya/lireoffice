@@ -8,10 +8,8 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
@@ -37,6 +35,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private UnitTypeContext _unitTypeDTO;
 
         public UnitTypeContext UnitTypeDTO
@@ -52,7 +51,7 @@ namespace LireOffice.ViewModels
             get => _productName;
             set => SetProperty(ref _productName, value, nameof(ProductName));
         }
-        
+
         private ObservableCollection<TaxContext> _taxList;
 
         public ObservableCollection<TaxContext> TaxList
@@ -66,11 +65,11 @@ namespace LireOffice.ViewModels
         public TaxContext SelectedTaxIn
         {
             get => _selectedTaxIn;
-            set => SetProperty(ref _selectedTaxIn, value,()=> 
-            {
-                if (_selectedTaxIn != null && UnitTypeDTO != null)                
-                    UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
-            }, nameof(SelectedTaxIn));
+            set => SetProperty(ref _selectedTaxIn, value, () =>
+             {
+                 if (_selectedTaxIn != null && UnitTypeDTO != null)
+                     UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
+             }, nameof(SelectedTaxIn));
         }
 
         private TaxContext _selectedTaxOut;
@@ -84,7 +83,7 @@ namespace LireOffice.ViewModels
                     UnitTypeDTO.TaxOutId = _selectedTaxOut.Id;
             }, nameof(SelectedTaxOut));
         }
-        
+
         private ObservableCollection<UnitTypeContext> _unitTypeList;
 
         public ObservableCollection<UnitTypeContext> UnitTypeList
@@ -99,8 +98,9 @@ namespace LireOffice.ViewModels
         {
             get => _selectedUnitType;
             set => SetProperty(ref _selectedUnitType, value, nameof(SelectedUnitType));
-        }                
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -130,10 +130,10 @@ namespace LireOffice.ViewModels
             unitType.ProductId = ProductId;
 
             context.AddUnitType(unitType);
-            
+
             ResetValue();
             LoadUnitTypeList(ProductId);
-            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView 
+            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
@@ -152,13 +152,12 @@ namespace LireOffice.ViewModels
             }
             ResetValue();
             LoadUnitTypeList(ProductId);
-            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView 
+            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
         private void OnDelete()
         {
-
         }
 
         private void OnCancel()
@@ -171,7 +170,7 @@ namespace LireOffice.ViewModels
         {
             TaxList.Clear();
 
-            var tempTaxList = await Task.Run(()=> 
+            var tempTaxList = await Task.Run(() =>
             {
                 Collection<TaxContext> _taxList = new Collection<TaxContext>();
                 var taxList = context.GetTaxes().ToList();
@@ -195,9 +194,9 @@ namespace LireOffice.ViewModels
         private async void LoadUnitTypeList(ObjectId productId = null, string productName = null)
         {
             UnitTypeList.Clear();
-            ProductName = productName;            
+            ProductName = productName;
 
-            var tempUnitTypeList = await Task.Run(()=> 
+            var tempUnitTypeList = await Task.Run(() =>
             {
                 Collection<UnitTypeContext> _unitTypeList = new Collection<UnitTypeContext>();
                 var unitTypeList = context.GetUnitType(productId).ToList();
@@ -215,11 +214,11 @@ namespace LireOffice.ViewModels
 
             UnitTypeList.AddRange(tempUnitTypeList);
         }
-        
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["ProductId"] is ObjectId productId && 
+            if (parameter["ProductId"] is ObjectId productId &&
                 parameter["ProductName"] is string productName)
             {
                 ProductId = productId;
@@ -235,7 +234,6 @@ namespace LireOffice.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
     }
 }

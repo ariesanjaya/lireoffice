@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Windows.Media.Imaging;
@@ -56,6 +54,5 @@ namespace LireOffice.Utilities
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
-
     }
 }

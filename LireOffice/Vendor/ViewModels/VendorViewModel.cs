@@ -3,17 +3,13 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
@@ -39,6 +35,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<UserProfileContext> _vendorList;
 
         public ObservableCollection<UserProfileContext> VendorList
@@ -55,8 +52,8 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedVendor, value, nameof(SelectedVendor));
         }
 
-        #endregion
-        
+        #endregion Binding Properties
+
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
@@ -73,7 +70,7 @@ namespace LireOffice.ViewModels
             {
                 { "Instigator", "ContentRegion" }
             };
-            
+
             regionManager.RequestNavigate("Option01Region", "AddVendor", parameter);
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
@@ -116,7 +113,7 @@ namespace LireOffice.ViewModels
         {
             VendorList.Clear();
 
-            var tempProfileList = await Task.Run(()=> 
+            var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
                 var vendorList = context.GetVendor().ToList();

@@ -11,17 +11,10 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -34,7 +27,7 @@ namespace LireOffice.ViewModels
 
         private bool IsUpdated = false;
         private string Instigator;
-        
+
         public AddProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
         {
             eventAggregator = ea;
@@ -45,21 +38,22 @@ namespace LireOffice.ViewModels
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
 
             ProductDTO = new ProductContext();
-            UnitTypeDTO = new UnitTypeContext { Name = "Pcs"};
+            UnitTypeDTO = new UnitTypeContext { Name = "Pcs" };
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
             VendorList = new ObservableCollection<UserSimpleContext>();
             TaxList = new ObservableCollection<TaxContext>();
-            
-            UnitTypeList = new ObservableCollection<UnitTypeContext>{ UnitTypeDTO };
+
+            UnitTypeList = new ObservableCollection<UnitTypeContext> { UnitTypeDTO };
             SelectedUnitType = UnitTypeDTO;
-                                    
+
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Subscribe((string text) => LoadVendorList());
             eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Subscribe((ObjectId id) => LoadUnitTypeList(id));
         }
 
         #region Binding Properties
+
         private ProductContext _productDTO;
 
         public ProductContext ProductDTO
@@ -89,13 +83,13 @@ namespace LireOffice.ViewModels
         public UnitTypeContext SelectedUnitType
         {
             get => _selectedUnitType;
-            set => SetProperty(ref _selectedUnitType, value,()=> 
-            {
-                if (_selectedUnitType != null)
-                {
-                    UnitTypeDTO = _selectedUnitType;
-                }
-            }, nameof(SelectedUnitType));
+            set => SetProperty(ref _selectedUnitType, value, () =>
+             {
+                 if (_selectedUnitType != null)
+                 {
+                     UnitTypeDTO = _selectedUnitType;
+                 }
+             }, nameof(SelectedUnitType));
         }
 
         private bool _isUnitTypeBtnActive;
@@ -105,7 +99,7 @@ namespace LireOffice.ViewModels
             get => _isUnitTypeBtnActive;
             set => SetProperty(ref _isUnitTypeBtnActive, value, nameof(IsUnitTypeBtnActive));
         }
-        
+
         private ObservableCollection<ProductCategoryContext> _categoryList;
 
         public ObservableCollection<ProductCategoryContext> CategoryList
@@ -119,10 +113,10 @@ namespace LireOffice.ViewModels
         public ProductCategoryContext SelectedCategory
         {
             get => _selectedCategory;
-            set => SetProperty(ref _selectedCategory, value,()=> 
-            {
+            set => SetProperty(ref _selectedCategory, value, () =>
+             {
                 //if (ProductDTO != null)
-                    //ProductDTO
+                //ProductDTO
             }, nameof(SelectedCategory));
         }
 
@@ -141,7 +135,7 @@ namespace LireOffice.ViewModels
             get => _selectedVendor;
             set => SetProperty(ref _selectedVendor, value, nameof(SelectedVendor));
         }
-        
+
         private ObservableCollection<TaxContext> _taxList;
 
         public ObservableCollection<TaxContext> TaxList
@@ -155,13 +149,13 @@ namespace LireOffice.ViewModels
         public TaxContext SelectedTaxIn
         {
             get => _selectedTaxIn;
-            set => SetProperty(ref _selectedTaxIn, value,()=> 
-            {
-                if (_selectedTaxIn != null)
-                {
-                    UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
-                }
-            }, nameof(SelectedTaxIn));
+            set => SetProperty(ref _selectedTaxIn, value, () =>
+             {
+                 if (_selectedTaxIn != null)
+                 {
+                     UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
+                 }
+             }, nameof(SelectedTaxIn));
         }
 
         private TaxContext _selectedTaxOut;
@@ -169,23 +163,24 @@ namespace LireOffice.ViewModels
         public TaxContext SelectedTaxOut
         {
             get => _selectedTaxOut;
-            set => SetProperty(ref _selectedTaxOut, value,()=> 
-            {
-                if (_selectedTaxOut != null)
-                {
-                    UnitTypeDTO.TaxOutId = _selectedTaxOut.Id;
-                }
-            }, nameof(SelectedTaxOut));
+            set => SetProperty(ref _selectedTaxOut, value, () =>
+             {
+                 if (_selectedTaxOut != null)
+                 {
+                     UnitTypeDTO.TaxOutId = _selectedTaxOut.Id;
+                 }
+             }, nameof(SelectedTaxOut));
         }
-                
+
         private BitmapImage _imageSource;
 
         public BitmapImage ImageSource
         {
             get => _imageSource;
             set => SetProperty(ref _imageSource, value, nameof(ImageSource));
-        }        
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
@@ -229,11 +224,10 @@ namespace LireOffice.ViewModels
 
             if (SelectedCategory != null)
                 product.CategoryId = SelectedCategory.Id;
-            
+
             if (SelectedVendor != null)
                 product.VendorId = SelectedVendor.Id;
-                        
-            
+
             foreach (var item in UnitTypeList)
             {
                 UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(item);
@@ -243,7 +237,6 @@ namespace LireOffice.ViewModels
             }
 
             context.AddProduct(product);
-                                 
         }
 
         private void UpdateData()
@@ -270,9 +263,9 @@ namespace LireOffice.ViewModels
                         context.UpdateUnitType(unitTypeResult);
                     }
                 }
-            }            
+            }
         }
-       
+
         private void LoadData(ProductInfoContext _product)
         {
             Models.Product product = context.GetProductById(_product.Id);
@@ -280,7 +273,7 @@ namespace LireOffice.ViewModels
             {
                 ProductDTO = Mapper.Map<Models.Product, ProductContext>(product);
             }
-                        
+
             IsUnitTypeBtnActive = true;
         }
 
@@ -353,7 +346,7 @@ namespace LireOffice.ViewModels
                     regionManager.RequestNavigate("Option02Region", "AddVendor", parameter);
                     eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
                     break;
-            }            
+            }
         }
 
         private void OnImageChanged()
@@ -377,7 +370,7 @@ namespace LireOffice.ViewModels
             SelectedUnitType = null;
             UnitTypeList.Clear();
 
-            var tempUnitTypeList = await Task.Run(()=> 
+            var tempUnitTypeList = await Task.Run(() =>
             {
                 Collection<UnitTypeContext> _unitTypeList = new Collection<UnitTypeContext>();
                 var unitTypeList = context.GetUnitType(productId).ToList();
@@ -407,7 +400,7 @@ namespace LireOffice.ViewModels
         {
             VendorList.Clear();
 
-            var tempVendorList = await Task.Run(()=> 
+            var tempVendorList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> userSimpleList = new Collection<UserSimpleContext>();
                 var vendorList = context.GetVendor().ToList();
@@ -435,7 +428,7 @@ namespace LireOffice.ViewModels
             SelectedCategory = null;
             CategoryList.Clear();
 
-            var tempCategoryList = await Task.Run(()=> 
+            var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
                 var categoryList = context.GetCategory().ToList();
@@ -462,7 +455,7 @@ namespace LireOffice.ViewModels
         {
             TaxList.Clear();
 
-            var tempTaxList = await Task.Run(()=> 
+            var tempTaxList = await Task.Run(() =>
             {
                 Collection<TaxContext> _taxList = new Collection<TaxContext>();
                 var taxList = context.GetTaxes().ToList();
@@ -478,7 +471,7 @@ namespace LireOffice.ViewModels
             });
 
             TaxList.AddRange(tempTaxList);
-                        
+
             if (TaxInId != null && TaxOutId != null)
             {
                 SelectedTaxIn = TaxList.FirstOrDefault(c => c.Id == TaxInId);
@@ -502,10 +495,10 @@ namespace LireOffice.ViewModels
             if (parameter["SelectedProduct"] is ProductInfoContext product)
             {
                 IsUpdated = true;
-                
+
                 LoadData(product);
                 LoadUnitTypeList(product.Id, product.UnitTypeId);
-                LoadCategoryList(product.CategoryId);                
+                LoadCategoryList(product.CategoryId);
                 LoadVendorList(product.VendorId);
             }
             else
@@ -522,8 +515,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {            
+        {
         }
     }
-    
 }

@@ -1,17 +1,14 @@
-﻿using System;
+﻿using LireOffice.Models;
+using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using LireOffice.Models;
-using LiteDB;
 
 namespace LireOffice.Service
 {
     public sealed class OfficeContext : IOfficeContext
     {
-        LiteDatabase db;
+        private LiteDatabase db;
         private static string databasePath = Environment.CurrentDirectory + @"/OfficeDB.db";
 
         public OfficeContext()
@@ -20,15 +17,19 @@ namespace LireOffice.Service
             db = new LiteDatabase(databasePath);
             // Indexing UserType property on Users Collection to speed up query
             db.GetCollection<User>("Users").EnsureIndex(c => c.UserType);
+
+            db.GetCollection<Product>("Products").EnsureIndex(c => c.Name);
             // Indexing ProductId property on UnitTypes Collection to speed up query
             db.GetCollection<UnitType>("UnitTypes").EnsureIndex(c => c.ProductId);
-
             db.GetCollection<UnitType>("UnitTypes").EnsureIndex(c => c.Barcode);
+
+            db.GetCollection<Account>("Accounts").EnsureIndex(c => c.Category);
         }
 
         public void SeedData()
         {
             #region Tax Data Sedding
+
             if (!db.CollectionExists("Taxes"))
             {
                 db.GetCollection<Tax>("Taxes").InsertBulk(new List<Tax>
@@ -49,14 +50,12 @@ namespace LireOffice.Service
                     }
                 });
             }
-            #endregion
 
-            #region Account Data Seeding
-
-            #endregion
+            #endregion Tax Data Sedding
         }
 
         #region Vendor Methods
+
         /// <summary>
         /// Adds a new vendor entity to the data store
         /// </summary>
@@ -97,9 +96,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
-        #endregion
+
+        #endregion Vendor Methods
 
         #region Customer Methods
+
         /// <summary>
         /// Adds a new customer entity to the data store
         /// </summary>
@@ -130,7 +131,7 @@ namespace LireOffice.Service
                 db.GetCollection<User>("Users").Delete(result.Id);
             }
         }
-        
+
         public IEnumerable<User> GetCustomer()
         {
             return db.GetCollection<User>("Users").Find(Query.Or(Query.EQ("UserType", "Personal"), Query.EQ("UserType", "Perusahaan")));
@@ -140,9 +141,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
-        #endregion
+
+        #endregion Customer Methods
 
         #region Employee Methods
+
         /// <summary>
         /// Adds a new employee entity to the data store
         /// </summary>
@@ -183,9 +186,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
-        #endregion
+
+        #endregion Employee Methods
 
         #region Tax Methods
+
         public void AddTax(Tax tax)
         {
             db.GetCollection<Tax>("Taxes").Insert(tax);
@@ -214,9 +219,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<Tax>("Taxes").FindById(id);
         }
-        #endregion
+
+        #endregion Tax Methods
 
         #region ProductCategory Methods
+
         public void AddCategory(ProductCategory category)
         {
             db.GetCollection<ProductCategory>("ProductCategories").Insert(category);
@@ -245,9 +252,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<ProductCategory>("ProductCategories").FindById(id);
         }
-        #endregion
+
+        #endregion ProductCategory Methods
 
         #region UnitType Methods
+
         public void AddUnitType(UnitType type)
         {
             db.GetCollection<UnitType>("UnitTypes").Insert(type);
@@ -276,9 +285,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<UnitType>("UnitTypes").FindById(id);
         }
-        #endregion
+
+        #endregion UnitType Methods
 
         #region Product Methods
+
         public void AddProduct(Product product)
         {
             db.GetCollection<Product>("Products").Insert(product);
@@ -303,7 +314,7 @@ namespace LireOffice.Service
                     }
 
                     db.GetCollection<Product>("Products").Delete(productResult.Id);
-                }                
+                }
             }
         }
 
@@ -312,13 +323,20 @@ namespace LireOffice.Service
             return db.GetCollection<Product>("Products").FindAll();
         }
 
+        public IEnumerable<Product> GetProducts(string text)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())));
+        }
+
         public Product GetProductById(ObjectId id)
         {
             return db.GetCollection<Product>("Products").FindById(id);
         }
-        #endregion
+
+        #endregion Product Methods
 
         #region Sales Methods
+
         public void AddSales(Sales sales)
         {
             db.GetCollection<Sales>("Sales").Insert(sales);
@@ -345,7 +363,7 @@ namespace LireOffice.Service
                 .Find(Query.And(
                     Query.EQ("EmployeeId", employeeId),
                     Query.And(
-                        Query.GTE("SalesDate", minSalesDate), 
+                        Query.GTE("SalesDate", minSalesDate),
                         Query.LTE("SalesDate", maxSalesDate)
                         )
                     )
@@ -359,16 +377,18 @@ namespace LireOffice.Service
                         Query.GTE("SalesDate", minSalesDate),
                         Query.LTE("SalesDate", maxSalesDate)
                         )
-                 );            
+                 );
         }
-        
+
         public Sales GetSalesById(ObjectId id)
         {
             return db.GetCollection<Sales>("Sales").FindById(id);
         }
-        #endregion
+
+        #endregion Sales Methods
 
         #region SalesItem Methods
+
         public void AddSalesItem(SalesItem salesItem)
         {
             db.GetCollection<SalesItem>("SalesItems").Insert(salesItem);
@@ -402,14 +422,16 @@ namespace LireOffice.Service
         {
             return db.GetCollection<SalesItem>("SalesItems").FindById(id);
         }
-        #endregion
+
+        #endregion SalesItem Methods
 
         #region ReceivedGood Methods
+
         public void AddReceivedGood(ReceivedGood receivedGood)
         {
             db.GetCollection<ReceivedGood>("ReceivedGoods").Insert(receivedGood);
         }
-        
+
         public void UpdateReceivedGood(ReceivedGood receivedGood)
         {
             db.GetCollection<ReceivedGood>("ReceivedGoods").Update(receivedGood);
@@ -438,9 +460,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<ReceivedGood>("ReceivedGoods").FindById(id);
         }
-        #endregion
+
+        #endregion ReceivedGood Methods
 
         #region ReceivedGoodItem Methods
+
         public void AddReceivedGoodItem(ReceivedGoodItem receivedGoodItem)
         {
             db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Insert(receivedGoodItem);
@@ -450,7 +474,7 @@ namespace LireOffice.Service
         {
             db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Insert(receivedGoodItem);
         }
-        
+
         public void AddBulkReceivedGoodItem(IEnumerable<ReceivedGoodItem> receivedGoodItem)
         {
             db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").InsertBulk(receivedGoodItem);
@@ -479,9 +503,11 @@ namespace LireOffice.Service
         {
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindById(id);
         }
-        #endregion
+
+        #endregion ReceivedGoodItem Methods
 
         #region Account Methods
+
         public void AddAccount(Account account)
         {
             db.GetCollection<Account>("Accounts").Insert(account);
@@ -497,11 +523,16 @@ namespace LireOffice.Service
             return db.GetCollection<Account>("Accounts").FindAll();
         }
 
+        public IEnumerable<Account> GetAccounts(string category)
+        {
+            return db.GetCollection<Account>("Accounts").Find(Query.EQ("Category", category));
+        }
+
         public Account GetAccountById(ObjectId id)
         {
             return db.GetCollection<Account>("Accounts").FindById(id);
         }
 
-        #endregion
+        #endregion Account Methods
     }
 }

@@ -2,17 +2,12 @@
 using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace LireOffice.ViewModels
 {
@@ -31,12 +26,13 @@ namespace LireOffice.ViewModels
             this.context = context;
 
             CustomerDTO = new UserContext();
-         
+
             UserTypeList = new List<string> { "Personal", "Perusahaan" };
             SelectedUserType = "Personal";
         }
 
         #region Binding Properties
+
         private UserContext _customerDTO;
 
         public UserContext CustomerDTO
@@ -44,7 +40,7 @@ namespace LireOffice.ViewModels
             get => _customerDTO;
             set => SetProperty(ref _customerDTO, value, nameof(CustomerDTO));
         }
-        
+
         private List<string> _userTypeList;
 
         public List<string> UserTypeList
@@ -59,8 +55,9 @@ namespace LireOffice.ViewModels
         {
             get => _selectedUserType;
             set => SetProperty(ref _selectedUserType, value, nameof(SelectedUserType));
-        }        
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
@@ -85,7 +82,7 @@ namespace LireOffice.ViewModels
             if (customer != null)
             {
                 CustomerDTO = Mapper.Map<User, UserContext>(customer);
-            }            
+            }
         }
 
         private void AddData()
@@ -115,7 +112,7 @@ namespace LireOffice.ViewModels
             OnCancel();
             eventAggregator.GetEvent<CustomerListUpdatedEvent>().Publish("Update Customer List");
         }
-        
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
@@ -133,7 +130,6 @@ namespace LireOffice.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
     }
 }

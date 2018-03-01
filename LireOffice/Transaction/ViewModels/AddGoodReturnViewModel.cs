@@ -9,11 +9,7 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
@@ -39,6 +35,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<GoodReturnItemContext> _itemList;
 
         public ObservableCollection<GoodReturnItemContext> ItemList
@@ -54,7 +51,8 @@ namespace LireOffice.ViewModels
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value, nameof(SelectedItem));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -64,7 +62,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
-        
+
         private void AddGoodReturnItem(Tuple<ProductInfoContext, int, bool> productIndex)
         {
             var product = productIndex.Item1;
@@ -90,22 +88,19 @@ namespace LireOffice.ViewModels
 
         private void OnUpdate()
         {
-
         }
 
         private void OnDelete()
         {
-
         }
 
         public void OnSave()
         {
-            
         }
 
         public void OnCancel()
         {
-            switch(Instigator)
+            switch (Instigator)
             {
                 case "ContentRegion":
                     regionManager.Regions["Option01Region"].RemoveAll();
@@ -120,7 +115,7 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option02Region"];
             region.Add(view);
 
-            var parameter = new NavigationParameters { { "Instigator", "Option01Region"} };
+            var parameter = new NavigationParameters { { "Instigator", "Option01Region" } };
 
             if (SelectedItem != null)
                 parameter.Add("Product", Tuple.Create(SelectedItem.UnitTypeId, ItemList.IndexOf(SelectedItem), true));
@@ -130,7 +125,7 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option02Region", "AddReceivedGoodItem", parameter);
             eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
         }
-        
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
@@ -142,7 +137,7 @@ namespace LireOffice.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;  
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

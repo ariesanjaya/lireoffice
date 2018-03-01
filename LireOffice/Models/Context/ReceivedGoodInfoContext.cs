@@ -1,11 +1,7 @@
 ﻿using LiteDB;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Models
 {
@@ -50,7 +46,6 @@ namespace LireOffice.Models
             get => _firstDetailList;
             set => SetProperty(ref _firstDetailList, value, nameof(FirstDetailList));
         }
-
 
         private bool _isPosted;
 

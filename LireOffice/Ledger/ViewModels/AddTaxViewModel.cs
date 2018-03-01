@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
 using LireOffice.Models;
 using LireOffice.Service;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -35,6 +28,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private TaxContext _taxDTO;
 
         public TaxContext TaxDTO
@@ -42,7 +36,7 @@ namespace LireOffice.ViewModels
             get => _taxDTO;
             set => SetProperty(ref _taxDTO, value, nameof(TaxDTO));
         }
-        
+
         private ObservableCollection<TaxContext> _taxList;
 
         public ObservableCollection<TaxContext> TaxList
@@ -58,7 +52,8 @@ namespace LireOffice.ViewModels
             get => _selectedTax;
             set => SetProperty(ref _selectedTax, value, nameof(SelectedTax));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -82,7 +77,7 @@ namespace LireOffice.ViewModels
             ResetValue();
             LoadTaxList();
         }
-        
+
         private void OnUpdate()
         {
             if (SelectedTax != null)
@@ -113,14 +108,13 @@ namespace LireOffice.ViewModels
 
         private void OnCancel()
         {
-
         }
 
         private async void LoadTaxList()
         {
             TaxList.Clear();
 
-            var tempTaxList = await Task.Run(()=> 
+            var tempTaxList = await Task.Run(() =>
             {
                 Collection<TaxContext> _taxList = new Collection<TaxContext>();
                 var taxList = context.GetTaxes().ToList();

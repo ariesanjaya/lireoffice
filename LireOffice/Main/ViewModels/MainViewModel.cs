@@ -5,10 +5,6 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace LireOffice.ViewModels
@@ -31,8 +27,9 @@ namespace LireOffice.ViewModels
             eventAggregator.GetEvent<Option02VisibilityEvent>().Subscribe((bool isVisible) => IsOption02Visible = isVisible);
             eventAggregator.GetEvent<Option03VisibilityEvent>().Subscribe((bool isVisible) => IsOption03Visible = isVisible);
         }
-        
+
         #region Binding Properties
+
         private bool _isOption01Visible;
 
         public bool IsOption01Visible
@@ -73,13 +70,13 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _viewDescription, value, nameof(ViewDescription));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand<string> NavigateCommand => new DelegateCommand<string>(OnNavigate);
-        
+
         private void OnNavigate(string text)
-        {            
-            regionManager.RequestNavigate("ContentRegion", text);            
-        }        
+        {
+            regionManager.RequestNavigate("ContentRegion", text);
+        }
     }
 }

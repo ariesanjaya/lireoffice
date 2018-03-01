@@ -2,9 +2,6 @@
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Service
 {
@@ -13,6 +10,7 @@ namespace LireOffice.Service
         void SeedData();
 
         #region Vendor Methods
+
         /// <summary>
         /// Adds a new vendor entity to the data store
         /// </summary>
@@ -34,9 +32,11 @@ namespace LireOffice.Service
         IEnumerable<User> GetVendor();
 
         User GetVendorById(ObjectId id);
-        #endregion
+
+        #endregion Vendor Methods
 
         #region Customer Methods
+
         /// <summary>
         /// Adds a new customer entity to the data store
         /// </summary>
@@ -58,9 +58,11 @@ namespace LireOffice.Service
         IEnumerable<User> GetCustomer();
 
         User GetCustomerById(ObjectId id);
-        #endregion
+
+        #endregion Customer Methods
 
         #region Employee Methods
+
         /// <summary>
         /// Adds a new employee entity to the data store
         /// </summary>
@@ -82,9 +84,11 @@ namespace LireOffice.Service
         IEnumerable<User> GetEmployee();
 
         User GetEmployeeById(ObjectId id);
-        #endregion
+
+        #endregion Employee Methods
 
         #region Tax Methods
+
         void AddTax(Tax tax);
 
         void UpdateTax(Tax tax);
@@ -94,9 +98,11 @@ namespace LireOffice.Service
         IEnumerable<Tax> GetTaxes();
 
         Tax GetTaxById(ObjectId id);
-        #endregion
+
+        #endregion Tax Methods
 
         #region Product Methods
+
         void AddProduct(Product product);
 
         void UpdateProduct(Product product);
@@ -105,10 +111,14 @@ namespace LireOffice.Service
 
         IEnumerable<Product> GetProducts();
 
+        IEnumerable<Product> GetProducts(string text);
+
         Product GetProductById(ObjectId id);
-        #endregion
+
+        #endregion Product Methods
 
         #region UnitType Methods
+
         void AddUnitType(UnitType type);
 
         void UpdateUnitType(UnitType type);
@@ -118,9 +128,11 @@ namespace LireOffice.Service
         IEnumerable<UnitType> GetUnitType(ObjectId id);
 
         UnitType GetUnitTypeById(ObjectId id);
-        #endregion
+
+        #endregion UnitType Methods
 
         #region ProductCategory Methods
+
         void AddCategory(ProductCategory category);
 
         void UpdateCategory(ProductCategory category);
@@ -130,9 +142,11 @@ namespace LireOffice.Service
         IEnumerable<ProductCategory> GetCategory();
 
         ProductCategory GetCategoryById(ObjectId id);
-        #endregion
+
+        #endregion ProductCategory Methods
 
         #region Sales Methods
+
         void AddSales(Sales sales);
 
         void UpdateSales(Sales sales);
@@ -146,9 +160,11 @@ namespace LireOffice.Service
         IEnumerable<Sales> GetSales(DateTime minSalesDate, DateTime maxSalesDate);
 
         Sales GetSalesById(ObjectId id);
-        #endregion
+
+        #endregion Sales Methods
 
         #region SalesItem Methods
+
         void AddSalesItem(SalesItem salesItem);
 
         void AddBulkSalesItem(IEnumerable<SalesItem> salesItem);
@@ -160,9 +176,11 @@ namespace LireOffice.Service
         IEnumerable<SalesItem> GetSalesItem(ObjectId Id);
 
         SalesItem GetSalesItemById(ObjectId id);
-        #endregion
+
+        #endregion SalesItem Methods
 
         #region ReceivedGood Methods
+
         void AddReceivedGood(ReceivedGood receivedGood);
 
         void UpdateReceivedGood(ReceivedGood receivedGood);
@@ -170,12 +188,15 @@ namespace LireOffice.Service
         void DeleteReceivedGood(ObjectId id);
 
         IEnumerable<ReceivedGood> GetReceivedGood();
+
         IEnumerable<ReceivedGood> GetReceivedGood(string text);
 
         ReceivedGood GetReceivedGoodById(ObjectId id);
-        #endregion
+
+        #endregion ReceivedGood Methods
 
         #region ReceivedGoodItem Methods
+
         void AddReceivedGoodItem(ReceivedGoodItem receivedGoodItem);
 
         void AddBulkReceivedGoodItem(IEnumerable<ReceivedGoodItem> receivedGoodItem);
@@ -187,28 +208,23 @@ namespace LireOffice.Service
         IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id);
 
         ReceivedGoodItem GetReceivedGoodItemById(ObjectId id);
-        #endregion
 
-        #region GoodReturn Methods
+        #endregion ReceivedGoodItem Methods
 
-        #endregion
 
-        #region GoodReturnItem Methods
-
-        #endregion
 
         #region Account Methods
+
         void AddAccount(Account account);
 
         void UpdateAccount(Account account);
 
         IEnumerable<Account> GetAccounts();
 
-        Account GetAccountById(ObjectId id);
-        #endregion
+        IEnumerable<Account> GetAccounts(string category);
 
-        #region Account History Methods
-        
-        #endregion
+        Account GetAccountById(ObjectId id);
+
+        #endregion Account Methods
     }
 }

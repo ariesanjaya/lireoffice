@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using LireOffice.Models;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LireOffice
@@ -22,6 +17,7 @@ namespace LireOffice
             Mapper.Initialize(config =>
             {
                 #region User Configuration
+
                 config.CreateMap<User, UserContext>()
                         .ForMember(dest => dest.AddressLine, m => m.MapFrom(src => src.Address.AddressLine))
                         .ForMember(dest => dest.SubDistrict, m => m.MapFrom(src => src.Address.SubDistrict))
@@ -48,63 +44,78 @@ namespace LireOffice
                         .ForMember(dest => dest.Phone, m => m.MapFrom(src => src.Address.CellPhone01));
 
                 config.CreateMap<User, UserSimpleContext>();
-                #endregion
+
+                #endregion User Configuration
 
                 #region Product Category Configuration
+
                 config.CreateMap<ProductCategory, ProductCategoryContext>();
 
                 config.CreateMap<ProductCategoryContext, ProductCategory>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                #endregion
+
+                #endregion Product Category Configuration
 
                 #region Tax Configuration
+
                 config.CreateMap<Tax, TaxContext>();
 
                 config.CreateMap<TaxContext, Tax>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                #endregion
+
+                #endregion Tax Configuration
 
                 #region Product Configuration
+
                 config.CreateMap<Product, ProductContext>();
 
                 config.CreateMap<ProductContext, Product>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                #endregion
+
+                #endregion Product Configuration
 
                 #region UnitType Configuration
+
                 config.CreateMap<UnitType, UnitTypeContext>();
 
                 config.CreateMap<UnitTypeContext, UnitType>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                #endregion
+
+                #endregion UnitType Configuration
 
                 #region Sales Configuration
+
                 config.CreateMap<SalesSummary, SalesSummaryContext>();
 
                 config.CreateMap<Sales, SalesDetailContext>();
                 config.CreateMap<SalesDetailContext, Sales>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 config.CreateMap<Sales, SalesInvoiceInfoContext>();
-                #endregion
+
+                #endregion Sales Configuration
 
                 #region ReceivedGood Configuration
+
                 config.CreateMap<ReceivedGood, ReceivedGoodInfoContext>();
 
                 config.CreateMap<ReceivedGoodDetailContext, ReceivedGood>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
                 //.ForMember(dest => dest.)
-                                
-                #endregion
+
+                #endregion ReceivedGood Configuration
 
                 #region Account Configuration
+
                 config.CreateMap<Account, AccountInfoContext>();
 
                 config.CreateMap<Account, AccountContext>();
                 config.CreateMap<AccountContext, Account>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                #endregion
+
+                #endregion Account Configuration
 
                 #region Ledger Configuration
+
                 config.CreateMap<LedgerContext, LedgerIn>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
 
@@ -118,7 +129,8 @@ namespace LireOffice
                 config.CreateMap<LedgerIn, LedgerSummaryContext>();
 
                 config.CreateMap<LedgerOut, LedgerSummaryContext>();
-                #endregion
+
+                #endregion Ledger Configuration
             });
 
             base.OnStartup(e);

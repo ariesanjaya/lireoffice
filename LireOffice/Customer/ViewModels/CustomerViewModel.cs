@@ -3,17 +3,13 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
@@ -39,6 +35,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<UserProfileContext> _customerList;
 
         public ObservableCollection<UserProfileContext> CustomerList
@@ -55,7 +52,8 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedCustomer, value, nameof(SelectedCustomer));
         }
 
-        #endregion
+        #endregion Binding Properties
+
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
@@ -109,7 +107,7 @@ namespace LireOffice.ViewModels
             CustomerList.Clear();
 
             // Async Method using CPU Bound because all the task is procceded on CPU background
-            var tempProfileList = await Task.Run(() => 
+            var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileContext = new Collection<UserProfileContext>();
                 var customerList = context.GetCustomer().ToList();

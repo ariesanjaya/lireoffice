@@ -1,24 +1,24 @@
 ﻿<UserControl x:Class="LireOffice.Views.DebtSummary"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid Margin="16">
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition/>
+                <RowDefinition Height="60" />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Content="Debt Summary" FontSize="32"/>
+            <Label Content="Debt Summary" FontSize="32" />
 
-            <syncfusion:SfDataGrid x:Name="dataGrid" 
-                                   
+            <syncfusion:SfDataGrid x:Name="dataGrid"
+
                                    Grid.Row="1"
                                    FontSize="14"
                                    AutoGenerateColumns="False"
@@ -29,13 +29,13 @@
                                    EnableDataVirtualization="True"
                                    ScrollMode="Async">
                 <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridTextColumn HeaderText="Tgl" Width="160"/>
-                    <syncfusion:GridTextColumn HeaderText="Nama Pemasok"/>
-                    <syncfusion:GridCurrencyColumn HeaderText="Total Hutang" Width="200"/>
-                    <syncfusion:GridCurrencyColumn HeaderText="Hutang Terbayar" Width="200"/>
-                    <syncfusion:GridCurrencyColumn HeaderText="Sisa Hutang" Width="200"/>
+                    <syncfusion:GridTextColumn HeaderText="Tgl" Width="160" />
+                    <syncfusion:GridTextColumn HeaderText="Nama Pemasok" />
+                    <syncfusion:GridCurrencyColumn HeaderText="Total Hutang" Width="200" />
+                    <syncfusion:GridCurrencyColumn HeaderText="Hutang Terbayar" Width="200" />
+                    <syncfusion:GridCurrencyColumn HeaderText="Sisa Hutang" Width="200" />
                 </syncfusion:SfDataGrid.Columns>
             </syncfusion:SfDataGrid>
-        </Grid>        
+        </Grid>
     </Grid>
 </UserControl>

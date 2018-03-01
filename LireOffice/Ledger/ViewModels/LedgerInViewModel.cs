@@ -1,13 +1,12 @@
 ﻿using LireOffice.Service;
+using LireOffice.Utilities;
+using LireOffice.Views;
+using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
@@ -16,15 +15,17 @@ namespace LireOffice.ViewModels
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
+        private readonly IUnityContainer container;
         private readonly IOfficeContext context;
 
         private DispatcherTimer timer;
         private bool IsLedgerListLoaded = false;
 
-        public LedgerInViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
+        public LedgerInViewModel(IRegionManager rm, IEventAggregator ea, IUnityContainer container, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
+            this.container = container;
             this.context = context;
 
             // ----------------------
@@ -38,6 +39,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private string _searchText;
 
         public string SearchText
@@ -62,42 +64,39 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(()=> MaxDate = MinDate);
-        public DelegateCommand RefreshCommand => new DelegateCommand(OnRefresh);
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
+        public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadLedgerList());
 
         #region Delegate Command Methods
 
         private void OnAdd()
         {
+            var view = container.Resolve<AddLedgerIn>();
+            IRegion region = regionManager.Regions["Option01Region"];
+            region.Add(view, "AddLedgerIn");
 
+            regionManager.RequestNavigate("Option01Region", "AddLedgerIn");
+            eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
 
         private void OnUpdate()
         {
-
         }
 
         private void OnDelete()
         {
-
-        }
-        
-        private void OnRefresh()
-        {
-
         }
 
-        #endregion
+        #endregion Delegate Command Methods
 
         private void LoadLedgerList()
         {
-
         }
 
         private void SearchData()
@@ -118,8 +117,6 @@ namespace LireOffice.ViewModels
                     }
 
                     //---------------------
-
-
 
                     //---------------------
 

@@ -1,21 +1,19 @@
-﻿using LireOffice.Views;
-using LireOffice.Models;
+﻿using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
+using LireOffice.Views;
+using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using LiteDB;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -44,6 +42,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<ProductInfoContext> _productList;
 
         public ObservableCollection<ProductInfoContext> ProductList
@@ -68,7 +67,7 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _searchText, value, nameof(SearchText));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -83,8 +82,8 @@ namespace LireOffice.ViewModels
             IRegion region = regionManager.Regions["Option02Region"];
             region.Add(view, "AddProduct");
 
-            var parameter = new NavigationParameters{ { "Instigator", "Option01Region" } };
-            
+            var parameter = new NavigationParameters { { "Instigator", "Option01Region" } };
+
             regionManager.RequestNavigate("Option02Region", "AddProduct", parameter);
             eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
         }
@@ -105,7 +104,7 @@ namespace LireOffice.ViewModels
 
                 regionManager.RequestNavigate("Option02Region", "AddProduct", parameter);
                 eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);
-            }            
+            }
         }
 
         private void OnCancel()
@@ -134,7 +133,7 @@ namespace LireOffice.ViewModels
         {
             ProductList.Clear();
 
-            var tempItemList = await Task.Run(()=> 
+            var tempItemList = await Task.Run(() =>
             {
                 Collection<ProductInfoContext> _productList = new Collection<ProductInfoContext>();
                 var productList = context.GetProducts().ToList();
@@ -146,7 +145,7 @@ namespace LireOffice.ViewModels
                         if (unitTypeList.Count > 0)
                         {
                             foreach (var unitType in unitTypeList)
-                            {                                
+                            {
                                 ProductInfoContext productInfo = new ProductInfoContext()
                                 {
                                     Id = product.Id,
@@ -179,7 +178,7 @@ namespace LireOffice.ViewModels
 
             ProductList.AddRange(tempItemList);
         }
-        
+
         private void SearchProduct()
         {
             if (timer == null)
@@ -229,7 +228,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {            
+        {
         }
     }
 }

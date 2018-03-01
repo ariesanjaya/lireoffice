@@ -1,14 +1,8 @@
-﻿using Prism.Unity;
+﻿using LireOffice.Service;
 using Microsoft.Practices.Unity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Prism.Mvvm;
 using Prism.Modularity;
-using LireOffice.Service;
+using Prism.Unity;
+using System.Windows;
 
 namespace LireOffice
 {
@@ -31,6 +25,5 @@ namespace LireOffice
             var catalog = (ModuleCatalog)ModuleCatalog;
             catalog.AddModule(typeof(Module));
         }
-        
     }
 }

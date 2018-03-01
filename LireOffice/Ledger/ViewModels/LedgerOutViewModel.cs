@@ -7,10 +7,6 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
@@ -43,6 +39,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private string _searchText;
 
         public string SearchText
@@ -67,14 +64,14 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(OnDateAssign);
-        public DelegateCommand RefreshCommand => new DelegateCommand(OnRefresh);
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
+        public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadLedgerList());
 
         #region Delegate Command Methods
 
@@ -90,29 +87,16 @@ namespace LireOffice.ViewModels
 
         private void OnUpdate()
         {
-
         }
 
         private void OnDelete()
         {
-
         }
 
-        private void OnDateAssign()
-        {
-
-        }
-
-        private void OnRefresh()
-        {
-
-        }
-
-        #endregion
+        #endregion Delegate Command Methods
 
         private void LoadLedgerList()
         {
-
         }
 
         private void SearchData()
@@ -133,8 +117,6 @@ namespace LireOffice.ViewModels
                     }
 
                     //---------------------
-
-
 
                     //---------------------
 

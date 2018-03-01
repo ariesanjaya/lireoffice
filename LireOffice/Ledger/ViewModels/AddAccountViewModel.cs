@@ -9,8 +9,6 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
@@ -39,6 +37,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private AccountContext _accountDTO;
 
         public AccountContext AccountDTO
@@ -60,13 +59,14 @@ namespace LireOffice.ViewModels
         public string SelectedCategory
         {
             get => _selectedCategory;
-            set => SetProperty(ref _selectedCategory, value,()=> 
-            {
-                if (_selectedCategory != null && AccountDTO != null)
-                    AccountDTO.Category = _selectedCategory;
-            }, nameof(SelectedCategory));
+            set => SetProperty(ref _selectedCategory, value, () =>
+             {
+                 if (_selectedCategory != null && AccountDTO != null)
+                     AccountDTO.Category = _selectedCategory;
+             }, nameof(SelectedCategory));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);

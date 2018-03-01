@@ -4,11 +4,6 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
@@ -25,22 +20,16 @@ namespace LireOffice.ViewModels
             this.context = context;
         }
 
-        #region Binding Properties
-
-        #endregion
-
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand SaveDraftCommand => new DelegateCommand(OnSaveDraft);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         private void OnSave()
         {
-
         }
 
         private void OnSaveDraft()
         {
-
         }
 
         private void OnCancel()
@@ -51,7 +40,6 @@ namespace LireOffice.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -60,7 +48,6 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {}
-
+        { }
     }
 }

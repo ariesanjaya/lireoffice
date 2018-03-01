@@ -1,22 +1,15 @@
-﻿using LireOffice.Models;
+﻿using AutoMapper;
+using LireOffice.Models;
+using LireOffice.Service;
+using LireOffice.Utilities;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.Entity;
-using System.Windows.Threading;
-using System.Threading;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using LiteDB;
-using System.Windows;
 using Prism.Regions;
-using LireOffice.Utilities;
+using System;
 using System.Collections.ObjectModel;
-using LireOffice.Service;
-using AutoMapper;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
@@ -41,6 +34,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ProductCategoryContext _categoryDTO;
 
         public ProductCategoryContext CategoryDTO
@@ -63,8 +57,9 @@ namespace LireOffice.ViewModels
         {
             get => _selectedCategory;
             set => SetProperty(ref _selectedCategory, value, nameof(SelectedCategory));
-        }        
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -110,7 +105,7 @@ namespace LireOffice.ViewModels
 
         private void OnDelete()
         {
-            if(SelectedCategory != null)
+            if (SelectedCategory != null)
             {
                 context.DeleteCategory(SelectedCategory.Id);
             }
@@ -139,12 +134,12 @@ namespace LireOffice.ViewModels
                     break;
             }
         }
-                
+
         private async void LoadCategoryList()
         {
             CategoryList.Clear();
 
-            var tempCategoryList = await Task.Run(() => 
+            var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
                 var categoryList = context.GetCategory().ToList();
@@ -165,7 +160,7 @@ namespace LireOffice.ViewModels
         private void ResetValue()
         {
             SelectedCategory = null;
-            CategoryDTO = new ProductCategoryContext();       
+            CategoryDTO = new ProductCategoryContext();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -183,7 +178,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {            
+        {
         }
     }
 }

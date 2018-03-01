@@ -2,7 +2,6 @@
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -11,9 +10,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -25,8 +22,9 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
-        
+
         private DispatcherTimer timer;
+        private bool IsProductListLoaded = false;
 
         public ProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
         {
@@ -41,6 +39,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<ProductInfoContext> _productList;
 
         public ObservableCollection<ProductInfoContext> ProductList
@@ -62,16 +61,17 @@ namespace LireOffice.ViewModels
         public string SearchText
         {
             get => _searchText;
-            set => SetProperty(ref _searchText, value, nameof(SearchText));
+            set => SetProperty(ref _searchText, value, SearchProduct, nameof(SearchText));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
-        
+
         private void OnAdd()
         {
             var view = container.Resolve<AddProduct>();
@@ -97,7 +97,6 @@ namespace LireOffice.ViewModels
 
         private void OnDelete()
         {
-
         }
 
         private void OnCellDoubleTapped()
@@ -116,17 +115,22 @@ namespace LireOffice.ViewModels
 
                 regionManager.RequestNavigate("Option01Region", "AddProduct", parameter);
                 eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
-            }            
+            }
         }
 
-        private async void LoadProductList()
+        private async void LoadProductList(string text = null)
         {
             ProductList.Clear();
 
-            var tempProductList = await Task.Run(()=> 
+            var tempProductList = await Task.Run(() =>
             {
+                List<Models.Product> productList = new List<Models.Product>();
                 Collection<ProductInfoContext> productInfoList = new Collection<ProductInfoContext>();
-                var productList = context.GetProducts().ToList();
+                if (string.IsNullOrEmpty(text))
+                    productList = context.GetProducts().ToList();
+                else
+                    productList = context.GetProducts(text).ToList();
+
                 if (productList.Count > 0)
                 {
                     foreach (var product in productList)
@@ -163,13 +167,29 @@ namespace LireOffice.ViewModels
             });
 
             ProductList.AddRange(tempProductList);
+            IsProductListLoaded = true;
         }
 
         private void SearchProduct()
         {
             if (timer == null)
             {
+                timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
 
+                timer.Tick += (o, ae) =>
+                {
+                    if (timer == null) return;
+
+                    if (!IsProductListLoaded)
+                    {
+                        timer.Stop();
+                        return;
+                    }
+
+                    LoadProductList(SearchText);
+
+                    timer.Stop();
+                };
             }
 
             timer.Stop();
@@ -188,7 +208,6 @@ namespace LireOffice.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
     }
 }

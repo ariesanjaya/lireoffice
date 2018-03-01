@@ -1,11 +1,7 @@
 ﻿using LiteDB;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Models
 {
@@ -67,7 +63,7 @@ namespace LireOffice.Models
             get => _totalTax;
             set => SetProperty(ref _totalTax, value, nameof(TotalTax));
         }
-        
+
         private decimal _total;
 
         public decimal Total

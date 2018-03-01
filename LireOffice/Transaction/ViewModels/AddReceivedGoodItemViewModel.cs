@@ -9,10 +9,8 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -45,6 +43,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private string _searchText;
 
         public string SearchText
@@ -69,7 +68,7 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedProduct, value, nameof(SelectedProduct));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
@@ -100,7 +99,7 @@ namespace LireOffice.ViewModels
                 var view = container.Resolve<AddProduct>();
                 IRegion region = regionManager.Regions["Option02Region"];
                 region.Add(view, "AddProduct");
-                
+
                 var parameter = new NavigationParameters
                 {
                     { "SelectedProduct", SelectedProduct },
@@ -127,20 +126,20 @@ namespace LireOffice.ViewModels
                     eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(false);
                     eventAggregator.GetEvent<GoodReturnDetailDataGridFocusEvent>().Publish("Focus Receveid Good Item List");
                     break;
-            }            
+            }
         }
 
         private void OnAccept()
         {
-            if(SelectedProduct != null)
+            if (SelectedProduct != null)
             {
                 switch (Instigator)
                 {
                     case "ContentRegion":
-                        if(productIndex.Item3)
+                        if (productIndex.Item3)
                         {
                             MessageBoxResult result = MessageBox.Show("Data ini akan merubah data yg lama!! Lanjutkan?", "Perubahan Data", MessageBoxButton.YesNo);
-                            if(result == MessageBoxResult.No)
+                            if (result == MessageBoxResult.No)
                                 return;
                         }
                         eventAggregator.GetEvent<AddReceivedGoodItemEvent>().Publish(Tuple.Create(SelectedProduct/*Object*/, productIndex.Item2/*index*/, productIndex.Item3/*IsUpdated*/));
@@ -229,9 +228,9 @@ namespace LireOffice.ViewModels
                     {
                         timer.Stop();
                         return;
-                    } 
+                    }
 
-                    var tempSelectedProduct = await Task.Run(()=> 
+                    var tempSelectedProduct = await Task.Run(() =>
                     {
                         var _selectedProduct = ProductList.Where(c => c.Name.ToLower().Contains(SearchText.ToLower())).FirstOrDefault();
 

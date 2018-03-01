@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LireOffice.Models.Old
 {
@@ -15,13 +12,17 @@ namespace LireOffice.Models.Old
         [Index]
         [Column(Order = 1)]
         public string Id { get; set; }
+
         [Column(Order = 2)]
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
         [Column(Order = 3)]
         public bool IsDeleted { get; set; }
+
         [Column(Order = 4)]
         public DateTime CreatedAt { get; set; }
+
         [Column(Order = 5)]
         public DateTime UpdatedAt { get; set; }
     }
@@ -29,18 +30,25 @@ namespace LireOffice.Models.Old
     public class Address : EntityData
     {
         public string AddressLine { get; set; }
+
         [MaxLength(64)]
         public string SubDistrict { get; set; }
+
         [MaxLength(64)]
         public string District { get; set; }
+
         [MaxLength(64)]
         public string Regency { get; set; }
+
         [MaxLength(64)]
         public string Email { get; set; }
+
         [MaxLength(64)]
         public string Phone { get; set; }
+
         [MaxLength(64)]
         public string CellPhone01 { get; set; }
+
         [MaxLength(64)]
         public string CellPhone02 { get; set; }
 
@@ -61,6 +69,7 @@ namespace LireOffice.Models.Old
 
         [ForeignKey("Product")]
         public string ProductId { get; set; }
+
         public Product Product { get; set; }
     }
 
@@ -68,6 +77,7 @@ namespace LireOffice.Models.Old
     {
         [MaxLength(255)]
         public string Name { get; set; }
+
         public byte[] Source { get; set; }
 
         public User User { get; set; }
@@ -83,6 +93,7 @@ namespace LireOffice.Models.Old
 
         [MaxLength(255)]
         public string Name { get; set; }
+
         [Index]
         public bool IsActive { get; set; }
 
@@ -96,6 +107,7 @@ namespace LireOffice.Models.Old
     {
         [MaxLength(255)]
         public string Name { get; set; }
+
         public bool IsActive { get; set; }
     }
 
@@ -107,8 +119,10 @@ namespace LireOffice.Models.Old
         }
 
         public DateTime SalesDate { get; set; }
+
         [MaxLength(128)]
         public string InvoiceId { get; set; }
+
         public string Description { get; set; }
 
         public User Customer { get; set; }
@@ -132,6 +146,7 @@ namespace LireOffice.Models.Old
 
         [ForeignKey("Sales")]
         public string SalesId { get; set; }
+
         public Sales Sales { get; set; }
     }
 
@@ -139,6 +154,7 @@ namespace LireOffice.Models.Old
     {
         [MaxLength(255)]
         public string Name { get; set; }
+
         public string Description { get; set; }
         public double Value { get; set; }
         public bool IsActive { get; set; }
@@ -151,25 +167,35 @@ namespace LireOffice.Models.Old
         [Index]
         [MaxLength(128)]
         public string RegisterId { get; set; }
+
         [Index]
         [MaxLength(128)]
         public string CardId { get; set; }
+
         [MaxLength(128)]
         public string SelfId { get; set; }
+
         [MaxLength(128)]
         public string TaxId { get; set; }
+
         [MaxLength(255)]
         public string Name { get; set; }
+
         [MaxLength(255)]
         public string SalesName { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
         public DateTime? EnterDate { get; set; }
+
         [MaxLength(64)]
         public string Occupation { get; set; }
+
         [Index]
         [MaxLength(32)]
         public string UserType { get; set; }
+
         public int RewardPoint { get; set; }
+
         [Index]
         public bool IsActive { get; set; }
 

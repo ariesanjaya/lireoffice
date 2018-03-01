@@ -1,11 +1,7 @@
 namespace LireOffice
 {
     using LireOffice.Models;
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Linq;
 
     public class OfficeDatabase : DbContext
     {
@@ -14,7 +10,7 @@ namespace LireOffice
         {
             //Database.SetInitializer(new DropCreateDatabaseAlways<OfficeDatabase>());
         }
-                
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             ///----------------------------------------
@@ -44,10 +40,9 @@ namespace LireOffice
 
             ///----------------------------------------
             /// Sales Fluent API Configuration
-            
-            ///----------------------------------------
-            /// 
 
+            ///----------------------------------------
+            ///
         }
 
         public virtual DbSet<User> Users { get; set; }
@@ -64,5 +59,4 @@ namespace LireOffice
 
         //public virtual DbSet<SalesItem> SalesItems { get; set; }
     }
-
 }

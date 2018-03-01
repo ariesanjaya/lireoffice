@@ -10,14 +10,9 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
 {
@@ -43,14 +38,15 @@ namespace LireOffice.ViewModels
             SalesDTO = new SalesDetailContext();
 
             SalesItemList = new ObservableCollection<SalesItemContext>();
-                        
+
             eventAggregator.GetEvent<CustomerListUpdatedEvent>().Subscribe((string text) => LoadCustomerList());
             eventAggregator.GetEvent<EmployeeListUpdateEvent>().Subscribe((string text) => LoadEmployeeList());
             eventAggregator.GetEvent<AddSalesItemEvent>().Subscribe(AddSalesItem);
             eventAggregator.GetEvent<CalculateSalesDetailTotalEvent>().Subscribe((string text) => CalculateTotal());
         }
-        
+
         #region Binding Properties
+
         private SalesDetailContext _salesDTO;
 
         public SalesDetailContext SalesDTO
@@ -58,7 +54,7 @@ namespace LireOffice.ViewModels
             get => _salesDTO;
             set => SetProperty(ref _salesDTO, value, nameof(SalesDTO));
         }
-        
+
         private ObservableCollection<UserSimpleContext> _customerList;
 
         public ObservableCollection<UserSimpleContext> CustomerList
@@ -72,17 +68,16 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedCustomer
         {
             get => _selectedCustomer;
-            set => SetProperty(ref _selectedCustomer, value,()=> 
-            {
-                if (_selectedCustomer != null)
-                {
-                    SalesDTO.Description = "Penjualan, Kepada " + _selectedCustomer.Name;
-                    SalesDTO.CustomerId = _selectedCustomer.Id;
-                }
-
-            }, nameof(SelectedCustomer));
+            set => SetProperty(ref _selectedCustomer, value, () =>
+             {
+                 if (_selectedCustomer != null)
+                 {
+                     SalesDTO.Description = "Penjualan, Kepada " + _selectedCustomer.Name;
+                     SalesDTO.CustomerId = _selectedCustomer.Id;
+                 }
+             }, nameof(SelectedCustomer));
         }
-                
+
         private ObservableCollection<UserSimpleContext> _employeeList;
 
         public ObservableCollection<UserSimpleContext> EmployeeList
@@ -96,14 +91,13 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedEmployee
         {
             get => _selectedEmployee;
-            set => SetProperty(ref _selectedEmployee, value,()=> 
-            {
-                if (_selectedEmployee != null)
-                    SalesDTO.EmployeeId = _selectedEmployee.Id;
-
-            }, nameof(SelectedEmployee));
+            set => SetProperty(ref _selectedEmployee, value, () =>
+             {
+                 if (_selectedEmployee != null)
+                     SalesDTO.EmployeeId = _selectedEmployee.Id;
+             }, nameof(SelectedEmployee));
         }
-        
+
         private ObservableCollection<SalesItemContext> _salesItemList;
 
         public ObservableCollection<SalesItemContext> SalesItemList
@@ -119,7 +113,7 @@ namespace LireOffice.ViewModels
             get => _selectedSalesItem;
             set => SetProperty(ref _selectedSalesItem, value, nameof(SelectedSalesItem));
         }
-        
+
         private decimal _additionalCost;
 
         public decimal AdditionalCost
@@ -151,9 +145,11 @@ namespace LireOffice.ViewModels
             get => _total;
             set => SetProperty(ref _total, value, nameof(Total));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         #region Delegate Command Properties
+
         public DelegateCommand AddCustomerCommand => new DelegateCommand(OnAddCustomer);
         public DelegateCommand AddEmployeeCommand => new DelegateCommand(OnAddEmployee);
 
@@ -167,13 +163,15 @@ namespace LireOffice.ViewModels
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand AddtionalCostCommand => new DelegateCommand(OnAdditionalCost);
-        #endregion
+
+        #endregion Delegate Command Properties
 
         #region EventAggregator Function
+
         private void AddSalesItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*IsUpdated*/> productIndex)
         {
             var product = productIndex.Item1;
-                        
+
             SalesItemContext salesItem = new SalesItemContext(eventAggregator)
             {
                 Id = ObjectId.NewObjectId(),
@@ -203,16 +201,18 @@ namespace LireOffice.ViewModels
             SalesDTO.TotalTax = 0;
             SalesDTO.Total = 0;
 
-            foreach(var item in SalesItemList)
+            foreach (var item in SalesItemList)
             {
                 SalesDTO.TotalDiscount += item.Discount;
                 SalesDTO.TotalTax += item.Tax;
                 SalesDTO.Total += item.SubTotal;
             }
         }
-        #endregion
+
+        #endregion EventAggregator Function
 
         #region Delegate Command Function
+
         private void OnAddCustomer()
         {
             var view = container.Resolve<AddCustomer>();
@@ -232,10 +232,9 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option01Region", "AddEmployee");
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
-        
+
         private void OnUpdateItem()
         {
-
         }
 
         private void OnDeleteItem()
@@ -288,23 +287,23 @@ namespace LireOffice.ViewModels
             //--------------------
             // Navigate to destination view with additional parameter
             regionManager.RequestNavigate("Option01Region", "AddSalesItem", parameter);
-            
+
             // Notify Main ViewModel to show Option01 ContentControl in Main View
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
 
         private void OnAdditionalCost()
         {
-
         }
-        #endregion
+
+        #endregion Delegate Command Function
 
         private async void LoadCustomerList(ObjectId customerId = null)
         {
             SelectedCustomer = null;
             CustomerList.Clear();
 
-            var tempCustomerList = await Task.Run(()=> 
+            var tempCustomerList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> _customerList = new Collection<UserSimpleContext>();
                 var customerList = context.GetCustomer().ToList();
@@ -332,7 +331,7 @@ namespace LireOffice.ViewModels
         {
             EmployeeList.Clear();
 
-            var tempEmployeeList = await Task.Run(()=> 
+            var tempEmployeeList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> _employeeList = new Collection<UserSimpleContext>();
                 var employeeList = context.GetEmployee().ToList();
@@ -379,7 +378,7 @@ namespace LireOffice.ViewModels
                         Discount = salesItem.Discount,
                         Tax = salesItem.Tax
                     };
-                
+
                     SalesItemList.Add(item);
                 }
             }
@@ -472,7 +471,7 @@ namespace LireOffice.ViewModels
 
                     LoadSalesItemList(salesId);
                 }
-            }            
+            }
         }
 
         private void ResetValue()
@@ -486,7 +485,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
-        {            
+        {
             var parameter = navigationContext.Parameters;
             if (parameter["SalesId"] is ObjectId salesId)
             {
@@ -507,6 +506,6 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {}
+        { }
     }
 }

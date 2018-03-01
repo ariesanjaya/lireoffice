@@ -2,17 +2,11 @@
 using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace LireOffice.ViewModels
 {
@@ -34,14 +28,16 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private UserContext _employeeDTO;
 
         public UserContext EmployeeDTO
         {
             get => _employeeDTO;
             set => SetProperty(ref _employeeDTO, value, nameof(EmployeeDTO));
-        }        
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
@@ -66,7 +62,7 @@ namespace LireOffice.ViewModels
 
             employee.UserType = "Employee";
             context.AddEmployee(employee);
-            
+
             OnCancel();
             eventAggregator.GetEvent<EmployeeListUpdateEvent>().Publish("Update Employee List");
         }
@@ -92,7 +88,7 @@ namespace LireOffice.ViewModels
             if (employee != null)
                 EmployeeDTO = Mapper.Map<User, UserContext>(employee);
         }
-        
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
@@ -110,7 +106,6 @@ namespace LireOffice.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
         }
     }
 }

@@ -1,20 +1,7 @@
-﻿using Prism.Events;
-using Syncfusion.UI.Xaml.Grid;
-using LireOffice.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LireOffice.Utilities;
+using Prism.Events;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LireOffice.Views
 {
@@ -31,7 +18,7 @@ namespace LireOffice.Views
 
             ea.GetEvent<TransactionDetailDataGridFocusEvent>().Subscribe((string text) => dataGrid.Focus());
 
-            ea.GetEvent<ResetValueEvent>().Subscribe((string text) => 
+            ea.GetEvent<ResetValueEvent>().Subscribe((string text) =>
             {
                 CustomerBox.Text = null;
                 EmployeeBox.Text = null;
@@ -42,6 +29,5 @@ namespace LireOffice.Views
         {
             dataGrid.Focus();
         }
-        
     }
 }

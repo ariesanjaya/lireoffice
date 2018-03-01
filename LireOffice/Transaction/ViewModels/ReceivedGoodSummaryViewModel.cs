@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -47,6 +46,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private ObservableCollection<ReceivedGoodInfoContext> _receivedGoodInfoList;
 
         public ObservableCollection<ReceivedGoodInfoContext> ReceivedGoodInfoList
@@ -87,17 +87,17 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _searchText, value, SearchReceivedGoodList, nameof(SearchText));
         }
 
-        #endregion
+        #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand DetailCommand => new DelegateCommand(OnDetail);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
-        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate );
+        public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
         public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadReceivedGoodList());
 
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
-        
+
         private void OnAdd()
         {
             regionManager.RequestNavigate("ContentRegion", "ReceivedGoodDetail");
@@ -110,7 +110,6 @@ namespace LireOffice.ViewModels
 
         private void OnDelete()
         {
-                
         }
 
         private async void OnDetailsViewExpanding(object _item)
@@ -119,7 +118,7 @@ namespace LireOffice.ViewModels
             {
                 SelectedReceivedGoodInfo.FirstDetailList.Clear();
 
-                var tempFirstDetailList = await Task.Run(()=> 
+                var tempFirstDetailList = await Task.Run(() =>
                 {
                     Collection<ReceivedGoodItemContext> _itemList = new Collection<ReceivedGoodItemContext>();
                     var itemList = context.GetReceivedGoodItem(receivedGood.Id).ToList();
@@ -151,13 +150,12 @@ namespace LireOffice.ViewModels
                 SelectedReceivedGoodInfo.FirstDetailList.AddRange(tempFirstDetailList);
             }
         }
-        
 
         private async void LoadReceivedGoodList(string text = null)
         {
             ReceivedGoodInfoList.Clear();
-            
-            var tempReceivedGoodList = await Task.Run(()=> 
+
+            var tempReceivedGoodList = await Task.Run(() =>
             {
                 Collection<ReceivedGoodInfoContext> _receivedGoodList = new Collection<ReceivedGoodInfoContext>();
                 List<ReceivedGood> receivedGoodList;

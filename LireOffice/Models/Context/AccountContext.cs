@@ -1,10 +1,9 @@
 ﻿using LiteDB;
 using Prism.Mvvm;
-using System.ComponentModel;
 
 namespace LireOffice.Models
 {
-    public class AccountContext : BindableBase, IDataErrorInfo
+    public class AccountContext : BindableBase
     {
         public ObjectId Id { get; set; }
 
@@ -13,7 +12,7 @@ namespace LireOffice.Models
         public string ReferenceId
         {
             get => _referenceId;
-            set => SetProperty(ref _referenceId, value, CheckBtnAvailability, nameof(ReferenceId));
+            set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
         }
 
         private string _name;
@@ -21,7 +20,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, CheckBtnAvailability, nameof(Name));
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
         private string _category;
@@ -40,39 +39,12 @@ namespace LireOffice.Models
             set => SetProperty(ref _description, value, nameof(Description));
         }
 
-        private bool _isBtnEnabled;
+        private decimal _balance;
 
-        public bool IsBtnEnabled
+        public decimal Balance
         {
-            get => _isBtnEnabled;
-            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
-        }
-
-        public string Error => null;
-
-        public string this[string propertyName]
-        {
-            get
-            {
-                switch (propertyName)
-                {
-                    case nameof(ReferenceId):
-                        break;
-
-                    case nameof(Name):
-
-                        break;
-                }
-                return string.Empty;
-            }
-        }
-
-        private void CheckBtnAvailability()
-        {
-            if (!string.IsNullOrEmpty(ReferenceId) && !string.IsNullOrEmpty(Name))
-                IsBtnEnabled = true;
-            else
-                IsBtnEnabled = false;
+            get => _balance;
+            set => SetProperty(ref _balance, value, nameof(Balance));
         }
     }
 }

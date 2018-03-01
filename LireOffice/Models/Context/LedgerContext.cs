@@ -1,10 +1,7 @@
-﻿using LiteDB;
+﻿using LireOffice.Utilities;
+using LiteDB;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace LireOffice.Models
 {
@@ -35,7 +32,13 @@ namespace LireOffice.Models
         public decimal Value
         {
             get => _value;
-            set => SetProperty(ref _value, value, nameof(Value));
+            set => SetProperty(ref _value, value, () =>
+             {
+                 ValueString = CurrencyConverter.ConvertNumberToString((long)Value) + " rupiah";
+
+                 TextInfo textInfo = new CultureInfo("id-ID", false).TextInfo;
+                 ValueString = textInfo.ToTitleCase(ValueString);
+             }, nameof(Value));
         }
 
         private string _valueString;
@@ -53,6 +56,5 @@ namespace LireOffice.Models
             get => _isPosted;
             set => SetProperty(ref _isPosted, value, nameof(IsPosted));
         }
-
     }
 }

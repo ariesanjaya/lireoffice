@@ -18,7 +18,7 @@ namespace LireOffice.ViewModels
 
         private bool IsUpdated = false;
         private string Instigator;
-                
+
         public AddVendorViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
         {
             eventAggregator = ea;
@@ -29,14 +29,16 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private UserContext _vendorDTO;
 
         public UserContext VendorDTO
         {
             get => _vendorDTO;
             set => SetProperty(ref _vendorDTO, value, nameof(VendorDTO));
-        }                
-        #endregion
+        }
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
@@ -48,7 +50,7 @@ namespace LireOffice.ViewModels
             else
                 UpdateData();
         }
-        
+
         private void OnCancel()
         {
             switch (Instigator)
@@ -67,7 +69,7 @@ namespace LireOffice.ViewModels
                     regionManager.Regions["Option01Region"].RemoveAll();
                     eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(false);
                     break;
-            }            
+            }
         }
 
         private void LoadData(UserProfileContext _vendor)
@@ -85,7 +87,7 @@ namespace LireOffice.ViewModels
 
             vendor.UserType = "Vendor";
             context.AddVendor(vendor);
-            
+
             OnCancel();
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Publish("Update Vendor List");
         }
@@ -95,7 +97,7 @@ namespace LireOffice.ViewModels
             var result = context.GetVendorById(VendorDTO.Id);
             if (result != null)
             {
-                result = Mapper.Map(VendorDTO,result);
+                result = Mapper.Map(VendorDTO, result);
                 result.Version += 1;
                 result.UpdatedAt = DateTime.Now;
                 context.UpdateVendor(result);
@@ -104,7 +106,7 @@ namespace LireOffice.ViewModels
             OnCancel();
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Publish("Update Vendor List");
         }
-        
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
@@ -125,7 +127,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {            
+        {
         }
     }
 }

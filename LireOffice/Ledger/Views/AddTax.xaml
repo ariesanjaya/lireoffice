@@ -1,41 +1,41 @@
 ﻿<UserControl x:Class="LireOffice.Views.AddTax"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:local="clr-namespace:LireOffice.Views"              
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             xmlns:local="clr-namespace:LireOffice.Views"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" >
+             mc:Ignorable="d">
     <Grid Background="Black">
         <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid Margin="8 8 16 8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="240"/>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="240" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
-                <Label Content="Detail Pajak " Grid.ColumnSpan="4" FontSize="22"/>
+                <Label Content="Detail Pajak " Grid.ColumnSpan="4" FontSize="22" />
 
                 <syncfusion:SfDataGrid Grid.Column="4" Grid.Row="2" Grid.RowSpan="10"
                                        ColumnSizer="Star"
@@ -48,32 +48,32 @@
                                        HeaderRowHeight="32"
                                        RowHeight="32">
                     <syncfusion:SfDataGrid.Columns>
-                        <syncfusion:GridTextColumn HeaderText="Pajak" MappingName="Name"/>
-                        <syncfusion:GridPercentColumn HeaderText="Nilai" MappingName="Value" Width="70"/>
+                        <syncfusion:GridTextColumn HeaderText="Pajak" MappingName="Name" />
+                        <syncfusion:GridPercentColumn HeaderText="Nilai" MappingName="Value" Width="70" />
                     </syncfusion:SfDataGrid.Columns>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </syncfusion:SfDataGrid>
 
                 <Label Grid.Row="4" Content="Nama" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding TaxDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center"/>
+                <TextBox FontSize="14" Text="{Binding TaxDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
 
                 <Label Grid.Row="6" Content="Nilai" FontSize="14" VerticalAlignment="Center" />
-                <syncfusion:PercentTextBox FontSize="14" PercentValue="{Binding TaxDTO.Value}" Grid.Column="1" Grid.Row="6" Width="80" HorizontalAlignment="Left" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch"/>
+                <syncfusion:PercentTextBox FontSize="14" PercentValue="{Binding TaxDTO.Value}" Grid.Column="1" Grid.Row="6" Width="80" HorizontalAlignment="Left" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Stretch" />
 
                 <Label Grid.Row="8" Content="Keterangan" FontSize="14" VerticalAlignment="Center" />
-                <TextBox Grid.Column="1" Grid.Row="8" FontSize="14" Text="{Binding TaxDTO.Description}" TextWrapping="WrapWithOverflow" Grid.RowSpan="2"/>
+                <TextBox Grid.Column="1" Grid.Row="8" FontSize="14" Text="{Binding TaxDTO.Description}" TextWrapping="WrapWithOverflow" Grid.RowSpan="2" />
 
-                <CheckBox Grid.Row="11" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding TaxDTO.IsActive}" VerticalAlignment="Center"/>
+                <CheckBox Grid.Row="11" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding TaxDTO.IsActive}" VerticalAlignment="Center" />
 
                 <StackPanel Margin="14" Grid.Row="13" Grid.ColumnSpan="4" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Tambah" Command="{Binding AddCommand}" IsEnabled="{Binding TaxDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}"/>
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Update" Margin="16 0 0 0" Command="{Binding UpdateCommand}" IsEnabled="{Binding TaxDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}"/>
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Hapus" Margin="16 0 0 0" Command="{Binding DeleteCommand}" IsEnabled="False"/>
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}"/>
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Tambah" Command="{Binding AddCommand}" IsEnabled="{Binding TaxDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Update" Margin="16 0 0 0" Command="{Binding UpdateCommand}" IsEnabled="{Binding TaxDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Hapus" Margin="16 0 0 0" Command="{Binding DeleteCommand}" IsEnabled="False" />
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />
                 </StackPanel>
             </Grid>
         </Grid>
