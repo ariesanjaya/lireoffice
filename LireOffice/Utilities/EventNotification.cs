@@ -27,6 +27,8 @@ namespace LireOffice.Utilities
 
     public class SalesListUpdatedEvent : PubSubEvent<string> { }
 
+    public class LedgerListUpdatedEvent : PubSubEvent<string> { }
+
     public class UnitTypeListUpdatedEvent : PubSubEvent<ObjectId> { }
 
     public class ProductDataGridFocusEvent : PubSubEvent<string> { }

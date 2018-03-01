@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:LireOffice.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -32,6 +33,8 @@
 
             <syncfusion:SfDataGrid x:Name="LedgerInDataGrid"
                                    AutoGenerateColumns="False"
+                                   ItemsSource="{Binding LedgerList}"
+                                   SelectedItem="{Binding SelectedLedger}"
                                    Grid.Row="1"
                                    FontSize="14"
                                    NavigationMode="Row"
@@ -43,13 +46,25 @@
                                    ColumnSizer="Star"
                                    RowHeight="40" HeaderRowHeight="40">
                 <syncfusion:SfDataGrid.Columns>
-                    <syncfusion:GridDateTimeColumn Pattern="ShortDate" HeaderText="Tgl" Width="100" />
-                    <syncfusion:GridTextColumn HeaderText="No. Referensi" Width="120" />
-                    <syncfusion:GridTextColumn HeaderText="Deskripsi" />
-                    <syncfusion:GridTextColumn HeaderText="Petugas" Width="160" />
-                    <syncfusion:GridCurrencyColumn HeaderText="Jumlah" Width="120" />
-                    <syncfusion:GridCurrencyColumn HeaderText="Total" Width="160" />
+                    <syncfusion:GridDateTimeColumn Pattern="ShortDate" HeaderText="Tgl" Width="100" MappingName="LedgerDate"/>
+                    <syncfusion:GridTextColumn HeaderText="No. Referensi" Width="120" MappingName="ReferenceId"/>
+                    <syncfusion:GridTextColumn HeaderText="Deskripsi" MappingName="Description"/>
+                    <syncfusion:GridTextColumn HeaderText="Petugas" Width="160" MappingName="EmployeeName"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Jumlah" Width="120" MappingName="Value" CurrencySymbol="Rp" CurrencyDecimalDigits="2" CurrencyDecimalSeparator="," CurrencyGroupSizes="3" CurrencyGroupSeparator="." CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
+                    <syncfusion:GridCurrencyColumn HeaderText="Total" Width="160" MappingName="Total" CurrencySymbol="Rp" CurrencyDecimalDigits="2" CurrencyDecimalSeparator="," CurrencyGroupSizes="3" CurrencyGroupSeparator="." CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
+                    <syncfusion:GridCheckBoxColumn HeaderText="" MappingName="IsPosted" Width="60"/>
                 </syncfusion:SfDataGrid.Columns>
+                <i:Interaction.Behaviors>
+                    <local:SelectionController />
+                </i:Interaction.Behaviors>
+                <i:Interaction.Triggers>
+                    <local:EnterKeyDownEventTrigger EventName="KeyUp">
+                        <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
+                    </local:EnterKeyDownEventTrigger>
+                    <i:EventTrigger EventName="CellDoubleTapped">
+                        <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </syncfusion:SfDataGrid>
         </Grid>
     </Grid>

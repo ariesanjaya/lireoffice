@@ -1,6 +1,7 @@
 ﻿using LireOffice.Utilities;
 using LiteDB;
 using Prism.Mvvm;
+using System;
 using System.Globalization;
 
 namespace LireOffice.Models
@@ -9,6 +10,8 @@ namespace LireOffice.Models
     {
         public ObjectId Id { get; set; }
         public ObjectId AccountId { get; set; }
+        public ObjectId AccountInId { get; set; }
+        public ObjectId AccountOutId { get; set; }
         public ObjectId EmployeeId { get; set; }
 
         private string _referenceId;
@@ -19,6 +22,14 @@ namespace LireOffice.Models
             set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
         }
 
+        private DateTime _ledgerDate;
+
+        public DateTime LedgerDate
+        {
+            get => _ledgerDate;
+            set => SetProperty(ref _ledgerDate, value, nameof(LedgerDate));
+        }
+        
         private string _description;
 
         public string Description

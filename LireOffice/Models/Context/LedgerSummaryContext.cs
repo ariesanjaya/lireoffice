@@ -7,6 +7,10 @@ namespace LireOffice.Models
     public class LedgerSummaryContext : BindableBase
     {
         public ObjectId Id { get; set; }
+        public ObjectId AccountId { get; set; }
+        public ObjectId AccountInId { get; set; }
+        public ObjectId EmployeeId { get; set; }
+
         private DateTime _ledgerDate;
 
         public DateTime LedgerDate
@@ -37,6 +41,30 @@ namespace LireOffice.Models
         {
             get => _employeeName;
             set => SetProperty(ref _employeeName, value, nameof(EmployeeName));
+        }
+
+        private decimal _value;
+
+        public decimal Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value, nameof(Value));
+        }
+
+        private decimal _total;
+
+        public decimal Total
+        {
+            get => _total;
+            set => SetProperty(ref _total, value, nameof(Total));
+        }
+        
+        private bool _isPosted;
+
+        public bool IsPosted
+        {
+            get => _isPosted;
+            set => SetProperty(ref _isPosted, value, nameof(IsPosted));
         }
     }
 }

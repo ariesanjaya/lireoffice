@@ -24,6 +24,8 @@ namespace LireOffice.Service
             db.GetCollection<UnitType>("UnitTypes").EnsureIndex(c => c.Barcode);
 
             db.GetCollection<Account>("Accounts").EnsureIndex(c => c.Category);
+
+            //db.GetCollection<LedgerIn>("LedgerIn").Delete(Query.All());
         }
 
         public void SeedData()
@@ -534,5 +536,71 @@ namespace LireOffice.Service
         }
 
         #endregion Account Methods
+
+        #region LedgerIn Methods
+
+        public void AddLedgerIn(LedgerIn ledger)
+        {
+            db.GetCollection<LedgerIn>("LedgerIn").Insert(ledger);
+        }
+
+        public void UpdateLedgerIn(LedgerIn ledger)
+        {
+            db.GetCollection<LedgerIn>("LedgerIn").Update(ledger);
+        }
+
+        public void DeleteLedgerIn(ObjectId Id)
+        {
+            var result = db.GetCollection<LedgerIn>("LedgerIn").FindById(Id);
+            if (result != null)
+            {
+                db.GetCollection<LedgerIn>("LedgerIn").Delete(result.Id);
+            }
+        }
+
+        public IEnumerable<LedgerIn> GetLedgerIn()
+        {
+            return db.GetCollection<LedgerIn>("LedgerIn").FindAll();
+        }
+
+        public LedgerIn GetLedgerInById(ObjectId Id)
+        {
+            return db.GetCollection<LedgerIn>("LedgerIn").FindById(Id);
+        }
+
+        #endregion
+
+        #region LedgerOut Methods
+
+        public void AddLedgerOut(LedgerOut ledger)
+        {
+            db.GetCollection<LedgerOut>("LedgerOut").Insert(ledger);
+        }
+
+        public void UpdateLedgerOut(LedgerOut ledger)
+        {
+            db.GetCollection<LedgerOut>("LedgerOut").Update(ledger);
+        }
+
+        public void DeleteLedgerOut(ObjectId Id)
+        {
+            var result = db.GetCollection<LedgerOut>("LedgerOut").FindById(Id);
+            if (result != null)
+            {
+                db.GetCollection<LedgerOut>("LedgerOut").Delete(result.Id);
+            }
+        }
+
+        public IEnumerable<LedgerOut> GetLedgerOut()
+        {
+            return db.GetCollection<LedgerOut>("LedgerOut").FindAll();
+        }
+
+        public LedgerOut GetLedgerOutById(ObjectId Id)
+        {
+            return db.GetCollection<LedgerOut>("LedgerOut").FindById(Id);
+        }
+
+        #endregion
     }
 }

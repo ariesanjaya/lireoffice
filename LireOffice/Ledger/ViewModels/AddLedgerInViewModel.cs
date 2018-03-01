@@ -6,6 +6,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace LireOffice.ViewModels
             eventAggregator = ea;
             this.context = context;
 
-            LedgerDTO = new LedgerContext();
+            LedgerDTO = new LedgerContext { LedgerDate = DateTime.Now };
 
             AccountList = new ObservableCollection<AccountInfoContext>();
             AccountInList = new ObservableCollection<AccountInfoContext>();
@@ -54,7 +55,11 @@ namespace LireOffice.ViewModels
         public AccountInfoContext SelectedAccount
         {
             get => _selectedAccount;
-            set => SetProperty(ref _selectedAccount, value, nameof(SelectedAccount));
+            set => SetProperty(ref _selectedAccount, value,()=> 
+            {
+                if (_selectedAccount != null)
+                    LedgerDTO.AccountId = _selectedAccount.Id;
+            }, nameof(SelectedAccount));
         }
 
         private ObservableCollection<AccountInfoContext> _accountInList;
@@ -65,12 +70,16 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _accountInList, value, nameof(AccountInList));
         }
 
-        private AccountInfoContext _selectedAccountOut;
+        private AccountInfoContext _selectedAccountIn;
 
-        public AccountInfoContext SelectedAccountOut
+        public AccountInfoContext SelectedAccountIn
         {
-            get => _selectedAccountOut;
-            set => SetProperty(ref _selectedAccountOut, value, nameof(SelectedAccountOut));
+            get => _selectedAccountIn;
+            set => SetProperty(ref _selectedAccountIn, value,()=> 
+            {
+                if (_selectedAccountIn != null)
+                    LedgerDTO.AccountInId = _selectedAccountIn.Id;
+            }, nameof(SelectedAccountIn));
         }
 
         private ObservableCollection<UserSimpleContext> _employeeList;
@@ -86,7 +95,11 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedEmployee
         {
             get => _selectedEmployee;
-            set => SetProperty(ref _selectedEmployee, value, nameof(SelectedEmployee));
+            set => SetProperty(ref _selectedEmployee, value,()=> 
+            {
+                if (_selectedEmployee != null)
+                    LedgerDTO.EmployeeId = _selectedEmployee.Id;
+            }, nameof(SelectedEmployee));
         }
 
         #endregion Binding Properties
@@ -101,7 +114,11 @@ namespace LireOffice.ViewModels
 
         private void OnSaveDraft()
         {
+            LedgerIn ledger = Mapper.Map<LedgerContext, LedgerIn>(LedgerDTO);
+            context.AddLedgerIn(ledger);
+            
             OnCancel();
+            eventAggregator.GetEvent<LedgerListUpdatedEvent>().Publish("Load Ledger List");
         }
 
         private void OnCancel()

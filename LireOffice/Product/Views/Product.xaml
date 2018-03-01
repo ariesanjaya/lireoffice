@@ -36,7 +36,6 @@
                                NavigationMode="Row"
                                EnableDataVirtualization="True"
                                ScrollMode="Async"
-                               ShowRowHeader="True"
                                HeaderRowHeight="32">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="120" HorizontalHeaderContentAlignment="Left" />

@@ -210,21 +210,39 @@ namespace LireOffice.Service
         ReceivedGoodItem GetReceivedGoodItemById(ObjectId id);
 
         #endregion ReceivedGoodItem Methods
-
-
-
+        
         #region Account Methods
 
         void AddAccount(Account account);
-
         void UpdateAccount(Account account);
-
         IEnumerable<Account> GetAccounts();
-
         IEnumerable<Account> GetAccounts(string category);
-
         Account GetAccountById(ObjectId id);
 
         #endregion Account Methods
+
+        #region LedgerIn Methods
+
+        void AddLedgerIn(LedgerIn ledger);
+        void UpdateLedgerIn(LedgerIn ledger);
+        void DeleteLedgerIn(ObjectId Id);
+        IEnumerable<LedgerIn> GetLedgerIn();
+        LedgerIn GetLedgerInById(ObjectId Id);
+
+        #endregion
+
+        #region LedgerOut Methods
+
+        void AddLedgerOut(LedgerOut ledger);
+        void UpdateLedgerOut(LedgerOut ledger);
+        void DeleteLedgerOut(ObjectId Id);
+        IEnumerable<LedgerOut> GetLedgerOut();
+        LedgerOut GetLedgerOutById(ObjectId Id);
+
+        #endregion
+
+        #region MainLedger Methods
+
+        #endregion
     }
 }
