@@ -38,7 +38,7 @@
                     <ColumnDefinition Width="440" />
                 </Grid.ColumnDefinitions>
 
-                <Label Content="Kas Masuk" Grid.ColumnSpan="2" FontSize="22" />
+                <Label Content="Kas Keluar" Grid.ColumnSpan="2" FontSize="22" />
 
                 <Label Grid.Row="2" Content="No. Referensi" FontSize="14" VerticalAlignment="Center" />
                 <TextBox x:Name="ReferenceIdTextBox" FontSize="14" Width="240" Text="{Binding LedgerDTO.ReferenceId, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
@@ -50,7 +50,7 @@
                 <syncfusion:AutoComplete FontSize="14" Width="240" IsFilter="True" CustomSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="6" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
 
                 <Label Grid.Row="8" Content="Kategori" FontSize="14" VerticalAlignment="Center" />
-                <syncfusion:AutoComplete FontSize="14" Width="240" IsFilter="True" CustomSource="{Binding AccountInList}" SelectedItem="{Binding SelectedAccountIn}" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="8" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
+                <syncfusion:AutoComplete FontSize="14" Width="240" IsFilter="True" CustomSource="{Binding AccountOutList}" SelectedItem="{Binding SelectedAccountOut}" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="8" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
 
                 <Label Grid.Row="10" Content="Petugas" FontSize="14" VerticalAlignment="Center" />
                 <syncfusion:AutoComplete x:Name="EmployeeTextBox" FontSize="14" Width="240" IsFilter="True" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="10" VerticalContentAlignment="Center" HorizontalAlignment="Left" />

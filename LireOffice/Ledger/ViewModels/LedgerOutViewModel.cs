@@ -1,4 +1,6 @@
-﻿using LireOffice.Service;
+﻿using AutoMapper;
+using LireOffice.Models;
+using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
 using Microsoft.Practices.Unity;
@@ -7,6 +9,9 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace LireOffice.ViewModels
@@ -36,6 +41,10 @@ namespace LireOffice.ViewModels
             MinDate = new DateTime(year, month, 1);
             MaxDate = new DateTime(year, month, dayInMonth);
             // ----------------------
+
+            LedgerList = new ObservableCollection<LedgerSummaryContext>();
+            LoadLedgerList();
+            eventAggregator.GetEvent<LedgerListUpdatedEvent>().Subscribe((string text) => LoadLedgerList());
         }
 
         #region Binding Properties
@@ -64,6 +73,22 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _maxDate, value, nameof(MaxDate));
         }
 
+        private ObservableCollection<LedgerSummaryContext> _ledgerList;
+
+        public ObservableCollection<LedgerSummaryContext> LedgerList
+        {
+            get => _ledgerList;
+            set => SetProperty(ref _ledgerList, value, nameof(LedgerList));
+        }
+
+        private LedgerSummaryContext _selectedLedger;
+
+        public LedgerSummaryContext SelectedLedger
+        {
+            get => _selectedLedger;
+            set => SetProperty(ref _selectedLedger, value, nameof(SelectedLedger));
+        }
+
         #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
@@ -72,6 +97,8 @@ namespace LireOffice.ViewModels
 
         public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
         public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadLedgerList());
+
+        public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
 
         #region Delegate Command Methods
 
@@ -95,8 +122,53 @@ namespace LireOffice.ViewModels
 
         #endregion Delegate Command Methods
 
-        private void LoadLedgerList()
+        private void OnCellDoubleTapped()
         {
+            if (SelectedLedger != null)
+            {
+                var view = container.Resolve<AddLedgerOut>();
+                IRegion region = regionManager.Regions["Option01Region"];
+                region.Add(view, "AddLedgerOut");
+
+                var parameter = new NavigationParameters { { "SelectedLedger", SelectedLedger } };
+
+                regionManager.RequestNavigate("Option01Region", "AddLedgerOut", parameter);
+                eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
+            }
+        }
+
+        private async void LoadLedgerList()
+        {
+            LedgerList.Clear();
+            decimal tempTotal = 0;
+
+            var tempLedgerList = await Task.Run(()=> 
+            {
+                Collection<LedgerSummaryContext> _ledgerList = new Collection<LedgerSummaryContext>();
+                var ledgerList = context.GetLedgerOut().ToList();
+                if (ledgerList.Count > 0)
+                {
+                    foreach (var ledger in ledgerList)
+                    {
+                        LedgerSummaryContext _ledger = Mapper.Map<Models.LedgerOut, LedgerSummaryContext>(ledger);
+                        var employee = context.GetEmployeeById(_ledger.EmployeeId);
+                        if (employee != null)
+                            _ledger.EmployeeName = employee.Name;
+
+                        if (_ledger.IsPosted)
+                        {
+                            tempTotal += _ledger.Value;
+                            _ledger.Total = tempTotal;
+                        }
+
+                        _ledgerList.Add(_ledger);
+                    }
+                }
+
+                return _ledgerList;
+            });
+
+            LedgerList.AddRange(tempLedgerList);
         }
 
         private void SearchData()

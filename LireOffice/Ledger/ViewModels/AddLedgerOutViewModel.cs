@@ -2,10 +2,12 @@
 using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
+using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +25,12 @@ namespace LireOffice.ViewModels
             regionManager = rm;
             eventAggregator = ea;
             this.context = context;
+
+            LedgerDTO = new LedgerContext { LedgerDate = DateTime.Now };
+
+            AccountList = new ObservableCollection<AccountInfoContext>();
+            AccountOutList = new ObservableCollection<AccountInfoContext>();
+            EmployeeList = new ObservableCollection<UserSimpleContext>();
         }
 
         #region Binding Properties
@@ -70,7 +78,7 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedAccountOut, value, () =>
             {
                 if (_selectedAccountOut != null)
-                    LedgerDTO.AccountInId = _selectedAccountOut.Id;
+                    LedgerDTO.AccountOutId = _selectedAccountOut.Id;
             }, nameof(SelectedAccountOut));
         }
 
@@ -101,10 +109,16 @@ namespace LireOffice.ViewModels
 
         private void OnSave()
         {
+
         }
 
         private void OnSaveDraft()
         {
+            LedgerOut ledger = Mapper.Map<LedgerContext, LedgerOut>(LedgerDTO);
+            context.AddLedgerOut(ledger);
+
+            OnCancel();
+            eventAggregator.GetEvent<LedgerListUpdatedEvent>().Publish("Load Ledger List");
         }
 
         private void OnCancel()
@@ -113,7 +127,7 @@ namespace LireOffice.ViewModels
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(false);
         }
 
-        private async void LoadAccountList()
+        private async void LoadAccountList(ObjectId accountId = null)
         {
             AccountList.Clear();
 
@@ -134,9 +148,12 @@ namespace LireOffice.ViewModels
             });
 
             AccountList.AddRange(tempAccountList);
+
+            if (accountId != null)
+                SelectedAccount = AccountList.FirstOrDefault(c => c.Id == accountId);
         }
 
-        private async void LoadAccountOutList()
+        private async void LoadAccountOutList(ObjectId accountOutId = null)
         {
             AccountOutList.Clear();
 
@@ -157,9 +174,12 @@ namespace LireOffice.ViewModels
             });
 
             AccountOutList.AddRange(tempAccountOutList);
+
+            if (accountOutId != null)
+                SelectedAccountOut = AccountOutList.FirstOrDefault(c => c.Id == accountOutId);
         }
 
-        private async void LoadEmployeeList()
+        private async void LoadEmployeeList(ObjectId employeeId = null)
         {
             EmployeeList.Clear();
 
@@ -181,13 +201,38 @@ namespace LireOffice.ViewModels
             });
 
             EmployeeList.AddRange(tempEmployeeList);
+
+            if (employeeId != null)
+                SelectedEmployee = EmployeeList.FirstOrDefault(c => c.Id == employeeId);            
+        }
+
+        private void LoadData(LedgerSummaryContext _ledger)
+        {
+            var ledger = context.GetLedgerOutById(_ledger.Id);
+            if (ledger != null)
+            {
+                LedgerDTO = Mapper.Map<LedgerOut, LedgerContext>(ledger);
+
+                LoadAccountList(LedgerDTO.AccountId);
+                LoadAccountOutList(LedgerDTO.AccountOutId);
+                LoadEmployeeList(LedgerDTO.EmployeeId);
+            }
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            LoadAccountList();
-            LoadAccountOutList();
-            LoadEmployeeList();
+        {           
+
+            var parameter = navigationContext.Parameters;
+            if (parameter["SelectedLedger"] is LedgerSummaryContext ledger)
+            {
+                LoadData(ledger);
+            }
+            else
+            {
+                LoadAccountList();
+                LoadAccountOutList();
+                LoadEmployeeList();
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

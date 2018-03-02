@@ -197,6 +197,11 @@ namespace LireOffice.ViewModels
             EmployeeList.AddRange(tempEmployeeList);
         }
 
+        private void LoadData()
+        {
+
+        }
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             LoadAccountList();

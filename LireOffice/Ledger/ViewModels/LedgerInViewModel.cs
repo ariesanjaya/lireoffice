@@ -43,9 +43,7 @@ namespace LireOffice.ViewModels
             // ----------------------
 
             LedgerList = new ObservableCollection<LedgerSummaryContext>();
-
             LoadLedgerList();
-
             eventAggregator.GetEvent<LedgerListUpdatedEvent>().Subscribe((string text)=> LoadLedgerList());
         }
 
@@ -94,7 +92,7 @@ namespace LireOffice.ViewModels
         #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
-        public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
+        public DelegateCommand UpdateCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
 
         public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
@@ -113,11 +111,7 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option01Region", "AddLedgerIn");
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
-
-        private void OnUpdate()
-        {
-        }
-
+        
         private void OnDelete()
         {
         }
