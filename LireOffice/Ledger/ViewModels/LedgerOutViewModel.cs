@@ -142,7 +142,7 @@ namespace LireOffice.ViewModels
             LedgerList.Clear();
             decimal tempTotal = 0;
 
-            var tempLedgerList = await Task.Run(()=> 
+            var tempLedgerList = await Task.Run(() =>
             {
                 Collection<LedgerSummaryContext> _ledgerList = new Collection<LedgerSummaryContext>();
                 var ledgerList = context.GetLedgerOut().ToList();

@@ -1,12 +1,11 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System.Windows.Media.Imaging;
 
 namespace LireOffice.Models
 {
     public class UserProfileContext : BindableBase
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
         private string _name;
 

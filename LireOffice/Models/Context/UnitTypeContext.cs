@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System.ComponentModel;
 
 namespace LireOffice.Models
@@ -11,10 +10,10 @@ namespace LireOffice.Models
             IsActive = true;
         }
 
-        public ObjectId Id { get; set; }
-        public ObjectId ProductId { get; set; }
-        public ObjectId TaxInId { get; set; }
-        public ObjectId TaxOutId { get; set; }
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public string TaxInId { get; set; }
+        public string TaxOutId { get; set; }
 
         private string _name;
 

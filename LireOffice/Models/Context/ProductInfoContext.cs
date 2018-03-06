@@ -1,15 +1,14 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 
 namespace LireOffice.Models
 {
     public class ProductInfoContext : BindableBase
     {
-        public ObjectId Id { get; set; }
-        public ObjectId UnitTypeId { get; set; }
-        public ObjectId CategoryId { get; set; }
-        public ObjectId VendorId { get; set; }
-        public ObjectId TaxId { get; set; }
+        public string Id { get; set; }
+        public string UnitTypeId { get; set; }
+        public string CategoryId { get; set; }
+        public string VendorId { get; set; }
+        public string TaxId { get; set; }
         public decimal Tax { get; set; }
         public string UnboundColumn { get; set; }
 

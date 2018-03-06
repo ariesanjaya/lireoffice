@@ -1,13 +1,11 @@
-﻿using LiteDB;
-
-namespace LireOffice.Models
+﻿namespace LireOffice.Models
 {
     public class SalesItem : EntityData
     {
-        public ObjectId SalesId { get; set; }
-        public ObjectId ProductId { get; set; }
-        public ObjectId UnitTypeId { get; set; }
-        public ObjectId TaxId { get; set; }
+        public string SalesId { get; set; }
+        public string ProductId { get; set; }
+        public string UnitTypeId { get; set; }
+        public string TaxId { get; set; }
         public string Barcode { get; set; }
         public string Name { get; set; }
         public double Quantity { get; set; }

@@ -2,7 +2,6 @@
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -26,7 +25,7 @@ namespace LireOffice.ViewModels
 
         private bool IsProductListLoaded = false;
         private string Instigator;
-        private Tuple<ObjectId, int, bool> productIndex;
+        private Tuple<string, int, bool> productIndex;
 
         private DispatcherTimer timer;
 
@@ -253,7 +252,7 @@ namespace LireOffice.ViewModels
             if (parameter["Instigator"] is string instigator)
                 Instigator = instigator;
 
-            if (parameter["Product"] is Tuple<ObjectId, int, bool> productIndex)
+            if (parameter["Product"] is Tuple<string, int, bool> productIndex)
                 this.productIndex = productIndex;
 
             LoadProductList();

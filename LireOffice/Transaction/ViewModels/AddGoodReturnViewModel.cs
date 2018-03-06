@@ -2,7 +2,6 @@
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -68,7 +67,7 @@ namespace LireOffice.ViewModels
             var product = productIndex.Item1;
             GoodReturnItemContext _item = new GoodReturnItemContext(eventAggregator)
             {
-                Id = ObjectId.NewObjectId(),
+                Id = Guid.NewGuid().ToString(),
                 ProductId = product.Id,
                 UnitTypeId = product.UnitTypeId,
                 Barcode = product.Barcode,
@@ -120,7 +119,7 @@ namespace LireOffice.ViewModels
             if (SelectedItem != null)
                 parameter.Add("Product", Tuple.Create(SelectedItem.UnitTypeId, ItemList.IndexOf(SelectedItem), true));
             else
-                parameter.Add("Product", Tuple.Create(ObjectId.NewObjectId(), 0, false));
+                parameter.Add("Product", Tuple.Create(Guid.NewGuid().ToString(), 0, false));
 
             regionManager.RequestNavigate("Option02Region", "AddReceivedGoodItem", parameter);
             eventAggregator.GetEvent<Option02VisibilityEvent>().Publish(true);

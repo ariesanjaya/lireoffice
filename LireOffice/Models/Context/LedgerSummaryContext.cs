@@ -1,15 +1,14 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 
 namespace LireOffice.Models
 {
     public class LedgerSummaryContext : BindableBase
     {
-        public ObjectId Id { get; set; }
-        public ObjectId AccountId { get; set; }
-        public ObjectId AccountInId { get; set; }
-        public ObjectId EmployeeId { get; set; }
+        public string Id { get; set; }
+        public string AccountId { get; set; }
+        public string AccountInId { get; set; }
+        public string EmployeeId { get; set; }
 
         private DateTime _ledgerDate;
 
@@ -58,7 +57,7 @@ namespace LireOffice.Models
             get => _total;
             set => SetProperty(ref _total, value, nameof(Total));
         }
-        
+
         private bool _isPosted;
 
         public bool IsPosted

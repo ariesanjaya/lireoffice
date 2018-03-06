@@ -1,7 +1,6 @@
 ﻿using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -117,7 +116,7 @@ namespace LireOffice.ViewModels
             if (_salesInfo is SalesSummaryContext salesInfo)
             {
                 SelectedSalesInfo.FirstDetailList.Clear();
-                ObjectId tempUnitTypeId = ObjectId.NewObjectId();
+                string tempUnitTypeId = Guid.NewGuid().ToString();
 
                 var tempFirstDetailList = await Task.Run(() =>
                 {
@@ -180,7 +179,7 @@ namespace LireOffice.ViewModels
         private async void LoadSalesList(string text = null)
         {
             SalesInfoList.Clear();
-            ObjectId tempEmployeeId = ObjectId.NewObjectId();
+            string tempEmployeeId = Guid.NewGuid().ToString();
             DateTime tempDate = new DateTime(1900, 1, 1);
 
             var tempSalesList = await Task.Run(() =>

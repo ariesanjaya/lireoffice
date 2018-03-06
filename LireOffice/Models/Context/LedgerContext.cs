@@ -1,5 +1,4 @@
 ﻿using LireOffice.Utilities;
-using LiteDB;
 using Prism.Mvvm;
 using System;
 using System.Globalization;
@@ -8,11 +7,11 @@ namespace LireOffice.Models
 {
     public class LedgerContext : BindableBase
     {
-        public ObjectId Id { get; set; }
-        public ObjectId AccountId { get; set; }
-        public ObjectId AccountInId { get; set; }
-        public ObjectId AccountOutId { get; set; }
-        public ObjectId EmployeeId { get; set; }
+        public string Id { get; set; }
+        public string AccountId { get; set; }
+        public string AccountInId { get; set; }
+        public string AccountOutId { get; set; }
+        public string EmployeeId { get; set; }
 
         private string _referenceId;
 
@@ -29,7 +28,7 @@ namespace LireOffice.Models
             get => _ledgerDate;
             set => SetProperty(ref _ledgerDate, value, nameof(LedgerDate));
         }
-        
+
         private string _description;
 
         public string Description

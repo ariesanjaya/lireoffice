@@ -44,7 +44,7 @@ namespace LireOffice.ViewModels
 
             LedgerList = new ObservableCollection<LedgerSummaryContext>();
             LoadLedgerList();
-            eventAggregator.GetEvent<LedgerListUpdatedEvent>().Subscribe((string text)=> LoadLedgerList());
+            eventAggregator.GetEvent<LedgerListUpdatedEvent>().Subscribe((string text) => LoadLedgerList());
         }
 
         #region Binding Properties
@@ -88,7 +88,7 @@ namespace LireOffice.ViewModels
             get => _selectedLedger;
             set => SetProperty(ref _selectedLedger, value, nameof(SelectedLedger));
         }
-        
+
         #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
@@ -111,7 +111,7 @@ namespace LireOffice.ViewModels
             regionManager.RequestNavigate("Option01Region", "AddLedgerIn");
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
-        
+
         private void OnDelete()
         {
         }
@@ -138,7 +138,7 @@ namespace LireOffice.ViewModels
             LedgerList.Clear();
             decimal tempTotal = 0;
 
-            var tempLedgerList = await Task.Run(()=> 
+            var tempLedgerList = await Task.Run(() =>
             {
                 Collection<LedgerSummaryContext> _ledgerList = new Collection<LedgerSummaryContext>();
                 var ledgerList = context.GetLedgerIn().ToList();

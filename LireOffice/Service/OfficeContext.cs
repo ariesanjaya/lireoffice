@@ -9,7 +9,7 @@ namespace LireOffice.Service
     public sealed class OfficeContext : IOfficeContext
     {
         private LiteDatabase db;
-        private static string databasePath = Environment.CurrentDirectory + @"/OfficeDB.db";
+        private static string databasePath = @"D:/Database/OfficeDB.db";
 
         public OfficeContext()
         {
@@ -25,7 +25,7 @@ namespace LireOffice.Service
 
             db.GetCollection<Account>("Accounts").EnsureIndex(c => c.Category);
 
-            //db.GetCollection<LedgerIn>("LedgerIn").Delete(Query.All());
+            SeedData();
         }
 
         public void SeedData()
@@ -80,7 +80,7 @@ namespace LireOffice.Service
         /// Delete specified vendor
         /// </summary>
         /// <param name="vendor"></param>
-        public void DeleteVendor(ObjectId id)
+        public void DeleteVendor(string id)
         {
             var result = db.GetCollection<User>("Users").FindById(id);
             if (result != null)
@@ -94,7 +94,7 @@ namespace LireOffice.Service
             return db.GetCollection<User>("Users").Find(Query.EQ("UserType", "Vendor"));
         }
 
-        public User GetVendorById(ObjectId id)
+        public User GetVendorById(string id)
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
@@ -125,7 +125,7 @@ namespace LireOffice.Service
         /// Delete specified customer
         /// </summary>
         /// <param name="customer"></param>
-        public void DeleteCustomer(ObjectId id)
+        public void DeleteCustomer(string id)
         {
             var result = db.GetCollection<User>("Users").FindById(id);
             if (result != null)
@@ -139,7 +139,7 @@ namespace LireOffice.Service
             return db.GetCollection<User>("Users").Find(Query.Or(Query.EQ("UserType", "Personal"), Query.EQ("UserType", "Perusahaan")));
         }
 
-        public User GetCustomerById(ObjectId id)
+        public User GetCustomerById(string id)
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
@@ -170,7 +170,7 @@ namespace LireOffice.Service
         /// Delete specified employee
         /// </summary>
         /// <param name="employee"></param>
-        public void DeleteEmployee(ObjectId id)
+        public void DeleteEmployee(string id)
         {
             var result = db.GetCollection<User>("Users").FindById(id);
             if (result != null)
@@ -184,7 +184,7 @@ namespace LireOffice.Service
             return db.GetCollection<User>("Users").Find(Query.EQ("UserType", "Employee"));
         }
 
-        public User GetEmployeeById(ObjectId id)
+        public User GetEmployeeById(string id)
         {
             return db.GetCollection<User>("Users").FindById(id);
         }
@@ -203,7 +203,7 @@ namespace LireOffice.Service
             db.GetCollection<Tax>("Taxes").Update(tax);
         }
 
-        public void DeleteTax(ObjectId id)
+        public void DeleteTax(string id)
         {
             var result = db.GetCollection<Tax>("Taxes").FindById(id);
             if (result != null)
@@ -217,7 +217,7 @@ namespace LireOffice.Service
             return db.GetCollection<Tax>("Taxes").FindAll();
         }
 
-        public Tax GetTaxById(ObjectId id)
+        public Tax GetTaxById(string id)
         {
             return db.GetCollection<Tax>("Taxes").FindById(id);
         }
@@ -236,7 +236,7 @@ namespace LireOffice.Service
             db.GetCollection<ProductCategory>("ProductCategories").Update(category);
         }
 
-        public void DeleteCategory(ObjectId id)
+        public void DeleteCategory(string id)
         {
             var result = db.GetCollection<ProductCategory>("ProductCategories").FindById(id);
             if (result != null)
@@ -250,7 +250,7 @@ namespace LireOffice.Service
             return db.GetCollection<ProductCategory>("ProductCategories").FindAll();
         }
 
-        public ProductCategory GetCategoryById(ObjectId id)
+        public ProductCategory GetCategoryById(string id)
         {
             return db.GetCollection<ProductCategory>("ProductCategories").FindById(id);
         }
@@ -269,7 +269,7 @@ namespace LireOffice.Service
             db.GetCollection<UnitType>("UnitTypes").Update(type);
         }
 
-        public void DeleteUnitType(ObjectId id)
+        public void DeleteUnitType(string id)
         {
             var result = db.GetCollection<UnitType>("UnitTypes").FindById(id);
             if (result != null)
@@ -278,12 +278,12 @@ namespace LireOffice.Service
             }
         }
 
-        public IEnumerable<UnitType> GetUnitType(ObjectId productId)
+        public IEnumerable<UnitType> GetUnitType(string productId)
         {
             return db.GetCollection<UnitType>("UnitTypes").Find(Query.EQ("ProductId", productId));
         }
 
-        public UnitType GetUnitTypeById(ObjectId id)
+        public UnitType GetUnitTypeById(string id)
         {
             return db.GetCollection<UnitType>("UnitTypes").FindById(id);
         }
@@ -302,7 +302,7 @@ namespace LireOffice.Service
             db.GetCollection<Product>("Products").Update(product);
         }
 
-        public void DeleteProduct(ObjectId id)
+        public void DeleteProduct(string id)
         {
             var productResult = db.GetCollection<Product>("Products").FindById(id);
             if (productResult != null)
@@ -330,7 +330,7 @@ namespace LireOffice.Service
             return db.GetCollection<Product>("Products").Find(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())));
         }
 
-        public Product GetProductById(ObjectId id)
+        public Product GetProductById(string id)
         {
             return db.GetCollection<Product>("Products").FindById(id);
         }
@@ -349,7 +349,7 @@ namespace LireOffice.Service
             db.GetCollection<Sales>("Sales").Update(sales);
         }
 
-        public void DeleteSales(ObjectId Id)
+        public void DeleteSales(string Id)
         {
             db.GetCollection<Sales>("Sales").Delete(Id);
         }
@@ -359,7 +359,7 @@ namespace LireOffice.Service
             return db.GetCollection<Sales>("Sales").FindAll();
         }
 
-        public IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate)
+        public IEnumerable<Sales> GetSales(string employeeId, DateTime minSalesDate, DateTime maxSalesDate)
         {
             return db.GetCollection<Sales>("Sales")
                 .Find(Query.And(
@@ -382,7 +382,7 @@ namespace LireOffice.Service
                  );
         }
 
-        public Sales GetSalesById(ObjectId id)
+        public Sales GetSalesById(string id)
         {
             return db.GetCollection<Sales>("Sales").FindById(id);
         }
@@ -406,7 +406,7 @@ namespace LireOffice.Service
             db.GetCollection<SalesItem>("SalesItems").Update(salesItem);
         }
 
-        public void DeleteSalesItem(ObjectId Id)
+        public void DeleteSalesItem(string Id)
         {
             var result = db.GetCollection<SalesItem>("SalesItems").FindById(Id);
             if (result != null)
@@ -415,12 +415,12 @@ namespace LireOffice.Service
             }
         }
 
-        public IEnumerable<SalesItem> GetSalesItem(ObjectId Id)
+        public IEnumerable<SalesItem> GetSalesItem(string Id)
         {
             return db.GetCollection<SalesItem>("SalesItems").Find(Query.EQ("SalesId", Id));
         }
 
-        public SalesItem GetSalesItemById(ObjectId id)
+        public SalesItem GetSalesItemById(string id)
         {
             return db.GetCollection<SalesItem>("SalesItems").FindById(id);
         }
@@ -439,7 +439,7 @@ namespace LireOffice.Service
             db.GetCollection<ReceivedGood>("ReceivedGoods").Update(receivedGood);
         }
 
-        public void DeleteReceivedGood(ObjectId id)
+        public void DeleteReceivedGood(string id)
         {
             var result = db.GetCollection<ReceivedGood>("ReceivedGoods").FindById(id);
             if (result != null)
@@ -458,7 +458,7 @@ namespace LireOffice.Service
             return db.GetCollection<ReceivedGood>("ReceivedGoods").Find(Query.Where("Description", c => c.AsString.ToLower().Contains(text.ToLower())));
         }
 
-        public ReceivedGood GetReceivedGoodById(ObjectId id)
+        public ReceivedGood GetReceivedGoodById(string id)
         {
             return db.GetCollection<ReceivedGood>("ReceivedGoods").FindById(id);
         }
@@ -487,7 +487,7 @@ namespace LireOffice.Service
             db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Update(receivedGoodItem);
         }
 
-        public void DeleteReceivedGoodItem(ObjectId id)
+        public void DeleteReceivedGoodItem(string id)
         {
             var result = db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindById(id);
             if (result != null)
@@ -496,12 +496,12 @@ namespace LireOffice.Service
             }
         }
 
-        public IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id)
+        public IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(string Id)
         {
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").Find(Query.EQ("ReceivedGoodId", Id));
         }
 
-        public ReceivedGoodItem GetReceivedGoodItemById(ObjectId id)
+        public ReceivedGoodItem GetReceivedGoodItemById(string id)
         {
             return db.GetCollection<ReceivedGoodItem>("ReceivedGoodItems").FindById(id);
         }
@@ -530,7 +530,7 @@ namespace LireOffice.Service
             return db.GetCollection<Account>("Accounts").Find(Query.EQ("Category", category));
         }
 
-        public Account GetAccountById(ObjectId id)
+        public Account GetAccountById(string id)
         {
             return db.GetCollection<Account>("Accounts").FindById(id);
         }
@@ -549,7 +549,7 @@ namespace LireOffice.Service
             db.GetCollection<LedgerIn>("LedgerIn").Update(ledger);
         }
 
-        public void DeleteLedgerIn(ObjectId Id)
+        public void DeleteLedgerIn(string Id)
         {
             var result = db.GetCollection<LedgerIn>("LedgerIn").FindById(Id);
             if (result != null)
@@ -563,12 +563,12 @@ namespace LireOffice.Service
             return db.GetCollection<LedgerIn>("LedgerIn").FindAll();
         }
 
-        public LedgerIn GetLedgerInById(ObjectId Id)
+        public LedgerIn GetLedgerInById(string Id)
         {
             return db.GetCollection<LedgerIn>("LedgerIn").FindById(Id);
         }
 
-        #endregion
+        #endregion LedgerIn Methods
 
         #region LedgerOut Methods
 
@@ -582,7 +582,7 @@ namespace LireOffice.Service
             db.GetCollection<LedgerOut>("LedgerOut").Update(ledger);
         }
 
-        public void DeleteLedgerOut(ObjectId Id)
+        public void DeleteLedgerOut(string Id)
         {
             var result = db.GetCollection<LedgerOut>("LedgerOut").FindById(Id);
             if (result != null)
@@ -596,11 +596,11 @@ namespace LireOffice.Service
             return db.GetCollection<LedgerOut>("LedgerOut").FindAll();
         }
 
-        public LedgerOut GetLedgerOutById(ObjectId Id)
+        public LedgerOut GetLedgerOutById(string Id)
         {
             return db.GetCollection<LedgerOut>("LedgerOut").FindById(Id);
         }
 
-        #endregion
+        #endregion LedgerOut Methods
     }
 }

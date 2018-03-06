@@ -1,5 +1,4 @@
 ﻿using LireOffice.Models;
-using LiteDB;
 using Prism.Events;
 using System;
 
@@ -29,7 +28,7 @@ namespace LireOffice.Utilities
 
     public class LedgerListUpdatedEvent : PubSubEvent<string> { }
 
-    public class UnitTypeListUpdatedEvent : PubSubEvent<ObjectId> { }
+    public class UnitTypeListUpdatedEvent : PubSubEvent<string> { }
 
     public class ProductDataGridFocusEvent : PubSubEvent<string> { }
 

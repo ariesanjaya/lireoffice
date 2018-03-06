@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 
 namespace LireOffice.Models
@@ -11,10 +10,10 @@ namespace LireOffice.Models
             ReceivedDate = DateTime.Now;
         }
 
-        public ObjectId Id { get; set; }
-        public ObjectId VendorId { get; set; }
-        public ObjectId EmployeeId { get; set; }
-        public ObjectId GoodReturnId { get; set; }
+        public string Id { get; set; }
+        public string VendorId { get; set; }
+        public string EmployeeId { get; set; }
+        public string GoodReturnId { get; set; }
 
         private DateTime _receivedDate;
 

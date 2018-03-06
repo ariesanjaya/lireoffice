@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 
@@ -12,8 +11,8 @@ namespace LireOffice.Models
             FirstDetailList = new ObservableCollection<ReceivedGoodItemContext>();
         }
 
-        public ObjectId Id { get; set; }
-        public ObjectId VendorId { get; set; }
+        public string Id { get; set; }
+        public string VendorId { get; set; }
 
         private DateTime _receivedDate;
 

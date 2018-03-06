@@ -1,11 +1,10 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 
 namespace LireOffice.Models
 {
     public class AccountInfoContext : BindableBase
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
         private string _referenceId;
 

@@ -3,7 +3,6 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -174,7 +173,7 @@ namespace LireOffice.ViewModels
 
             SalesItemContext salesItem = new SalesItemContext(eventAggregator)
             {
-                Id = ObjectId.NewObjectId(),
+                Id = Guid.NewGuid().ToString(),
                 ProductId = product.Id,
                 TaxId = product.TaxId,
                 UnitTypeId = product.UnitTypeId,
@@ -281,7 +280,7 @@ namespace LireOffice.ViewModels
             if (SelectedSalesItem != null)
                 parameter.Add("Product", Tuple.Create(SelectedSalesItem.UnitTypeId/*object*/, SalesItemList.IndexOf(SelectedSalesItem)/*index*/, true/*IsUpdated*/));
             else
-                parameter.Add("Product", Tuple.Create(ObjectId.NewObjectId()/*object*/, 0/*index*/, false/*IsUpdated*/));
+                parameter.Add("Product", Tuple.Create(Guid.NewGuid().ToString()/*object*/, 0/*index*/, false/*IsUpdated*/));
             //--------------------
 
             //--------------------
@@ -298,7 +297,7 @@ namespace LireOffice.ViewModels
 
         #endregion Delegate Command Function
 
-        private async void LoadCustomerList(ObjectId customerId = null)
+        private async void LoadCustomerList(string customerId = null)
         {
             SelectedCustomer = null;
             CustomerList.Clear();
@@ -327,7 +326,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadEmployeeList(ObjectId employeeId = null)
+        private async void LoadEmployeeList(string employeeId = null)
         {
             EmployeeList.Clear();
 
@@ -355,7 +354,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private void LoadSalesItemList(ObjectId salesId)
+        private void LoadSalesItemList(string salesId)
         {
             SalesItemList.Clear();
 
@@ -457,7 +456,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private void LoadData(ObjectId salesId = null)
+        private void LoadData(string salesId = null)
         {
             if (salesId != null)
             {
@@ -487,7 +486,7 @@ namespace LireOffice.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["SalesId"] is ObjectId salesId)
+            if (parameter["SalesId"] is string salesId)
             {
                 IsUpdated = true;
 

@@ -2,7 +2,6 @@
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -25,7 +24,7 @@ namespace LireOffice.ViewModels
         private readonly IOfficeContext context;
 
         private bool IsProductListLoaded = false;
-        private Tuple<ObjectId, int, bool> productIndex;
+        private Tuple<string, int, bool> productIndex;
 
         private DispatcherTimer timer;
 
@@ -216,7 +215,7 @@ namespace LireOffice.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["Product"] is Tuple<ObjectId, int, bool> productIndex)
+            if (parameter["Product"] is Tuple<string, int, bool> productIndex)
                 this.productIndex = productIndex;
 
             LoadProductList();

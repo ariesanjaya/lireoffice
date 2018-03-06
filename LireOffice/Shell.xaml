@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         Title="Shell" MinHeight="600" MinWidth="1024" Height="720" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen">
     <Grid>
+        
         <ContentControl prism:RegionManager.RegionName="MainRegion" />
     </Grid>
 </syncfusion:ChromelessWindow>

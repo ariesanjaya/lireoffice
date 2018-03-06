@@ -1,12 +1,11 @@
-﻿using LiteDB;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 
 namespace LireOffice.Models
 {
     public class DebtDetailInfoContext : BindableBase
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
         private DateTime _receivedDate;
 

@@ -3,7 +3,6 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Microsoft.Win32;
 using Prism.Commands;
@@ -49,7 +48,7 @@ namespace LireOffice.ViewModels
 
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Subscribe((string text) => LoadVendorList());
-            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Subscribe((ObjectId id) => LoadUnitTypeList(id));
+            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Subscribe((string id) => LoadUnitTypeList(id));
         }
 
         #region Binding Properties
@@ -115,9 +114,9 @@ namespace LireOffice.ViewModels
             get => _selectedCategory;
             set => SetProperty(ref _selectedCategory, value, () =>
              {
-                //if (ProductDTO != null)
-                //ProductDTO
-            }, nameof(SelectedCategory));
+                 //if (ProductDTO != null)
+                 //ProductDTO
+             }, nameof(SelectedCategory));
         }
 
         private ObservableCollection<UserSimpleContext> _vendorList;
@@ -365,7 +364,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadUnitTypeList(ObjectId productId, ObjectId unitTypeId = null)
+        private async void LoadUnitTypeList(string productId, string unitTypeId = null)
         {
             SelectedUnitType = null;
             UnitTypeList.Clear();
@@ -396,7 +395,7 @@ namespace LireOffice.ViewModels
             LoadTaxList(SelectedUnitType.TaxInId, SelectedUnitType.TaxOutId);
         }
 
-        private async void LoadVendorList(ObjectId vendorId = null)
+        private async void LoadVendorList(string vendorId = null)
         {
             VendorList.Clear();
 
@@ -423,7 +422,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadCategoryList(ObjectId categoryId = null)
+        private async void LoadCategoryList(string categoryId = null)
         {
             SelectedCategory = null;
             CategoryList.Clear();
@@ -451,7 +450,7 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadTaxList(ObjectId TaxInId = null, ObjectId TaxOutId = null)
+        private async void LoadTaxList(string TaxInId = null, string TaxOutId = null)
         {
             TaxList.Clear();
 

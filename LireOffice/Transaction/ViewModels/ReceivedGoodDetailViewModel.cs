@@ -3,7 +3,6 @@ using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
-using LiteDB;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Prism.Events;
@@ -143,7 +142,7 @@ namespace LireOffice.ViewModels
             var product = productIndex.Item1;
             ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
             {
-                Id = ObjectId.NewObjectId(),
+                Id = Guid.NewGuid().ToString(),
                 ProductId = product.Id,
                 TaxId = product.TaxId,
                 UnitTypeId = product.UnitTypeId,
@@ -258,7 +257,7 @@ namespace LireOffice.ViewModels
             if (SelectedReceivedGoodItem != null)
                 parameter.Add("Product", Tuple.Create(SelectedReceivedGoodItem.UnitTypeId/*object*/, ReceivedGoodItemList.IndexOf(SelectedReceivedGoodItem)/*index*/, true/*IsUpdated*/));
             else
-                parameter.Add("Product", Tuple.Create(ObjectId.NewObjectId()/*object*/, 0/*index*/, false/*IsUpdated*/));
+                parameter.Add("Product", Tuple.Create(Guid.NewGuid().ToString()/*object*/, 0/*index*/, false/*IsUpdated*/));
             //--------------------
 
             //--------------------

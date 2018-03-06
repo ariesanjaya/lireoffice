@@ -1,5 +1,4 @@
 ﻿using LireOffice.Utilities;
-using LiteDB;
 using Prism.Events;
 using Prism.Mvvm;
 
@@ -14,10 +13,10 @@ namespace LireOffice.Models
             eventAggregator = ea;
         }
 
-        public ObjectId Id { get; set; }
-        public ObjectId ProductId { get; set; }
-        public ObjectId UnitTypeId { get; set; }
-        public ObjectId TaxId { get; set; }
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public string UnitTypeId { get; set; }
+        public string TaxId { get; set; }
 
         private string _barcode;
 

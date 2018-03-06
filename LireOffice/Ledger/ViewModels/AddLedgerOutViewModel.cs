@@ -2,7 +2,6 @@
 using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -34,6 +33,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+
         private LedgerContext _ledgerDTO;
 
         public LedgerContext LedgerDTO
@@ -101,7 +101,8 @@ namespace LireOffice.ViewModels
                     LedgerDTO.EmployeeId = _selectedEmployee.Id;
             }, nameof(SelectedEmployee));
         }
-        #endregion
+
+        #endregion Binding Properties
 
         public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
         public DelegateCommand SaveDraftCommand => new DelegateCommand(OnSaveDraft);
@@ -109,7 +110,6 @@ namespace LireOffice.ViewModels
 
         private void OnSave()
         {
-
         }
 
         private void OnSaveDraft()
@@ -127,7 +127,7 @@ namespace LireOffice.ViewModels
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(false);
         }
 
-        private async void LoadAccountList(ObjectId accountId = null)
+        private async void LoadAccountList(string accountId = null)
         {
             AccountList.Clear();
 
@@ -153,7 +153,7 @@ namespace LireOffice.ViewModels
                 SelectedAccount = AccountList.FirstOrDefault(c => c.Id == accountId);
         }
 
-        private async void LoadAccountOutList(ObjectId accountOutId = null)
+        private async void LoadAccountOutList(string accountOutId = null)
         {
             AccountOutList.Clear();
 
@@ -179,7 +179,7 @@ namespace LireOffice.ViewModels
                 SelectedAccountOut = AccountOutList.FirstOrDefault(c => c.Id == accountOutId);
         }
 
-        private async void LoadEmployeeList(ObjectId employeeId = null)
+        private async void LoadEmployeeList(string employeeId = null)
         {
             EmployeeList.Clear();
 
@@ -203,7 +203,7 @@ namespace LireOffice.ViewModels
             EmployeeList.AddRange(tempEmployeeList);
 
             if (employeeId != null)
-                SelectedEmployee = EmployeeList.FirstOrDefault(c => c.Id == employeeId);            
+                SelectedEmployee = EmployeeList.FirstOrDefault(c => c.Id == employeeId);
         }
 
         private void LoadData(LedgerSummaryContext _ledger)
@@ -220,8 +220,7 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
-        {           
-
+        {
             var parameter = navigationContext.Parameters;
             if (parameter["SelectedLedger"] is LedgerSummaryContext ledger)
             {
@@ -241,6 +240,6 @@ namespace LireOffice.ViewModels
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
-        {}
+        { }
     }
 }

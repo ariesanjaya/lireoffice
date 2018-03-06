@@ -2,7 +2,6 @@
 using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
-using LiteDB;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -20,7 +19,7 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IOfficeContext context;
 
-        private ObjectId ProductId;
+        private string ProductId;
 
         public AddUnitTypeViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
         {
@@ -191,7 +190,7 @@ namespace LireOffice.ViewModels
             SelectedTaxOut = TaxList.SingleOrDefault(c => string.Equals(c.Name, "Non Pjk"));
         }
 
-        private async void LoadUnitTypeList(ObjectId productId = null, string productName = null)
+        private async void LoadUnitTypeList(string productId = null, string productName = null)
         {
             UnitTypeList.Clear();
             ProductName = productName;
@@ -218,7 +217,7 @@ namespace LireOffice.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["ProductId"] is ObjectId productId &&
+            if (parameter["ProductId"] is string productId &&
                 parameter["ProductName"] is string productName)
             {
                 ProductId = productId;

@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using System;
+﻿using System;
 
 namespace LireOffice.Models
 {
@@ -7,14 +6,14 @@ namespace LireOffice.Models
     {
         public EntityData()
         {
-            Id = ObjectId.NewObjectId();
+            Id = Guid.NewGuid().ToString();
             Version = 1;
             IsDeleted = false;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }
 
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
         public int Version { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

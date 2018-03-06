@@ -1,5 +1,4 @@
 ﻿using LireOffice.Models;
-using LiteDB;
 using System;
 using System.Collections.Generic;
 
@@ -27,11 +26,11 @@ namespace LireOffice.Service
         /// Delete specified vendor
         /// </summary>
         /// <param name="vendor"></param>
-        void DeleteVendor(ObjectId id);
+        void DeleteVendor(string id);
 
         IEnumerable<User> GetVendor();
 
-        User GetVendorById(ObjectId id);
+        User GetVendorById(string id);
 
         #endregion Vendor Methods
 
@@ -53,11 +52,11 @@ namespace LireOffice.Service
         /// Delete specified customer
         /// </summary>
         /// <param name="customer"></param>
-        void DeleteCustomer(ObjectId id);
+        void DeleteCustomer(string id);
 
         IEnumerable<User> GetCustomer();
 
-        User GetCustomerById(ObjectId id);
+        User GetCustomerById(string id);
 
         #endregion Customer Methods
 
@@ -79,11 +78,11 @@ namespace LireOffice.Service
         /// Delete specified employee
         /// </summary>
         /// <param name="employee"></param>
-        void DeleteEmployee(ObjectId id);
+        void DeleteEmployee(string id);
 
         IEnumerable<User> GetEmployee();
 
-        User GetEmployeeById(ObjectId id);
+        User GetEmployeeById(string id);
 
         #endregion Employee Methods
 
@@ -93,11 +92,11 @@ namespace LireOffice.Service
 
         void UpdateTax(Tax tax);
 
-        void DeleteTax(ObjectId id);
+        void DeleteTax(string id);
 
         IEnumerable<Tax> GetTaxes();
 
-        Tax GetTaxById(ObjectId id);
+        Tax GetTaxById(string id);
 
         #endregion Tax Methods
 
@@ -107,13 +106,13 @@ namespace LireOffice.Service
 
         void UpdateProduct(Product product);
 
-        void DeleteProduct(ObjectId id);
+        void DeleteProduct(string id);
 
         IEnumerable<Product> GetProducts();
 
         IEnumerable<Product> GetProducts(string text);
 
-        Product GetProductById(ObjectId id);
+        Product GetProductById(string id);
 
         #endregion Product Methods
 
@@ -123,11 +122,11 @@ namespace LireOffice.Service
 
         void UpdateUnitType(UnitType type);
 
-        void DeleteUnitType(ObjectId id);
+        void DeleteUnitType(string id);
 
-        IEnumerable<UnitType> GetUnitType(ObjectId id);
+        IEnumerable<UnitType> GetUnitType(string id);
 
-        UnitType GetUnitTypeById(ObjectId id);
+        UnitType GetUnitTypeById(string id);
 
         #endregion UnitType Methods
 
@@ -137,11 +136,11 @@ namespace LireOffice.Service
 
         void UpdateCategory(ProductCategory category);
 
-        void DeleteCategory(ObjectId id);
+        void DeleteCategory(string id);
 
         IEnumerable<ProductCategory> GetCategory();
 
-        ProductCategory GetCategoryById(ObjectId id);
+        ProductCategory GetCategoryById(string id);
 
         #endregion ProductCategory Methods
 
@@ -151,15 +150,15 @@ namespace LireOffice.Service
 
         void UpdateSales(Sales sales);
 
-        void DeleteSales(ObjectId id);
+        void DeleteSales(string id);
 
         IEnumerable<Sales> GetSales();
 
-        IEnumerable<Sales> GetSales(ObjectId employeeId, DateTime minSalesDate, DateTime maxSalesDate);
+        IEnumerable<Sales> GetSales(string employeeId, DateTime minSalesDate, DateTime maxSalesDate);
 
         IEnumerable<Sales> GetSales(DateTime minSalesDate, DateTime maxSalesDate);
 
-        Sales GetSalesById(ObjectId id);
+        Sales GetSalesById(string id);
 
         #endregion Sales Methods
 
@@ -171,11 +170,11 @@ namespace LireOffice.Service
 
         void UpdateSalesItem(SalesItem salesItem);
 
-        void DeleteSalesItem(ObjectId Id);
+        void DeleteSalesItem(string Id);
 
-        IEnumerable<SalesItem> GetSalesItem(ObjectId Id);
+        IEnumerable<SalesItem> GetSalesItem(string Id);
 
-        SalesItem GetSalesItemById(ObjectId id);
+        SalesItem GetSalesItemById(string id);
 
         #endregion SalesItem Methods
 
@@ -185,13 +184,13 @@ namespace LireOffice.Service
 
         void UpdateReceivedGood(ReceivedGood receivedGood);
 
-        void DeleteReceivedGood(ObjectId id);
+        void DeleteReceivedGood(string id);
 
         IEnumerable<ReceivedGood> GetReceivedGood();
 
         IEnumerable<ReceivedGood> GetReceivedGood(string text);
 
-        ReceivedGood GetReceivedGoodById(ObjectId id);
+        ReceivedGood GetReceivedGoodById(string id);
 
         #endregion ReceivedGood Methods
 
@@ -203,46 +202,54 @@ namespace LireOffice.Service
 
         void UpdateReceivedGoodItem(ReceivedGoodItem receivedGoodItem);
 
-        void DeleteReceivedGoodItem(ObjectId Id);
+        void DeleteReceivedGoodItem(string Id);
 
-        IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(ObjectId Id);
+        IEnumerable<ReceivedGoodItem> GetReceivedGoodItem(string Id);
 
-        ReceivedGoodItem GetReceivedGoodItemById(ObjectId id);
+        ReceivedGoodItem GetReceivedGoodItemById(string id);
 
         #endregion ReceivedGoodItem Methods
-        
+
         #region Account Methods
 
         void AddAccount(Account account);
+
         void UpdateAccount(Account account);
+
         IEnumerable<Account> GetAccounts();
+
         IEnumerable<Account> GetAccounts(string category);
-        Account GetAccountById(ObjectId id);
+
+        Account GetAccountById(string id);
 
         #endregion Account Methods
 
         #region LedgerIn Methods
 
         void AddLedgerIn(LedgerIn ledger);
-        void UpdateLedgerIn(LedgerIn ledger);
-        void DeleteLedgerIn(ObjectId Id);
-        IEnumerable<LedgerIn> GetLedgerIn();
-        LedgerIn GetLedgerInById(ObjectId Id);
 
-        #endregion
+        void UpdateLedgerIn(LedgerIn ledger);
+
+        void DeleteLedgerIn(string Id);
+
+        IEnumerable<LedgerIn> GetLedgerIn();
+
+        LedgerIn GetLedgerInById(string Id);
+
+        #endregion LedgerIn Methods
 
         #region LedgerOut Methods
 
         void AddLedgerOut(LedgerOut ledger);
+
         void UpdateLedgerOut(LedgerOut ledger);
-        void DeleteLedgerOut(ObjectId Id);
+
+        void DeleteLedgerOut(string Id);
+
         IEnumerable<LedgerOut> GetLedgerOut();
-        LedgerOut GetLedgerOutById(ObjectId Id);
 
-        #endregion
+        LedgerOut GetLedgerOutById(string Id);
 
-        #region MainLedger Methods
-
-        #endregion
+        #endregion LedgerOut Methods
     }
 }

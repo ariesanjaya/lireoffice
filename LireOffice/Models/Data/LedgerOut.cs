@@ -1,13 +1,12 @@
-﻿using LiteDB;
-using System;
+﻿using System;
 
 namespace LireOffice.Models
 {
     public class LedgerOut : EntityData
     {
-        public ObjectId AccountId { get; set; }
-        public ObjectId AccountOutId { get; set; }
-        public ObjectId EmployeeId { get; set; }
+        public string AccountId { get; set; }
+        public string AccountOutId { get; set; }
+        public string EmployeeId { get; set; }
         public DateTime LedgerDate { get; set; }
         public string ReferenceId { get; set; }
         public string Description { get; set; }

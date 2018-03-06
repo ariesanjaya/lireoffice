@@ -55,11 +55,11 @@ namespace LireOffice.ViewModels
         public AccountInfoContext SelectedAccount
         {
             get => _selectedAccount;
-            set => SetProperty(ref _selectedAccount, value,()=> 
-            {
-                if (_selectedAccount != null)
-                    LedgerDTO.AccountId = _selectedAccount.Id;
-            }, nameof(SelectedAccount));
+            set => SetProperty(ref _selectedAccount, value, () =>
+             {
+                 if (_selectedAccount != null)
+                     LedgerDTO.AccountId = _selectedAccount.Id;
+             }, nameof(SelectedAccount));
         }
 
         private ObservableCollection<AccountInfoContext> _accountInList;
@@ -75,11 +75,11 @@ namespace LireOffice.ViewModels
         public AccountInfoContext SelectedAccountIn
         {
             get => _selectedAccountIn;
-            set => SetProperty(ref _selectedAccountIn, value,()=> 
-            {
-                if (_selectedAccountIn != null)
-                    LedgerDTO.AccountInId = _selectedAccountIn.Id;
-            }, nameof(SelectedAccountIn));
+            set => SetProperty(ref _selectedAccountIn, value, () =>
+             {
+                 if (_selectedAccountIn != null)
+                     LedgerDTO.AccountInId = _selectedAccountIn.Id;
+             }, nameof(SelectedAccountIn));
         }
 
         private ObservableCollection<UserSimpleContext> _employeeList;
@@ -95,11 +95,11 @@ namespace LireOffice.ViewModels
         public UserSimpleContext SelectedEmployee
         {
             get => _selectedEmployee;
-            set => SetProperty(ref _selectedEmployee, value,()=> 
-            {
-                if (_selectedEmployee != null)
-                    LedgerDTO.EmployeeId = _selectedEmployee.Id;
-            }, nameof(SelectedEmployee));
+            set => SetProperty(ref _selectedEmployee, value, () =>
+             {
+                 if (_selectedEmployee != null)
+                     LedgerDTO.EmployeeId = _selectedEmployee.Id;
+             }, nameof(SelectedEmployee));
         }
 
         #endregion Binding Properties
@@ -116,7 +116,7 @@ namespace LireOffice.ViewModels
         {
             LedgerIn ledger = Mapper.Map<LedgerContext, LedgerIn>(LedgerDTO);
             context.AddLedgerIn(ledger);
-            
+
             OnCancel();
             eventAggregator.GetEvent<LedgerListUpdatedEvent>().Publish("Load Ledger List");
         }
@@ -199,7 +199,6 @@ namespace LireOffice.ViewModels
 
         private void LoadData()
         {
-
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

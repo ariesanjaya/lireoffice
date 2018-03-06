@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using System;
+﻿using System;
 
 namespace LireOffice.Models
 {
@@ -9,8 +8,8 @@ namespace LireOffice.Models
         public string InvoiceId { get; set; }
         public string Description { get; set; }
 
-        public ObjectId CustomerId { get; set; }
-        public ObjectId EmployeeId { get; set; }
+        public string CustomerId { get; set; }
+        public string EmployeeId { get; set; }
 
         public decimal TotalAdditionalCost { get; set; }
         public decimal TotalDiscount { get; set; }
