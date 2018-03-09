@@ -33,20 +33,26 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="36" />
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
 
                 <Label Content="Detail Supplier" Grid.ColumnSpan="2" FontSize="22" />
 
-                <Label Grid.Row="2" Content="No. Register" FontSize="14" VerticalAlignment="Center" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <Label Content="No. Register" FontSize="14" VerticalAlignment="Center" />
+                    <Label Content="*" Foreground="Red" FontSize="14" VerticalAlignment="Center" />
+                </StackPanel>
                 <TextBox FontSize="14" Text="{Binding VendorDTO.RegisterId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" />
 
                 <Label Grid.Row="2" Grid.Column="3" Content="NPWP" FontSize="14" VerticalAlignment="Center" />
                 <TextBox FontSize="14" Text="{Binding VendorDTO.TaxId}" Grid.Column="4" Grid.Row="2" />
 
-                <Label Grid.Row="4" Content="Nama" FontSize="14" VerticalAlignment="Center" />
+                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                    <Label Content="Nama" FontSize="14" VerticalAlignment="Center" />
+                    <Label Content="*" Foreground="Red" FontSize="14" VerticalAlignment="Center" />
+                </StackPanel>
                 <TextBox FontSize="14" Text="{Binding VendorDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" />
 
                 <Label Grid.Row="4" Grid.Column="3" Content="Nama Sales" FontSize="14" VerticalAlignment="Center" />

@@ -1,4 +1,6 @@
-﻿using Syncfusion.Windows.Shared;
+﻿using LireOffice.Views;
+using Prism.Regions;
+using Syncfusion.Windows.Shared;
 
 namespace LireOffice
 {
@@ -7,9 +9,11 @@ namespace LireOffice
     /// </summary>
     public partial class Shell : ChromelessWindow
     {
-        public Shell()
+        public Shell(IRegionManager regionManager)
         {
             InitializeComponent();
+
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(Login));
         }
     }
 }

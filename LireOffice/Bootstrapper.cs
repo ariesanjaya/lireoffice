@@ -1,4 +1,5 @@
 ﻿using LireOffice.Service;
+using LireOffice.Views;
 using Microsoft.Practices.Unity;
 using Prism.Modularity;
 using Prism.Unity;
@@ -10,8 +11,6 @@ namespace LireOffice
     {
         protected override DependencyObject CreateShell()
         {
-            Container.RegisterType<IOfficeContext, OfficeContext>();
-
             return Container.Resolve<Shell>();
         }
 
@@ -20,10 +19,42 @@ namespace LireOffice
             Application.Current.MainWindow.Show();
         }
 
-        protected override void ConfigureModuleCatalog()
+        protected override void ConfigureContainer()
         {
-            var catalog = (ModuleCatalog)ModuleCatalog;
-            catalog.AddModule(typeof(Module));
+            base.ConfigureContainer();
+
+            Container.RegisterType<IOfficeContext, OfficeContext>();
+            
+            Container.RegisterTypeForNavigation<Main>();
+
+            Container.RegisterTypeForNavigation<Dashboard>();
+            Container.RegisterTypeForNavigation<Customer>();
+            Container.RegisterTypeForNavigation<Employee>();
+            Container.RegisterTypeForNavigation<MainLedger>();
+            Container.RegisterTypeForNavigation<LedgerIn>();
+            Container.RegisterTypeForNavigation<LedgerOut>();
+            Container.RegisterTypeForNavigation<Account>();
+            Container.RegisterTypeForNavigation<Product>();
+            Container.RegisterTypeForNavigation<Vendor>();
+            Container.RegisterTypeForNavigation<SalesSummary>();
+            Container.RegisterTypeForNavigation<SalesInvoiceSummary>();
+            Container.RegisterTypeForNavigation<SalesDetail>();
+            Container.RegisterTypeForNavigation<DebtSummary>();
+            Container.RegisterTypeForNavigation<ReceivedGoodSummary>();
+            Container.RegisterTypeForNavigation<ReceivedGoodDetail>();
+
+            Container.RegisterTypeForNavigation<AddCustomer>();
+            Container.RegisterTypeForNavigation<AddEmployee>();
+            Container.RegisterTypeForNavigation<AddVendor>();
+            Container.RegisterTypeForNavigation<AddProduct>();
+            Container.RegisterTypeForNavigation<AddUnitType>();
+            Container.RegisterTypeForNavigation<AddCategory>();
+            Container.RegisterTypeForNavigation<AddTax>();
+
+            Container.RegisterTypeForNavigation<AddGoodReturn>();
+
+            Container.RegisterTypeForNavigation<ReportViewer>();
+
         }
     }
 }

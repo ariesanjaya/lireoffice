@@ -6,7 +6,9 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using ReactiveUI;
 using System;
+using System.Reactive;
 
 namespace LireOffice.ViewModels
 {
@@ -40,7 +42,7 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
+        public DelegateCommand SaveCommand => new DelegateCommand(OnSave, () => !string.IsNullOrEmpty(VendorDTO.RegisterId) && !string.IsNullOrEmpty(VendorDTO.Name));
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         private void OnSave()
@@ -49,6 +51,9 @@ namespace LireOffice.ViewModels
                 AddData();
             else
                 UpdateData();
+            
+            OnCancel();
+            eventAggregator.GetEvent<VendorListUpdatedEvent>().Publish("Update Vendor List");
         }
 
         private void OnCancel()
@@ -87,9 +92,6 @@ namespace LireOffice.ViewModels
 
             vendor.UserType = "Vendor";
             context.AddVendor(vendor);
-
-            OnCancel();
-            eventAggregator.GetEvent<VendorListUpdatedEvent>().Publish("Update Vendor List");
         }
 
         private void UpdateData()
@@ -102,9 +104,6 @@ namespace LireOffice.ViewModels
                 result.UpdatedAt = DateTime.Now;
                 context.UpdateVendor(result);
             }
-
-            OnCancel();
-            eventAggregator.GetEvent<VendorListUpdatedEvent>().Publish("Update Vendor List");
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
