@@ -48,6 +48,8 @@ namespace LireOffice
             container.RegisterTypeForNavigation<AddTax>();
 
             container.RegisterTypeForNavigation<AddGoodReturn>();
+
+            container.RegisterTypeForNavigation<ReportViewer>();
         }
     }
 }

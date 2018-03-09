@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using ReactiveUI;
 using System.ComponentModel;
 
 namespace LireOffice.Models

@@ -11,5 +11,6 @@
     <Grid>
         
         <ContentControl prism:RegionManager.RegionName="MainRegion" />
+        
     </Grid>
 </syncfusion:ChromelessWindow>
