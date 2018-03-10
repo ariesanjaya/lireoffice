@@ -15,7 +15,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="8" />
                     <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
+                    <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="8" />
                     <RowDefinition Height="30" />
@@ -40,11 +40,29 @@
 
                 <Label Content="Detail Supplier" Grid.ColumnSpan="2" FontSize="22" />
 
+                <Label Content="Detail Supplier" Foreground="Red" Grid.Column="2" Grid.ColumnSpan="3" FontSize="14" />
+                
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <Label Content="No. Register" FontSize="14" VerticalAlignment="Center" />
                     <Label Content="*" Foreground="Red" FontSize="14" VerticalAlignment="Center" />
                 </StackPanel>
-                <TextBox FontSize="14" Text="{Binding VendorDTO.RegisterId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" />
+                <TextBox FontSize="14" Text="{Binding VendorDTO.RegisterId, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <!-- Placeholder for the TextBox itself -->
+                                <AdornedElementPlaceholder x:Name="textBox"/>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}" Foreground="Red"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </TextBox>
 
                 <Label Grid.Row="2" Grid.Column="3" Content="NPWP" FontSize="14" VerticalAlignment="Center" />
                 <TextBox FontSize="14" Text="{Binding VendorDTO.TaxId}" Grid.Column="4" Grid.Row="2" />
@@ -85,7 +103,7 @@
                 <TextBox FontSize="14" Text="{Binding VendorDTO.CellPhone02}" Grid.Column="4" Grid.Row="14" />
 
                 <StackPanel Margin="12" Grid.Row="16" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}" IsEnabled="{Binding VendorDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}"/>
                     <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="24 0 0 0" Command="{Binding CancelCommand}" />
                 </StackPanel>
             </Grid>

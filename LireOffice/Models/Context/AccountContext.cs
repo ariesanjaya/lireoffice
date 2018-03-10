@@ -1,8 +1,8 @@
-﻿using Prism.Mvvm;
-
-namespace LireOffice.Models
+﻿namespace LireOffice.Models
 {
-    public class AccountContext : BindableBase
+    using ReactiveUI;
+    using static LireOffice.Models.RuleCollection<AccountContext>;
+    public class AccountContext : NotifyDataErrorInfo<AccountContext>
     {
         public string Id { get; set; }
 
@@ -11,7 +11,7 @@ namespace LireOffice.Models
         public string ReferenceId
         {
             get => _referenceId;
-            set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
+            set => this.RaiseAndSetIfChanged(ref _referenceId, value, nameof(ReferenceId));
         }
 
         private string _name;
@@ -19,7 +19,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, nameof(Name));
+            set => this.RaiseAndSetIfChanged(ref _name, value, nameof(Name));
         }
 
         private string _category;
@@ -27,7 +27,7 @@ namespace LireOffice.Models
         public string Category
         {
             get => _category;
-            set => SetProperty(ref _category, value, nameof(Category));
+            set => this.RaiseAndSetIfChanged(ref _category, value, nameof(Category));
         }
 
         private string _description;
@@ -35,7 +35,7 @@ namespace LireOffice.Models
         public string Description
         {
             get => _description;
-            set => SetProperty(ref _description, value, nameof(Description));
+            set => this.RaiseAndSetIfChanged(ref _description, value, nameof(Description));
         }
 
         private decimal _balance;
@@ -43,7 +43,7 @@ namespace LireOffice.Models
         public decimal Balance
         {
             get => _balance;
-            set => SetProperty(ref _balance, value, nameof(Balance));
+            set => this.RaiseAndSetIfChanged(ref _balance, value, nameof(Balance));
         }
     }
 }

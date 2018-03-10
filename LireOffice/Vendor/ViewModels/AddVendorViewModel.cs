@@ -10,40 +10,46 @@ using ReactiveUI;
 using System;
 using System.Reactive;
 
+
 namespace LireOffice.ViewModels
 {
-    public class AddVendorViewModel : BindableBase, INavigationAware
+    using static LireOffice.Models.RuleCollection<AddVendorViewModel>;
+
+    public class AddVendorViewModel : NotifyDataErrorInfo<AddVendorViewModel>, INavigationAware
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IOfficeContext context;
+        private readonly IValidationService validationService;
 
         private bool IsUpdated = false;
         private string Instigator;
 
-        public AddVendorViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
+        public AddVendorViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context, IValidationService validationService)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.context = context;
+            this.validationService = validationService;
 
-            VendorDTO = new UserContext();
+            VendorDTO = new UserContext();            
         }
 
         #region Binding Properties
-
+        
         private UserContext _vendorDTO;
 
         public UserContext VendorDTO
         {
             get => _vendorDTO;
-            set => SetProperty(ref _vendorDTO, value, nameof(VendorDTO));
+            set => this.RaiseAndSetIfChanged(ref _vendorDTO, value, nameof(VendorDTO));
         }
 
         #endregion Binding Properties
 
-        public DelegateCommand SaveCommand => new DelegateCommand(OnSave, () => !string.IsNullOrEmpty(VendorDTO.RegisterId) && !string.IsNullOrEmpty(VendorDTO.Name));
-        public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
+        public ReactiveCommand<Unit, Unit> SaveCommand => ReactiveCommand.Create(OnSave, 
+            this.WhenAnyValue(x => x.VendorDTO.RegisterId, x => x.VendorDTO.Name, (registerId, name) => !string.IsNullOrEmpty(registerId) && !string.IsNullOrEmpty(name)));
+        public ReactiveCommand<Unit, Unit> CancelCommand => ReactiveCommand.Create(OnCancel);
 
         private void OnSave()
         {

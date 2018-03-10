@@ -1,7 +1,6 @@
 ﻿using LireOffice.Service;
 using LireOffice.Views;
 using Microsoft.Practices.Unity;
-using Prism.Modularity;
 using Prism.Unity;
 using System.Windows;
 
@@ -24,7 +23,8 @@ namespace LireOffice
             base.ConfigureContainer();
 
             Container.RegisterType<IOfficeContext, OfficeContext>();
-            
+            Container.RegisterType<IValidationService, ValidationService>();
+
             Container.RegisterTypeForNavigation<Main>();
 
             Container.RegisterTypeForNavigation<Dashboard>();
@@ -54,7 +54,6 @@ namespace LireOffice
             Container.RegisterTypeForNavigation<AddGoodReturn>();
 
             Container.RegisterTypeForNavigation<ReportViewer>();
-
         }
     }
 }

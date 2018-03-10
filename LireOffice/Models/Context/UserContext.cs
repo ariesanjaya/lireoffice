@@ -1,16 +1,21 @@
-﻿using Prism.Mvvm;
-using System;
-using System.ComponentModel;
+﻿using System;
 
 namespace LireOffice.Models
 {
-    public class UserContext : BindableBase, IDataErrorInfo
+    using ReactiveUI;
+    using static LireOffice.Models.RuleCollection<UserContext>;
+
+    public class UserContext : NotifyDataErrorInfo<UserContext>
     {
         public UserContext()
         {
             DateOfBirth = DateTime.Now;
             EnterDate = DateTime.Now;
             IsActive = true;
+
+            Rules.Add(new DelegateRule<UserContext>(nameof(RegisterId), 
+                "No Register tidak boleh kosong.", 
+                x => !string.IsNullOrEmpty(x.RegisterId)));
         }
 
         public string Id { get; set; }
@@ -20,7 +25,11 @@ namespace LireOffice.Models
         public string RegisterId
         {
             get => _registerId;
-            set => SetProperty(ref _registerId, value, CheckBtnAvailability, nameof(RegisterId));
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _registerId, value, nameof(RegisterId));
+                OnPropertyChange(nameof(RegisterId));
+            }
         }
 
         private string _cardId;
@@ -28,7 +37,7 @@ namespace LireOffice.Models
         public string CardId
         {
             get => _cardId;
-            set => SetProperty(ref _cardId, value, nameof(CardId));
+            set => this.RaiseAndSetIfChanged(ref _cardId, value, nameof(CardId));
         }
 
         private string _selfId;
@@ -36,7 +45,7 @@ namespace LireOffice.Models
         public string SelfId
         {
             get => _selfId;
-            set => SetProperty(ref _selfId, value, nameof(SelfId));
+            set => this.RaiseAndSetIfChanged(ref _selfId, value, nameof(SelfId));
         }
 
         private string _taxId;
@@ -44,7 +53,7 @@ namespace LireOffice.Models
         public string TaxId
         {
             get => _taxId;
-            set => SetProperty(ref _taxId, value, nameof(TaxId));
+            set => this.RaiseAndSetIfChanged(ref _taxId, value, nameof(TaxId));
         }
 
         private string _name;
@@ -52,7 +61,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, CheckBtnAvailability, nameof(Name));
+            set => this.RaiseAndSetIfChanged(ref _name, value, nameof(Name));
         }
 
         private string _salesName;
@@ -60,7 +69,7 @@ namespace LireOffice.Models
         public string SalesName
         {
             get => _salesName;
-            set => SetProperty(ref _salesName, value, nameof(SalesName));
+            set => this.RaiseAndSetIfChanged(ref _salesName, value, nameof(SalesName));
         }
 
         private DateTime? _dateOfBirth;
@@ -68,7 +77,7 @@ namespace LireOffice.Models
         public DateTime? DateOfBirth
         {
             get => _dateOfBirth;
-            set => SetProperty(ref _dateOfBirth, value, nameof(DateOfBirth));
+            set => this.RaiseAndSetIfChanged(ref _dateOfBirth, value, nameof(DateOfBirth));
         }
 
         private DateTime? _enterDate;
@@ -76,7 +85,7 @@ namespace LireOffice.Models
         public DateTime? EnterDate
         {
             get => _enterDate;
-            set => SetProperty(ref _enterDate, value, nameof(EnterDate));
+            set => this.RaiseAndSetIfChanged(ref _enterDate, value, nameof(EnterDate));
         }
 
         private string _occupation;
@@ -84,7 +93,7 @@ namespace LireOffice.Models
         public string Occupation
         {
             get => _occupation;
-            set => SetProperty(ref _occupation, value, nameof(Occupation));
+            set => this.RaiseAndSetIfChanged(ref _occupation, value, nameof(Occupation));
         }
 
         private bool _isActive;
@@ -92,7 +101,7 @@ namespace LireOffice.Models
         public bool IsActive
         {
             get => _isActive;
-            set => SetProperty(ref _isActive, value, nameof(IsActive));
+            set => this.RaiseAndSetIfChanged(ref _isActive, value, nameof(IsActive));
         }
 
         private string _addressLine;
@@ -100,7 +109,7 @@ namespace LireOffice.Models
         public string AddressLine
         {
             get => _addressLine;
-            set => SetProperty(ref _addressLine, value, nameof(AddressLine));
+            set => this.RaiseAndSetIfChanged(ref _addressLine, value, nameof(AddressLine));
         }
 
         private string _subDistrict;
@@ -108,7 +117,7 @@ namespace LireOffice.Models
         public string SubDistrict
         {
             get => _subDistrict;
-            set => SetProperty(ref _subDistrict, value, nameof(SubDistrict));
+            set => this.RaiseAndSetIfChanged(ref _subDistrict, value, nameof(SubDistrict));
         }
 
         private string _district;
@@ -116,7 +125,7 @@ namespace LireOffice.Models
         public string District
         {
             get => _district;
-            set => SetProperty(ref _district, value, nameof(District));
+            set => this.RaiseAndSetIfChanged(ref _district, value, nameof(District));
         }
 
         private string _regency;
@@ -124,7 +133,7 @@ namespace LireOffice.Models
         public string Regency
         {
             get => _regency;
-            set => SetProperty(ref _regency, value, nameof(Regency));
+            set => this.RaiseAndSetIfChanged(ref _regency, value, nameof(Regency));
         }
 
         private string _email;
@@ -132,7 +141,7 @@ namespace LireOffice.Models
         public string Email
         {
             get => _email;
-            set => SetProperty(ref _email, value, nameof(Email));
+            set => this.RaiseAndSetIfChanged(ref _email, value, nameof(Email));
         }
 
         private string _phone;
@@ -140,7 +149,7 @@ namespace LireOffice.Models
         public string Phone
         {
             get => _phone;
-            set => SetProperty(ref _phone, value, nameof(Phone));
+            set => this.RaiseAndSetIfChanged(ref _phone, value, nameof(Phone));
         }
 
         private string _cellPhone01;
@@ -148,7 +157,7 @@ namespace LireOffice.Models
         public string CellPhone01
         {
             get => _cellPhone01;
-            set => SetProperty(ref _cellPhone01, value, nameof(CellPhone01));
+            set => this.RaiseAndSetIfChanged(ref _cellPhone01, value, nameof(CellPhone01));
         }
 
         private string _cellPhone02;
@@ -156,51 +165,8 @@ namespace LireOffice.Models
         public string CellPhone02
         {
             get => _cellPhone02;
-            set => SetProperty(ref _cellPhone02, value, nameof(CellPhone02));
+            set => this.RaiseAndSetIfChanged(ref _cellPhone02, value, nameof(CellPhone02));
         }
-
-        private bool _isBtnEnabled;
-
-        public bool IsBtnEnabled
-        {
-            get => _isBtnEnabled;
-            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
-        }
-
-        public string Error => null;
-
-        public string this[string propertyName]
-        {
-            get
-            {
-                switch (propertyName)
-                {
-                    case nameof(RegisterId):
-                        if (string.IsNullOrEmpty(RegisterId))
-                        {
-                            IsBtnEnabled = false;
-                            return "Kotak ini harus diisi !!";
-                        }
-                        break;
-
-                    case nameof(Name):
-                        if (string.IsNullOrEmpty(Name))
-                        {
-                            IsBtnEnabled = false;
-                            return "Kotak ini harus diisi !!";
-                        }
-                        break;
-                }
-                return string.Empty;
-            }
-        }
-
-        private void CheckBtnAvailability()
-        {
-            if (!string.IsNullOrEmpty(RegisterId) && !string.IsNullOrEmpty(Name))
-                IsBtnEnabled = true;
-            else
-                IsBtnEnabled = false;
-        }
+                
     }
 }
