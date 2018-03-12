@@ -80,7 +80,7 @@ namespace LireOffice.Models
         }
 
 #pragma warning disable CS0693 // Type parameter has the same name as the type parameter from outer type
-        public abstract class NotifyDataErrorInfo<T> : ReactiveObject, INotifyDataErrorInfo
+        public abstract class NotifyDataErrorInfo<T> : BindableBase, INotifyDataErrorInfo
 #pragma warning restore CS0693 // Type parameter has the same name as the type parameter from outer type
             where T : NotifyDataErrorInfo<T>
         {

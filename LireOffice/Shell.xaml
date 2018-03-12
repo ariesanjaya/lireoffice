@@ -1,16 +1,14 @@
-﻿<mahapps:MetroWindow x:Class="LireOffice.Shell"
+﻿<syncfusion:ChromelessWindow x:Class="LireOffice.Shell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mahapps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:LireOffice"
         mc:Ignorable="d"
         Title="Shell" MinHeight="600" MinWidth="1024" Height="720" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen">
-    <Grid>
-        
-        <ContentControl prism:RegionManager.RegionName="MainRegion" />
-        
+    <Grid>        
+        <ContentControl prism:RegionManager.RegionName="MainRegion" />        
     </Grid>
-</mahapps:MetroWindow>
+</syncfusion:ChromelessWindow>

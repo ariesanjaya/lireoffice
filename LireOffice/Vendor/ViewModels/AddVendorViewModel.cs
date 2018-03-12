@@ -42,7 +42,7 @@ namespace LireOffice.ViewModels
         public UserContext VendorDTO
         {
             get => _vendorDTO;
-            set => this.RaiseAndSetIfChanged(ref _vendorDTO, value, nameof(VendorDTO));
+            set => SetProperty(ref _vendorDTO, value, nameof(VendorDTO));
         }
 
         #endregion Binding Properties

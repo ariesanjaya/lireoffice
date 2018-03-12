@@ -1,4 +1,5 @@
-﻿using LireOffice.Models;
+﻿using AutoMapper;
+using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
@@ -33,12 +34,53 @@ namespace LireOffice.ViewModels
             this.container = container;
             this.context = context;
 
+            CategoryList = new ObservableCollection<ProductCategoryContext>();
+            VendorList = new ObservableCollection<UserSimpleContext>();
             ProductList = new ObservableCollection<ProductInfoContext>();
+            IsActive = true;
+
+            LoadCategoryList();
+            LoadVendorList();
+            LoadProductList();
 
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Subscribe((string text) => LoadProductList());
+            eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
+            eventAggregator.GetEvent<VendorListUpdatedEvent>().Subscribe((string text) => LoadVendorList());
         }
 
         #region Binding Properties
+
+        private ObservableCollection<UserSimpleContext> _vendorList;
+
+        public ObservableCollection<UserSimpleContext> VendorList
+        {
+            get => _vendorList;
+            set => SetProperty(ref _vendorList, value, nameof(VendorList));
+        }
+
+        private UserSimpleContext _selectedVendor;
+
+        public UserSimpleContext SelectedVendor
+        {
+            get => _selectedVendor;
+            set => SetProperty(ref _selectedVendor, value, nameof(SelectedVendor));
+        }
+
+        private ObservableCollection<ProductCategoryContext> _categoryList;
+
+        public ObservableCollection<ProductCategoryContext> CategoryList
+        {
+            get => _categoryList;
+            set => SetProperty(ref _categoryList, value, nameof(CategoryList));
+        }
+
+        private ProductCategoryContext _selectedCategory;
+
+        public ProductCategoryContext SelectedCategory
+        {
+            get => _selectedCategory;
+            set => SetProperty(ref _selectedCategory, value, nameof(SelectedCategory));
+        }
 
         private ObservableCollection<ProductInfoContext> _productList;
 
@@ -56,6 +98,14 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedProduct, value, nameof(SelectedProduct));
         }
 
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, nameof(IsActive));
+        }
+        
         private string _searchText;
 
         public string SearchText
@@ -68,7 +118,8 @@ namespace LireOffice.ViewModels
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
-        public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
+
+        public DelegateCommand RefreshCommand => new DelegateCommand(() => { LoadProductList(); });
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
 
@@ -94,10 +145,7 @@ namespace LireOffice.ViewModels
                 OnCellDoubleTapped();
             }
         }
-
-        private void OnDelete()
-        {
-        }
+        
 
         private void OnCellDoubleTapped()
         {
@@ -127,9 +175,40 @@ namespace LireOffice.ViewModels
                 List<Models.Product> productList = new List<Models.Product>();
                 Collection<ProductInfoContext> productInfoList = new Collection<ProductInfoContext>();
                 if (string.IsNullOrEmpty(text))
-                    productList = context.GetProducts().ToList();
+                {
+                    if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProducts(IsActive).ToList();
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByVendor(SelectedVendor.Id, IsActive).ToList();
+                    }      
+                    else if(SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByCategory(SelectedCategory.Id, IsActive).ToList();
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).ToList();
+                    }
+                }   
                 else
-                    productList = context.GetProducts(text).ToList();
+                {
+                    if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProducts(text, IsActive).ToList();
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByVendor(text, SelectedVendor.Id, IsActive).ToList();
+                    }
+                    else if (SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByCategory(text, SelectedCategory.Id, IsActive).ToList();
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
+                            productList = context.GetProductsByCategoryVendor(text, SelectedCategory.Id, SelectedVendor.Id, IsActive).ToList();
+                    }
+                }
+                    
 
                 if (productList.Count > 0)
                 {
@@ -196,9 +275,59 @@ namespace LireOffice.ViewModels
             timer.Start();
         }
 
+        private async void LoadCategoryList()
+        {
+            CategoryList.Clear();
+
+            var tempCategoryList = await Task.Run(()=> 
+            {
+                Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
+                var categoryList = context.GetCategory().OrderBy(x => x.Name).ToList();
+                if (categoryList.Count > 0)
+                {
+                    foreach (var category in categoryList)
+                    {
+                        ProductCategoryContext _category = Mapper.Map<ProductCategory, ProductCategoryContext>(category);
+                        _categoryList.Add(_category);
+                    }
+                }
+
+                return _categoryList;
+            });
+
+            CategoryList.AddRange(tempCategoryList);
+            CategoryList.Insert(0, new ProductCategoryContext { Id = Guid.NewGuid().ToString(), Name = "Semua", IsActive = true });
+            SelectedCategory = CategoryList.ElementAtOrDefault(0);
+        }
+
+        private async void LoadVendorList()
+        {
+            VendorList.Clear();
+
+            var tempVendorList = await Task.Run(()=> 
+            {
+                Collection<UserSimpleContext> _vendorList = new Collection<UserSimpleContext>();
+                var vendorList = context.GetVendor().OrderBy(x => x.Name).ToList();
+                if (vendorList.Count > 0)
+                {
+                    foreach (var vendor in vendorList)
+                    {
+                        UserSimpleContext _vendor = Mapper.Map<User, UserSimpleContext>(vendor);
+                        _vendorList.Add(_vendor);
+                    }
+                }
+
+                return _vendorList;
+            });
+
+            VendorList.AddRange(tempVendorList);
+            VendorList.Insert(0, new UserSimpleContext { Id = Guid.NewGuid().ToString(), Name = "Semua", RegisterId = "000" });
+            SelectedVendor = VendorList.ElementAtOrDefault(0);
+        }
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            LoadProductList();
+            
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

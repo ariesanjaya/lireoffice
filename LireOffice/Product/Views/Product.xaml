@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
@@ -18,14 +19,17 @@
         <StackPanel Orientation="Horizontal" Margin="24 0" VerticalAlignment="Center" HorizontalAlignment="Left">
             <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" IsTabStop="True" Command="{Binding AddCommand}" />
             <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" IsTabStop="False" Command="{Binding UpdateCommand}" />
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Hapus" Height="30" Width="100" FontSize="14" IsTabStop="False" Command="{Binding DeleteCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center" />
+            <CheckBox Content="Aktif" FontSize="14" VerticalAlignment="Center" IsChecked="{Binding IsActive, UpdateSourceTrigger=PropertyChanged}"/>
+            <ComboBox Margin="16 0 8 0" Width="160" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
+            <ComboBox Width="180" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
+            <Button Margin="8 0" Width="30" Command="{Binding RefreshCommand}"/>
+            <syncfusion:SfTextBoxExt Watermark="Cari" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center" />
         </StackPanel>
 
-        <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid"
+        <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid" Margin="12 0 12 12"
                                ItemsSource="{Binding ProductList}"
                                SelectedItem="{Binding SelectedProduct}"
                                FontSize="14"

@@ -1,6 +1,6 @@
 ﻿using LireOffice.Views;
-using MahApps.Metro.Controls;
 using Prism.Regions;
+using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Shared;
 
 namespace LireOffice
@@ -8,13 +8,14 @@ namespace LireOffice
     /// <summary>
     /// Interaction logic for Shell.xaml
     /// </summary>
-    public partial class Shell : MetroWindow
+    public partial class Shell : ChromelessWindow
     {
         public Shell(IRegionManager regionManager)
-        {
+        {            
             InitializeComponent();
-
+            
             regionManager.RegisterViewWithRegion("MainRegion", typeof(Login));
         }
+
     }
 }

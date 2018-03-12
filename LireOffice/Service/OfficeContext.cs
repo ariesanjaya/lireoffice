@@ -325,9 +325,44 @@ namespace LireOffice.Service
             return db.GetCollection<Product>("Products").FindAll();
         }
 
-        public IEnumerable<Product> GetProducts(string text)
+        public IEnumerable<Product> GetProducts(bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())));
+            return db.GetCollection<Product>("Products").Find(Query.EQ("IsActive", isActive));
+        }
+
+        public IEnumerable<Product> GetProductsByVendor(string vendorId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProductsByCategory(string categoryId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProductsByCategoryVendor(string categoryId, string vendorId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId),Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProducts(string text, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProductsByVendor(string text, string vendorId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProductsByCategory(string text, string categoryId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
+        }
+
+        public IEnumerable<Product> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive)
+        {
+            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
         }
 
         public Product GetProductById(string id)

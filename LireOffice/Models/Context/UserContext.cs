@@ -27,7 +27,7 @@ namespace LireOffice.Models
             get => _registerId;
             set
             {
-                this.RaiseAndSetIfChanged(ref _registerId, value, nameof(RegisterId));
+                SetProperty(ref _registerId, value, nameof(RegisterId));
                 OnPropertyChange(nameof(RegisterId));
             }
         }
@@ -37,7 +37,7 @@ namespace LireOffice.Models
         public string CardId
         {
             get => _cardId;
-            set => this.RaiseAndSetIfChanged(ref _cardId, value, nameof(CardId));
+            set => SetProperty(ref _cardId, value, nameof(CardId));
         }
 
         private string _selfId;
@@ -45,7 +45,7 @@ namespace LireOffice.Models
         public string SelfId
         {
             get => _selfId;
-            set => this.RaiseAndSetIfChanged(ref _selfId, value, nameof(SelfId));
+            set => SetProperty(ref _selfId, value, nameof(SelfId));
         }
 
         private string _taxId;
@@ -53,7 +53,7 @@ namespace LireOffice.Models
         public string TaxId
         {
             get => _taxId;
-            set => this.RaiseAndSetIfChanged(ref _taxId, value, nameof(TaxId));
+            set => SetProperty(ref _taxId, value, nameof(TaxId));
         }
 
         private string _name;
@@ -61,7 +61,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => this.RaiseAndSetIfChanged(ref _name, value, nameof(Name));
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
         private string _salesName;
@@ -69,7 +69,7 @@ namespace LireOffice.Models
         public string SalesName
         {
             get => _salesName;
-            set => this.RaiseAndSetIfChanged(ref _salesName, value, nameof(SalesName));
+            set => SetProperty(ref _salesName, value, nameof(SalesName));
         }
 
         private DateTime? _dateOfBirth;
@@ -77,7 +77,7 @@ namespace LireOffice.Models
         public DateTime? DateOfBirth
         {
             get => _dateOfBirth;
-            set => this.RaiseAndSetIfChanged(ref _dateOfBirth, value, nameof(DateOfBirth));
+            set => SetProperty(ref _dateOfBirth, value, nameof(DateOfBirth));
         }
 
         private DateTime? _enterDate;
@@ -85,7 +85,7 @@ namespace LireOffice.Models
         public DateTime? EnterDate
         {
             get => _enterDate;
-            set => this.RaiseAndSetIfChanged(ref _enterDate, value, nameof(EnterDate));
+            set => SetProperty(ref _enterDate, value, nameof(EnterDate));
         }
 
         private string _occupation;
@@ -93,7 +93,7 @@ namespace LireOffice.Models
         public string Occupation
         {
             get => _occupation;
-            set => this.RaiseAndSetIfChanged(ref _occupation, value, nameof(Occupation));
+            set => SetProperty(ref _occupation, value, nameof(Occupation));
         }
 
         private bool _isActive;
@@ -101,7 +101,7 @@ namespace LireOffice.Models
         public bool IsActive
         {
             get => _isActive;
-            set => this.RaiseAndSetIfChanged(ref _isActive, value, nameof(IsActive));
+            set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
 
         private string _addressLine;
@@ -109,7 +109,7 @@ namespace LireOffice.Models
         public string AddressLine
         {
             get => _addressLine;
-            set => this.RaiseAndSetIfChanged(ref _addressLine, value, nameof(AddressLine));
+            set => SetProperty(ref _addressLine, value, nameof(AddressLine));
         }
 
         private string _subDistrict;
@@ -117,7 +117,7 @@ namespace LireOffice.Models
         public string SubDistrict
         {
             get => _subDistrict;
-            set => this.RaiseAndSetIfChanged(ref _subDistrict, value, nameof(SubDistrict));
+            set => SetProperty(ref _subDistrict, value, nameof(SubDistrict));
         }
 
         private string _district;
@@ -125,7 +125,7 @@ namespace LireOffice.Models
         public string District
         {
             get => _district;
-            set => this.RaiseAndSetIfChanged(ref _district, value, nameof(District));
+            set => SetProperty(ref _district, value, nameof(District));
         }
 
         private string _regency;
@@ -133,7 +133,7 @@ namespace LireOffice.Models
         public string Regency
         {
             get => _regency;
-            set => this.RaiseAndSetIfChanged(ref _regency, value, nameof(Regency));
+            set => SetProperty(ref _regency, value, nameof(Regency));
         }
 
         private string _email;
@@ -141,7 +141,7 @@ namespace LireOffice.Models
         public string Email
         {
             get => _email;
-            set => this.RaiseAndSetIfChanged(ref _email, value, nameof(Email));
+            set => SetProperty(ref _email, value, nameof(Email));
         }
 
         private string _phone;
@@ -149,7 +149,7 @@ namespace LireOffice.Models
         public string Phone
         {
             get => _phone;
-            set => this.RaiseAndSetIfChanged(ref _phone, value, nameof(Phone));
+            set => SetProperty(ref _phone, value, nameof(Phone));
         }
 
         private string _cellPhone01;
@@ -157,7 +157,7 @@ namespace LireOffice.Models
         public string CellPhone01
         {
             get => _cellPhone01;
-            set => this.RaiseAndSetIfChanged(ref _cellPhone01, value, nameof(CellPhone01));
+            set => SetProperty(ref _cellPhone01, value, nameof(CellPhone01));
         }
 
         private string _cellPhone02;
@@ -165,7 +165,7 @@ namespace LireOffice.Models
         public string CellPhone02
         {
             get => _cellPhone02;
-            set => this.RaiseAndSetIfChanged(ref _cellPhone02, value, nameof(CellPhone02));
+            set => SetProperty(ref _cellPhone02, value, nameof(CellPhone02));
         }
                 
     }

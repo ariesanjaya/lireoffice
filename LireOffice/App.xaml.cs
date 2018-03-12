@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LireOffice.Models;
+using Syncfusion.SfSkinManager;
 using System;
 using System.Windows;
 
@@ -14,6 +15,7 @@ namespace LireOffice
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            
             Mapper.Initialize(config =>
             {
                 #region User Configuration
