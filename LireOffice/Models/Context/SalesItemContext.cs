@@ -78,26 +78,14 @@ namespace LireOffice.Models
             set => SetProperty(ref _subTotal, value, nameof(SubTotal));
         }
 
-        private decimal _tax;
+        private double _tax;
 
-        public decimal Tax
+        public double Tax
         {
             get => _tax;
-            set => SetProperty(ref _tax, value, () =>
-            {
-                CalculateTax();
-                CalculateSubTotal();
-            }, nameof(Tax));
+            set => SetProperty(ref _tax, value, nameof(Tax));
         }
-
-        private void CalculateTax()
-        {
-            if (Tax <= 100)
-            {
-                Tax = ((decimal)Quantity * SellPrice - Discount) * (decimal)Tax / 100;
-            }
-        }
-
+        
         private void CalculateDiscount()
         {
             if (Discount <= 100)
@@ -108,7 +96,13 @@ namespace LireOffice.Models
 
         private void CalculateSubTotal()
         {
-            SubTotal = (decimal)Quantity * SellPrice - Discount + Tax;
+            decimal taxValue = 0;
+            if (Tax > 0)
+            {
+                taxValue = ((decimal)Quantity * SellPrice - Discount) * (decimal)Tax / 100;
+            }
+
+            SubTotal = ((decimal)Quantity * SellPrice - Discount) + taxValue;
             eventAggregator.GetEvent<CalculateSalesDetailTotalEvent>().Publish("Calculate Item List");
         }
     }

@@ -229,8 +229,10 @@ namespace LireOffice.ViewModels
                                     UnitTypeId = unitType.Id,
                                     UnitType = unitType.Name,
                                     Quantity = unitType.Stock,
-                                    BuyPrice = unitType.BuyPrice,
-                                    SellPrice = unitType.SellPrice
+                                    BuyPrice = unitType.BuyPrice + unitType.TaxInPrice,
+                                    TaxInPrice = unitType.TaxInPrice,
+                                    SellPrice = unitType.SellPrice,
+                                    TaxOutPrice = unitType.TaxOutPrice
                                 };
 
                                 productInfo.BuySubTotal = (decimal)productInfo.Quantity * productInfo.BuyPrice;

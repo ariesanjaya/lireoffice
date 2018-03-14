@@ -41,12 +41,12 @@
                         <ColumnDefinition Width="30" />
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:AutoComplete x:Name="VendorBox" Height="30" Width="180" CustomSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" IsFilter="True" FontSize="14" />
+                    <ComboBox x:Name="VendorBox" Height="30" Width="180" IsEditable="True" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" />
                     <Button Grid.Column="1" Command="{Binding AddVendorCommand}" />
                 </Grid>
 
                 <Label Grid.Column="2" Content="No. Invoice" FontSize="14" />
-                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ReceivedGoodDTO.InvoiceId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Width="120" Height="30" />
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ReceivedGoodDTO.InvoiceId, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Width="120" Height="30" VerticalContentAlignment="Center"/>
 
                 <Label Grid.Column="4" Content="Tgl. Penerimaan" FontSize="14" />
                 <DatePicker  Grid.Row="1" Grid.Column="4" Width="140" Height="30" SelectedDate="{Binding ReceivedGoodDTO.ReceivedDate}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
@@ -69,21 +69,20 @@
                         <ColumnDefinition Width="30" />
                     </Grid.ColumnDefinitions>
 
-                    <syncfusion:AutoComplete x:Name="EmployeeBox" Height="30" Width="180" CustomSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" IsFilter="True" FontSize="14" />
+                    <ComboBox x:Name="EmployeeBox" Height="30" Width="180" ItemsSource="{Binding EmployeeList}" SelectedItem="{Binding SelectedEmployee}" DisplayMemberPath="Name" FontSize="14" />
                     <Button Grid.Column="1" Command="{Binding AddEmployeeCommand}" />
                 </Grid>
 
                 <Label Grid.Column="2" Content="Keterangan" FontSize="14" />
-                <TextBox Grid.Row="1" Grid.Column="2" FontSize="14" Width="280" Height="30" Text="{Binding ReceivedGoodDTO.Description}" />
+                <TextBox Grid.Row="1" Grid.Column="2" FontSize="14" Width="380" Height="30" VerticalContentAlignment="Center" Text="{Binding ReceivedGoodDTO.Description}" />
             </Grid>
         </Grid>
 
-        <Button Content="Hitung HPP" Height="32" Width="120" Margin="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding CalculateBuyPriceCommand}" />
-        <syncfusion:SfDataGrid x:Name="dataGrid" Grid.Row="1" Margin="0 16"
+        <syncfusion:SfDataGrid x:Name="dataGrid" Grid.Row="1" Margin="16"
                                ItemsSource="{Binding ReceivedGoodItemList}"
                                SelectedItem="{Binding SelectedReceivedGoodItem}"
                                AutoGenerateColumns="False"
-                               AllowSorting="True"
+                               AllowSorting="True" 
                                ColumnSizer="Star"
                                NavigationMode="Cell"
                                SelectionUnit="Cell"
@@ -97,7 +96,7 @@
                 <syncfusion:GridCurrencyColumn HeaderText="Harga" MappingName="BuyPrice" MinValue="0" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
                 <syncfusion:GridCurrencyColumn HeaderText="Diskon (Rp)" MappingName="Discount" MinValue="0" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="160" MinValue="0" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
-                <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="80" AllowEditing="True" MinValue="0" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
+                <syncfusion:GridPercentColumn HeaderText="Pjk" MappingName="Tax" Width="80" AllowEditing="False" MinValue="0"/>
             </syncfusion:SfDataGrid.Columns>
             <syncfusion:SfDataGrid.Resources>
                 <DataTemplate x:Key="UnBoundRowCellTemplate">
@@ -135,25 +134,31 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="140" />
                 <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="160" />
                 <ColumnDefinition Width="26" />
             </Grid.ColumnDefinitions>
 
-            <Label Content="Tambahan Biaya" FontSize="14" />
-            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Column="1" FontSize="14" Height="30" Value="{Binding AdditionalCost}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-            <Button Grid.Column="2" Command="{Binding AdditionalCostCommand}" />
+            <Label Grid.Column="3" Content="Tambahan Biaya" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsTabStop="False" IsReadOnly="True" MinValue="0" Grid.Column="4" FontSize="14" Height="30" Value="{Binding AdditionalCost}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            <Button Grid.Column="5" Command="{Binding AdditionalCostCommand}" />
 
-            <Label Grid.Row="2" Content="Total Diskon (Rp)" FontSize="14" />
-            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="2" Grid.Column="1" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalDiscount}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            <Label Grid.Column="3" Grid.Row="2" Content="SubTotal (Rp)" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="2" Grid.Column="4" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.SubTotal}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            
+            <Label  Grid.Row="4" Content="Total Diskon (Rp)" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="4" Grid.Column="1" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalDiscount}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
 
-            <Label Grid.Row="4" Content="Total Pjk (Rp)" FontSize="14" />
-            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="4" Grid.Column="1" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalTax}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            <Label Grid.Row="4" Grid.Column="3" Content="Total Pjk (Rp)" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="4" Grid.Column="4" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalTax}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
 
-            <Label Grid.Row="6" Content="Potongan BS" FontSize="14" />
-            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="6" Grid.Column="1" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalGoodReturn}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-            <Button Grid.Row="6" Grid.Column="2" Command="{Binding GoodReturnCommand}" IsEnabled="{Binding ReceivedGoodDTO.IsBtnEnabled}" />
+            <Label Grid.Row="6" Grid.Column="3" Content="Potongan BS" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="6" Grid.Column="4" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.TotalGoodReturn}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            <Button Grid.Row="6" Grid.Column="5" Command="{Binding GoodReturnCommand}"/>
 
-            <Label Grid.Row="8" Content="Total Hutang" FontSize="14" />
-            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="8" Grid.Column="1" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.Total}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+            <Label Grid.Row="8" Grid.Column="3" Content="Total Hutang" FontSize="14" />
+            <syncfusion:CurrencyTextBox IsReadOnly="True" MinValue="0" Grid.Row="8" Grid.Column="4" FontSize="14" Height="30" Value="{Binding ReceivedGoodDTO.Total}" Culture="id-ID" HorizontalContentAlignment="Right" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
         </Grid>
 
         <StackPanel Margin="16" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal">
@@ -161,8 +166,8 @@
             <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Ubah Item" Command="{Binding UpdateItemCommand}" />
             <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Hapus Item" Command="{Binding DeleteItemCommand}" />
 
-            <syncfusion:ButtonAdv Margin="48 0 0 0" Height="30" Label="Rekam" Command="{Binding SaveCommand}" IsEnabled="{Binding ReceivedGoodDTO.IsBtnEnabled}" />
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Rekam Draft" Command="{Binding SaveDraftCommand}" />
+            <syncfusion:ButtonAdv Margin="48 0 0 0" Height="30" Label="Rekam" Command="{Binding SaveCommand}" CommandParameter="Save"/>
+            <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Rekam Draft" Command="{Binding SaveDraftCommand}" CommandParameter="SaveDraft"/>
             <syncfusion:ButtonAdv Margin="16 0 0 0" Height="30" Label="Batal" Command="{Binding CancelCommand}" />
         </StackPanel>
     </Grid>

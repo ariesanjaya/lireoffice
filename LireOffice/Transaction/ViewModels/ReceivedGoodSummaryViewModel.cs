@@ -96,6 +96,7 @@ namespace LireOffice.ViewModels
         public DelegateCommand DateAssignCommand => new DelegateCommand(() => MaxDate = MinDate);
         public DelegateCommand RefreshCommand => new DelegateCommand(() => LoadReceivedGoodList());
 
+        public DelegateCommand DoubleClickCommand => new DelegateCommand(OnDetail);
         public DelegateCommand<object> DetailsViewExpandingCommand => new DelegateCommand<object>(OnDetailsViewExpanding);
 
         private void OnAdd()
@@ -105,11 +106,30 @@ namespace LireOffice.ViewModels
 
         private void OnDetail()
         {
-            regionManager.RequestNavigate("ContentRegion", "ReceivedGoodDetail");
+            var parameter = new NavigationParameters { { "SelectedItem", SelectedReceivedGoodInfo } };
+            regionManager.RequestNavigate("ContentRegion", "ReceivedGoodDetail", parameter);
         }
 
         private void OnDelete()
         {
+            if (SelectedReceivedGoodInfo != null)
+            {
+                if (!SelectedReceivedGoodInfo.IsPosted)
+                {
+                    var itemList = context.GetReceivedGoodItem(SelectedReceivedGoodInfo.Id).ToList();
+                    if (itemList.Count > 0)
+                    {
+                        foreach (var item in itemList)
+                        {
+                            context.DeleteReceivedGoodItem(item.Id);
+                        }
+
+                        context.DeleteReceivedGood(SelectedReceivedGoodInfo.Id);
+                    }
+                    LoadReceivedGoodList();
+                }
+            }
+
         }
 
         private async void OnDetailsViewExpanding(object _item)
@@ -134,11 +154,13 @@ namespace LireOffice.ViewModels
                                 Name = item.Name,
                                 Quantity = item.Quantity,
                                 UnitType = item.UnitType,
-                                BuyPrice = item.BuyPrice,
+                                BuyPrice = item.BuyPrice,                                
                                 Discount = item.Discount,
-                                SubTotal = item.SubTotal,
-                                Tax = item.Tax
+                                Tax = item.Tax, 
+                                TaxPrice = item.TaxPrice
                             };
+                            
+                            receivedGoodItem.SubTotal = ((decimal)receivedGoodItem.Quantity * receivedGoodItem.BuyPrice - receivedGoodItem.Discount) + ((decimal)receivedGoodItem.Quantity * receivedGoodItem.TaxPrice);
 
                             _itemList.Add(receivedGoodItem);
                         }

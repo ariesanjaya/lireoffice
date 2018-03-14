@@ -44,7 +44,8 @@
                                ColumnSizer="Star"
                                RowHeight="40" HeaderRowHeight="40">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridDateTimeColumn HeaderText="Tgl" MappingName="ReceivedDate" Pattern="ShortDate" HorizontalHeaderContentAlignment="Left" Width="160" />
+                <syncfusion:GridDateTimeColumn HeaderText="Tgl" MappingName="ReceivedDate" Pattern="ShortDate" HorizontalHeaderContentAlignment="Left" Width="140" />
+                <syncfusion:GridTextColumn HeaderText="No. Invoice" MappingName="InvoiceId" HorizontalHeaderContentAlignment="Left" Width="180"/>
                 <syncfusion:GridTextColumn HeaderText="Pemasok" MappingName="Description" HorizontalHeaderContentAlignment="Left" />
                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="Total" HorizontalHeaderContentAlignment="Right" Width="240" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
                 <syncfusion:GridCheckBoxColumn HeaderText="" Width="60" MappingName="IsPosted" />
@@ -55,18 +56,18 @@
                         <syncfusion:SfDataGrid x:Name="FirstLevelNestedGrid"
                                                AutoGenerateColumns="False"
                                                FontSize="14"
-                                               RowHeight="40"
+                                               RowHeight="40" 
                                                HeaderRowHeight="40"
                                                ColumnSizer="Star">
                             <syncfusion:SfDataGrid.Columns>
                                 <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="160" FilterRowEditorType="MultiSelectComboBox" />
                                 <syncfusion:GridTextColumn HeaderText="Nama Barang" MappingName="Name" FilterRowEditorType="MultiSelectComboBox" />
-                                <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="80" />
-                                <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="100" FilterRowEditorType="MultiSelectComboBox" />
+                                <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="75" />
+                                <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="90" FilterRowEditorType="MultiSelectComboBox" />
                                 <syncfusion:GridCurrencyColumn HeaderText="Harga Beli" MappingName="BuyPrice" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
                                 <syncfusion:GridCurrencyColumn HeaderText="Diskon" MappingName="Discount" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
                                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-                                <syncfusion:GridCurrencyColumn HeaderText="Pjk" MappingName="Tax" Width="140" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
+                                <syncfusion:GridPercentColumn HeaderText="Pjk" MappingName="Tax" Width="140"/>
                             </syncfusion:SfDataGrid.Columns>
                         </syncfusion:SfDataGrid>
                     </syncfusion:GridViewDefinition.DataGrid>
@@ -76,6 +77,9 @@
                 <local:SelectionController />
             </i:Interaction.Behaviors>
             <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CellDoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding DoubleClickCommand}"/>
+                </i:EventTrigger>
                 <local:EnterKeyDownEventTrigger EventName="KeyUp">
                     <i:InvokeCommandAction Command="{Binding DoubleClickCommand}" />
                 </local:EnterKeyDownEventTrigger>

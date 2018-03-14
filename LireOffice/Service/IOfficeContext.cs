@@ -215,13 +215,9 @@ namespace LireOffice.Service
         #region Account Methods
 
         void AddAccount(Account account);
-
         void UpdateAccount(Account account);
-
         IEnumerable<Account> GetAccounts();
-
         IEnumerable<Account> GetAccounts(string category);
-
         Account GetAccountById(string id);
 
         #endregion Account Methods
@@ -253,5 +249,14 @@ namespace LireOffice.Service
         LedgerOut GetLedgerOutById(string Id);
 
         #endregion LedgerOut Methods
+
+        #region Inventory Methods
+
+        void AddStock(Inventory data);
+        void UpdateStock(Inventory data);
+        IEnumerable<Inventory> GetStocks();
+        Inventory GetStockByProductId(string productId);
+                    
+        #endregion
     }
 }

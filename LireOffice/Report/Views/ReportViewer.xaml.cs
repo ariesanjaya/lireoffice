@@ -24,10 +24,6 @@ namespace LireOffice.Views
         {
             InitializeComponent();
         }
-
-        private void ReportViewer_Load(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }

@@ -25,7 +25,16 @@ namespace LireOffice.Service
 
             db.GetCollection<Account>("Accounts").EnsureIndex(c => c.Category);
 
+            #region Inventory
+            db.GetCollection<Inventory>("Inventories").EnsureIndex(c => c.ProductId);
+            db.GetCollection<Inventory>("Inventories").EnsureIndex(c => c.Detail);
+            #endregion
+
             SeedData();
+
+            //db.DropCollection("Inventories");
+            //db.DropCollection("ReceivedGoods");
+            //db.DropCollection("ReceivedGoodItems");
         }
 
         public void SeedData()
@@ -34,22 +43,19 @@ namespace LireOffice.Service
 
             if (!db.CollectionExists("Taxes"))
             {
-                db.GetCollection<Tax>("Taxes").InsertBulk(new List<Tax>
+                db.GetCollection<Tax>("Taxes").Insert(new Tax
                 {
-                    new Tax
-                    {
-                        Name = "Non Pjk",
-                        Value = 0,
-                        Description = "Non Pjk",
-                        IsActive = true,
-                    },
-                    new Tax
-                    {
-                        Name = "PPn 10%",
-                        Value = 10,
-                        Description = "PPn 10%",
-                        IsActive = true,
-                    }
+                    Name = "Non Pjk",
+                    Value = 0,
+                    Description = "Non Pjk",
+                    IsActive = true,
+                });
+                db.GetCollection<Tax>("Taxes").Insert(new Tax
+                {
+                    Name = "PPn 10%",
+                    Value = 10,
+                    Description = "PPn 10%",
+                    IsActive = true,
                 });
             }
 
@@ -283,11 +289,11 @@ namespace LireOffice.Service
             return db.GetCollection<UnitType>("UnitTypes").Find(Query.EQ("ProductId", productId));
         }
 
-        public UnitType GetUnitTypeById(string id)
+        public UnitType GetUnitTypeById(string Id)
         {
-            return db.GetCollection<UnitType>("UnitTypes").FindById(id);
+            return db.GetCollection<UnitType>("UnitTypes").FindById(Id);
         }
-
+        
         #endregion UnitType Methods
 
         #region Product Methods
@@ -637,5 +643,31 @@ namespace LireOffice.Service
         }
 
         #endregion LedgerOut Methods
+
+        #region Inventory Methods
+
+        public void AddStock(Inventory data)
+        {
+            db.GetCollection<Inventory>("Inventories").Insert(data);
+        }
+
+        public void UpdateStock(Inventory data)
+        {
+            data.Version += 1;
+            data.UpdatedAt = DateTime.Now;
+            db.GetCollection<Inventory>("Inventories").Update(data);
+        }
+
+        public IEnumerable<Inventory> GetStocks()
+        {
+            return db.GetCollection<Inventory>("Inventories").FindAll();
+        }
+
+        public Inventory GetStockByProductId(string productId)
+        {
+            return db.GetCollection<Inventory>("Inventories").FindOne(Query.EQ("ProductId", productId));
+        }
+        
+        #endregion
     }
 }

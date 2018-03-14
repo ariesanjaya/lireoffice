@@ -3,11 +3,15 @@ using System;
 
 namespace LireOffice.Models
 {
-    public class ReceivedGoodDetailContext : BindableBase
+    using static LireOffice.Models.RuleCollection<ReceivedGoodDetailContext>;
+    public class ReceivedGoodDetailContext : NotifyDataErrorInfo<ReceivedGoodDetailContext>
     {
         public ReceivedGoodDetailContext()
         {
             ReceivedDate = DateTime.Now;
+
+            Rules.Add(new DelegateRule<ReceivedGoodDetailContext>(nameof(InvoiceId), 
+                "No. Invoice harus disi", x => !string.IsNullOrEmpty(InvoiceId)));
         }
 
         public string Id { get; set; }
@@ -28,7 +32,11 @@ namespace LireOffice.Models
         public string InvoiceId
         {
             get => _invoiceId;
-            set => SetProperty(ref _invoiceId, value, nameof(InvoiceId));
+            set
+            {
+                SetProperty(ref _invoiceId, value, nameof(InvoiceId));
+                OnPropertyChange(nameof(InvoiceId));
+            }
         }
 
         private string _description;
@@ -63,6 +71,15 @@ namespace LireOffice.Models
             set => SetProperty(ref _totalTax, value, nameof(TotalTax));
         }
 
+        private decimal _subTotal;
+
+        public decimal SubTotal
+        {
+            get => _subTotal;
+            set => SetProperty(ref _subTotal, value, nameof(SubTotal));
+        }
+
+
         private decimal _totalGoodReturn;
 
         public decimal TotalGoodReturn
@@ -85,14 +102,6 @@ namespace LireOffice.Models
         {
             get => _isPosted;
             set => SetProperty(ref _isPosted, value, nameof(IsPosted));
-        }
-
-        private bool _isBtnEnabled;
-
-        public bool IsBtnEnabled
-        {
-            get => _isBtnEnabled;
-            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
-        }
+        }        
     }
 }

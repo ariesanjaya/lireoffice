@@ -193,7 +193,7 @@ namespace LireOffice.ViewModels
                                 var tax = context.GetTaxById(unitType.TaxOutId);
                                 if (tax != null)
                                 {
-                                    productInfo.Tax = (decimal)tax.Value;
+                                    productInfo.Tax = tax.Value;
                                 }
 
                                 _productList.Add(productInfo);

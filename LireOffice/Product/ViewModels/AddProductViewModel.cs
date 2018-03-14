@@ -112,11 +112,7 @@ namespace LireOffice.ViewModels
         public ProductCategoryContext SelectedCategory
         {
             get => _selectedCategory;
-            set => SetProperty(ref _selectedCategory, value, () =>
-             {
-                 //if (ProductDTO != null)
-                 //ProductDTO
-             }, nameof(SelectedCategory));
+            set => SetProperty(ref _selectedCategory, value, nameof(SelectedCategory));
         }
 
         private ObservableCollection<UserSimpleContext> _vendorList;
@@ -231,6 +227,11 @@ namespace LireOffice.ViewModels
             {
                 UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(item);
 
+                var taxOut = context.GetTaxById(unitType.TaxOutId);
+                if (taxOut != null)
+                {
+                    unitType.TaxOutPrice = item.SellPrice * (decimal)taxOut.Value / 100;
+                }
                 unitType.ProductId = product.Id;
                 context.AddUnitType(unitType);
             }
@@ -246,6 +247,13 @@ namespace LireOffice.ViewModels
                 productResult = Mapper.Map(ProductDTO, productResult);
                 productResult.Version += 1;
                 productResult.UpdatedAt = DateTime.Now;
+
+                if (SelectedCategory != null)
+                    productResult.CategoryId = SelectedCategory.Id;
+
+                if (SelectedVendor != null)
+                    productResult.VendorId = SelectedVendor.Id;
+
                 context.UpdateProduct(productResult);
             }
 
@@ -259,6 +267,12 @@ namespace LireOffice.ViewModels
                         unitTypeResult = Mapper.Map(unitType, unitTypeResult);
                         unitTypeResult.Version += 1;
                         unitTypeResult.UpdatedAt = DateTime.Now;
+
+                        var taxOut = context.GetTaxById(unitType.TaxOutId);
+                        if (taxOut != null)
+                        {
+                            unitTypeResult.TaxOutPrice = unitType.SellPrice * (decimal)taxOut.Value / 100;
+                        }
                         context.UpdateUnitType(unitTypeResult);
                     }
                 }
@@ -378,6 +392,8 @@ namespace LireOffice.ViewModels
                     foreach (var unitType in unitTypeList)
                     {
                         UnitTypeContext item = Mapper.Map<UnitType, UnitTypeContext>(unitType);
+                        item.LastBuyPrice += item.LastTaxInPrice;
+                        item.BuyPrice += item.TaxInPrice;
                         _unitTypeList.Add(item);
                     }
                 }

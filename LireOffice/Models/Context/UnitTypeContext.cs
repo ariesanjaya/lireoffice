@@ -3,11 +3,14 @@ using System.ComponentModel;
 
 namespace LireOffice.Models
 {
-    public class UnitTypeContext : BindableBase, IDataErrorInfo
+    using static LireOffice.Models.RuleCollection<UnitTypeContext>;
+    public class UnitTypeContext : NotifyDataErrorInfo<UnitTypeContext>
     {
         public UnitTypeContext()
         {
             IsActive = true;
+            Rules.Add(new DelegateRule<UnitTypeContext>(nameof(Barcode), "Tipe Barang harus diisi.", x => !string.IsNullOrEmpty(x.Name)));
+            Rules.Add(new DelegateRule<UnitTypeContext>(nameof(Barcode), "Kode barang harus diisi.", x => !string.IsNullOrEmpty(x.Barcode)));
         }
 
         public string Id { get; set; }
@@ -20,15 +23,23 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, CheckBtnAvailability, nameof(Name));
+            set
+            {
+                SetProperty(ref _name, value, nameof(Name));
+                OnPropertyChange(nameof(Name));
+            }
         }
-
+        
         private string _barcode;
 
         public string Barcode
         {
             get => _barcode;
-            set => SetProperty(ref _barcode, value, CheckBtnAvailability, nameof(Barcode));
+            set
+            {
+                SetProperty(ref _barcode, value, nameof(Barcode));
+                OnPropertyChange(nameof(Barcode));
+            }
         }
 
         private decimal _lastBuyPrice;
@@ -39,6 +50,14 @@ namespace LireOffice.Models
             set => SetProperty(ref _lastBuyPrice, value, nameof(LastBuyPrice));
         }
 
+        private decimal _lastTaxInPrice;
+
+        public decimal LastTaxInPrice
+        {
+            get => _lastTaxInPrice;
+            set => SetProperty(ref _lastTaxInPrice, value, nameof(LastTaxInPrice));
+        }
+        
         private decimal _buyPrice;
 
         public decimal BuyPrice
@@ -47,6 +66,14 @@ namespace LireOffice.Models
             set => SetProperty(ref _buyPrice, value, nameof(BuyPrice));
         }
 
+        private decimal _taxInPrice;
+
+        public decimal TaxInPrice
+        {
+            get => _taxInPrice;
+            set => SetProperty(ref _taxInPrice, value, nameof(TaxInPrice));
+        }
+        
         private decimal _sellPrice;
 
         public decimal SellPrice
@@ -69,48 +96,6 @@ namespace LireOffice.Models
         {
             get => _isActive;
             set => SetProperty(ref _isActive, value, nameof(IsActive));
-        }
-
-        private bool _isBtnEnabled;
-
-        public bool IsBtnEnabled
-        {
-            get => _isBtnEnabled;
-            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
-        }
-
-        public string Error => null;
-
-        public string this[string propertyName]
-        {
-            get
-            {
-                switch (propertyName)
-                {
-                    case nameof(Name):
-                        if (string.IsNullOrEmpty(Name))
-                        {
-                            return "Kotak ini harus diisi !!";
-                        }
-                        break;
-
-                    case nameof(Barcode):
-                        if (string.IsNullOrEmpty(Barcode))
-                        {
-                            return "Kotak ini harus diisi !!";
-                        }
-                        break;
-                }
-                return string.Empty;
-            }
-        }
-
-        private void CheckBtnAvailability()
-        {
-            if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Barcode))
-                IsBtnEnabled = true;
-            else
-                IsBtnEnabled = false;
-        }
+        }        
     }
 }

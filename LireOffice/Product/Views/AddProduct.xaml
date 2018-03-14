@@ -39,7 +39,7 @@
                 <Label Content="Detail Produk" Grid.ColumnSpan="2" FontSize="22" />
 
                 <Label Grid.Row="2" Content="Nama Produk" FontSize="14" VerticalAlignment="Center" />
-                <TextBox x:Name="NameTextBox" FontSize="14" Text="{Binding ProductDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" VerticalContentAlignment="Center" />
+                <TextBox x:Name="NameTextBox" FontSize="14" Text="{Binding ProductDTO.Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" VerticalContentAlignment="Center" />
 
                 <CheckBox Grid.Row="2" Grid.Column="4" IsTabStop="False" Content="Aktif" IsChecked="{Binding ProductDTO.IsActive}" FontSize="14" Margin="24 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
@@ -104,7 +104,7 @@
                             </Grid.RowDefinitions>
 
                             <Label Content="Kode" FontSize="14" VerticalAlignment="Center" />
-                            <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Barcode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged" />
+                            <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged" />
 
                             <Label Grid.Row="2" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
                             <syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="2" Value="{Binding UnitTypeDTO.LastBuyPrice}" IsReadOnly="True" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />

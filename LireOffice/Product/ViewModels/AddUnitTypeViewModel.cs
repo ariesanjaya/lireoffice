@@ -6,9 +6,11 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
 using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
@@ -101,9 +103,10 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
+        public ReactiveCommand<Unit, Unit> AddCommand => ReactiveCommand.Create(OnAdd, 
+            this.WhenAnyValue(x => x.UnitTypeDTO.Name, x => x.UnitTypeDTO.Barcode, (name, barcode) => !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(barcode)));
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
-        public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
+        //public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         public DelegateCommand SelectionChangedCommand => new DelegateCommand(OnSelectionChanged);

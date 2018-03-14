@@ -20,17 +20,15 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IOfficeContext context;
-        private readonly IValidationService validationService;
 
         private bool IsUpdated = false;
         private string Instigator;
 
-        public AddVendorViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context, IValidationService validationService)
+        public AddVendorViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.context = context;
-            this.validationService = validationService;
 
             VendorDTO = new UserContext();            
         }

@@ -8,9 +8,11 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -22,9 +24,7 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
-
-        private bool IsUpdated = false;
-
+        
         public ReceivedGoodDetailViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
         {
             eventAggregator = ea;
@@ -45,6 +45,20 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
+        private bool _isUpdated;
+
+        public bool IsUpdated
+        {
+            get => _isUpdated;
+            set => SetProperty(ref _isUpdated, value, nameof(IsUpdated));
+        }
+
+        private bool _isPosted;
+        public bool IsPosted
+        {
+            get => _isPosted;
+            set => SetProperty(ref _isPosted, value, nameof(IsPosted));
+        }
 
         private ReceivedGoodDetailContext _receivedGoodDTO;
 
@@ -91,10 +105,10 @@ namespace LireOffice.ViewModels
         {
             get => _selectedEmployee;
             set => SetProperty(ref _selectedEmployee, value, () =>
-             {
+            {
                  if (ReceivedGoodDTO != null && _selectedEmployee != null)
                      ReceivedGoodDTO.EmployeeId = _selectedEmployee.Id;
-             }, nameof(SelectedEmployee));
+            }, nameof(SelectedEmployee));
         }
 
         private ObservableCollection<ReceivedGoodItemContext> _receivedGoodItemList;
@@ -122,21 +136,22 @@ namespace LireOffice.ViewModels
         public DelegateCommand UpdateItemCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand DeleteItemCommand => new DelegateCommand(OnDeleteItem);
 
-        public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
-        public DelegateCommand SaveDraftCommand => new DelegateCommand(OnSaveDraft);
+        public DelegateCommand<string> SaveCommand => new DelegateCommand<string>(OnSave, (string parameter) => IsUpdated && !IsPosted).ObservesProperty(() => IsUpdated).ObservesProperty(() => IsPosted);
+        public DelegateCommand<string> SaveDraftCommand => new DelegateCommand<string>(OnSave, (string parameter) => SelectedEmployee != null && SelectedVendor != null && !IsPosted)
+            .ObservesProperty(() => SelectedEmployee)
+            .ObservesProperty(()=> SelectedVendor)
+            .ObservesProperty(() => IsPosted);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         public DelegateCommand CellDoubleTappedCommand => new DelegateCommand(OnCellDoubleTapped);
         public DelegateCommand AdditionalCostCommand => new DelegateCommand(OnAdditionalCost);
-        public DelegateCommand GoodReturnCommand => new DelegateCommand(OnGoodReturn);
+        public DelegateCommand GoodReturnCommand => new DelegateCommand(OnGoodReturn).ObservesCanExecute(()=> IsUpdated);
 
         public DelegateCommand VendorSelectionChangedCommand => new DelegateCommand(() =>
         {
             ReceivedGoodDTO.Description = "Pembelian, dari " + SelectedVendor.Name;
         });
-
-        public DelegateCommand CalculateBuyPriceCommand => new DelegateCommand(OnCalculateBuyPrice);
-
+                
         private void AddReceivedGoodItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*isUpdated*/> productIndex)
         {
             var product = productIndex.Item1;
@@ -148,9 +163,9 @@ namespace LireOffice.ViewModels
                 UnitTypeId = product.UnitTypeId,
                 Barcode = product.Barcode,
                 Name = product.Name,
+                Tax = product.Tax,
                 UnitType = product.UnitType,
-                BuyPrice = product.BuyPrice,
-                Tax = product.Tax
+                BuyPrice = product.BuyPrice
             };
 
             if (productIndex.Item3)
@@ -164,33 +179,22 @@ namespace LireOffice.ViewModels
 
         private void CalculateTotal()
         {
+            ReceivedGoodDTO.SubTotal = 0;
             ReceivedGoodDTO.TotalDiscount = 0;
             ReceivedGoodDTO.TotalTax = 0;
             ReceivedGoodDTO.Total = 0;
-
-            Parallel.ForEach(ReceivedGoodItemList, (ReceivedGoodItemContext item) =>
+            
+            foreach (var item in ReceivedGoodItemList)
             {
                 ReceivedGoodDTO.TotalDiscount += item.Discount;
-                ReceivedGoodDTO.TotalTax += item.Tax;
-                ReceivedGoodDTO.Total += item.SubTotal;
-            });
+                ReceivedGoodDTO.TotalTax += (item.TaxPrice * (decimal)item.Quantity);
+                ReceivedGoodDTO.SubTotal += item.SubTotal;
+            }
+
+            ReceivedGoodDTO.Total = ReceivedGoodDTO.SubTotal;
+            ReceivedGoodDTO.SubTotal -= ReceivedGoodDTO.TotalTax;
         }
-
-        private void OnCalculateBuyPrice()
-        {
-            Parallel.ForEach(ReceivedGoodItemList, (item) =>
-            {
-                var buyPrice = item.SubTotal / (decimal)item.Quantity;
-
-                Dispatcher.CurrentDispatcher.BeginInvoke((Action)delegate
-                {
-                    item.BuyPrice = buyPrice;
-                    item.Discount = 0;
-                    item.Tax = 0;
-                });
-            });
-        }
-
+        
         private void OnAddVendor()
         {
             var view = container.Resolve<AddVendor>();
@@ -218,18 +222,13 @@ namespace LireOffice.ViewModels
             if (SelectedReceivedGoodItem != null)
                 ReceivedGoodItemList.Remove(SelectedReceivedGoodItem);
         }
-
-        private void OnSave()
-        {
-            regionManager.RequestNavigate("ContentRegion", "ReceivedGoodSummary");
-        }
-
-        private void OnSaveDraft()
+        
+        private void OnSave(string parameter)
         {
             if (!IsUpdated)
                 AddData();
             else
-                UpdateData();
+                UpdateData(parameter);
 
             OnCancel();
             eventAggregator.GetEvent<ReceivedGoodListUpdatedEvent>().Publish("Load ReceivedGood List");
@@ -283,7 +282,7 @@ namespace LireOffice.ViewModels
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(true);
         }
 
-        private async void LoadVendorList()
+        private async void LoadVendorList(string vendorId = null)
         {
             VendorList.Clear();
 
@@ -304,9 +303,14 @@ namespace LireOffice.ViewModels
             });
 
             VendorList.AddRange(tempVendorList);
+
+            if (!string.IsNullOrEmpty(vendorId))
+            {
+                SelectedVendor = VendorList.FirstOrDefault(x => x.Id == vendorId);
+            }
         }
 
-        private async void LoadEmployeeList()
+        private async void LoadEmployeeList(string employeeId = null)
         {
             EmployeeList.Clear();
 
@@ -327,6 +331,11 @@ namespace LireOffice.ViewModels
             });
 
             EmployeeList.AddRange(tempEmployeeList);
+
+            if (!string.IsNullOrEmpty(employeeId))
+            {
+                SelectedEmployee = EmployeeList.FirstOrDefault(x => x.Id == employeeId);
+            }
         }
 
         private void AddData()
@@ -351,7 +360,8 @@ namespace LireOffice.ViewModels
                         BuyPrice = item.BuyPrice,
                         Discount = item.Discount,
                         SubTotal = item.SubTotal,
-                        Tax = item.Tax
+                        Tax = item.Tax,
+                        TaxPrice = item.TaxPrice
                     };
 
                     receivedGoodItemList.Add(receivedGoodItem);
@@ -362,8 +372,165 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private void UpdateData()
+        // -------------------------------------
+        // --------------
+        private void UpdateData(string parameter)
         {
+            // Check if data is exist in database
+            var receivedGoodResult = context.GetReceivedGoodById(ReceivedGoodDTO.Id);
+            if (receivedGoodResult != null)
+            {
+                // update data from DTO to existed data using AutoMapper
+                receivedGoodResult = Mapper.Map(ReceivedGoodDTO, receivedGoodResult);
+                receivedGoodResult.Version += 1;
+                receivedGoodResult.UpdatedAt = DateTime.Now;
+
+                // check if item list exist in database. If exist, delete all data
+                var receivedGoodItemResult = context.GetReceivedGoodItem(receivedGoodResult.Id).ToList();
+                if (receivedGoodItemResult.Count > 0)
+                {
+                    foreach (var item in receivedGoodItemResult)
+                    {
+                        context.DeleteReceivedGoodItem(item.Id);
+                    }
+                }
+
+                Collection<ReceivedGoodItem> receivedGoodItemList = new Collection<ReceivedGoodItem>();
+
+                foreach (var item in ReceivedGoodItemList)
+                {
+                    ReceivedGoodItem receivedGoodItem = new ReceivedGoodItem
+                    {
+                        ReceivedGoodId = receivedGoodResult.Id,
+                        ProductId = item.ProductId,
+                        UnitTypeId = item.UnitTypeId,
+                        TaxId = item.TaxId,
+                        Barcode = item.Barcode,
+                        Name = item.Name,
+                        Quantity = item.Quantity,
+                        UnitType = item.UnitType,
+                        BuyPrice = item.BuyPrice,
+                        Discount = item.Discount,
+                        SubTotal = item.SubTotal,
+                        Tax = item.Tax, 
+                        TaxPrice = item.TaxPrice
+                    };
+
+                    receivedGoodItemList.Add(receivedGoodItem);
+                }
+
+                if (string.Equals(parameter, "Save"))
+                {
+                    foreach (var item in ReceivedGoodItemList)
+                    {
+                        var inventoryItem = new InventoryDetail
+                        {
+                            ReceivedGoodId = receivedGoodResult.Id,
+                            ReceivedDate = receivedGoodResult.ReceivedDate,
+                            Quantity = item.Quantity,
+                            BuyPrice = item.BuyPrice,
+                            TaxInPrice = item.TaxPrice
+                        };
+                                                
+                        var inventoryResult = context.GetStockByProductId(item.ProductId);
+                        if (inventoryResult == null)
+                        {
+                            Inventory inventory = new Inventory { ProductId = item.ProductId, UnitTypeId = item.UnitTypeId };
+
+                            inventory.Detail.Add(inventoryItem);
+                            context.AddStock(inventory);
+
+                            var product = context.GetUnitTypeById(item.UnitTypeId);
+                            if (product != null)
+                            {
+                                product.Stock = 0;
+                                product.Stock += inventoryItem.Quantity;
+                                product.LastTaxInPrice = item.TaxPrice;
+                                product.LastBuyPrice = item.BuyPrice;
+
+                                if (product.BuyPrice == 0)
+                                {
+                                    product.BuyPrice = product.LastBuyPrice;
+                                    product.TaxInPrice = product.LastTaxInPrice;
+                                }
+
+                                context.UpdateUnitType(product);
+                            }
+                        }
+                        else
+                        {
+                            inventoryResult.Detail.Add(inventoryItem);
+                            context.UpdateStock(inventoryResult);
+
+                            var product = context.GetUnitTypeById(item.UnitTypeId);
+                            if (product != null)
+                            {
+                                product.Stock = 0;
+                                foreach (var itemDetail in inventoryResult.Detail)
+                                {
+                                    product.Stock += itemDetail.Quantity;
+                                }
+                                product.BuyPrice = product.LastBuyPrice;
+                                product.LastTaxInPrice = item.TaxPrice;
+                                product.LastBuyPrice = ((decimal)item.Quantity * item.BuyPrice - item.Discount);
+
+                                context.UpdateUnitType(product);
+                            }
+                        }                        
+                    }
+                    receivedGoodResult.IsPosted = true;
+                }
+
+                context.UpdateReceivedGood(receivedGoodResult);
+                context.AddBulkReceivedGoodItem(receivedGoodItemList);
+            }
+        }
+        
+        // --------------
+        // -------------------------------------
+
+        private async void LoadData(ReceivedGoodInfoContext Item)
+        {
+            var data = context.GetReceivedGoodById(Item.Id);
+            if (data != null)
+            {
+                ReceivedGoodDTO = Mapper.Map<ReceivedGood, ReceivedGoodDetailContext>(data);
+                LoadEmployeeList(data.EmployeeId);
+                LoadVendorList(data.VendorId);
+
+                var tempItemList = await Task.Run(()=> 
+                {
+                    Collection<ReceivedGoodItemContext> _itemList = new Collection<ReceivedGoodItemContext>();
+                    var itemList = context.GetReceivedGoodItem(data.Id).ToList();
+                    if (itemList.Count > 0)
+                    {
+                        foreach (var item in itemList)
+                        {
+                            ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
+                            {
+                                Id = item.Id,
+                                UnitTypeId = item.UnitTypeId,
+                                ProductId = item.ProductId,
+                                TaxId = item.TaxId,
+                                Name = item.Name,
+                                Barcode = item.Barcode,
+                                UnitType = item.UnitType,
+                                Tax = item.Tax,
+                                Quantity = item.Quantity,
+                                BuyPrice = item.BuyPrice,
+                                Discount = item.Discount
+                            };
+
+                            _itemList.Add(_item);
+                        }
+                    }
+
+                    return _itemList;
+                });
+
+                ReceivedGoodItemList.AddRange(tempItemList);
+                CalculateTotal();
+            }
         }
 
         private void ResetValue()
@@ -375,11 +542,17 @@ namespace LireOffice.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            //if (parameter["SelectedInvoice"] is )
-            //{
-            //}
-            LoadVendorList();
-            LoadEmployeeList();
+            if (parameter["SelectedItem"] is ReceivedGoodInfoContext item)
+            {
+                IsUpdated = true;
+                IsPosted = item.IsPosted;
+                LoadData(item);
+            }
+            else
+            {
+                LoadVendorList();
+                LoadEmployeeList();
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

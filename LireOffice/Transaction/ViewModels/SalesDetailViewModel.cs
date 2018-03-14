@@ -203,7 +203,10 @@ namespace LireOffice.ViewModels
             foreach (var item in SalesItemList)
             {
                 SalesDTO.TotalDiscount += item.Discount;
-                SalesDTO.TotalTax += item.Tax;
+                if (item.Tax > 0)
+                {
+                    SalesDTO.TotalTax += ((decimal)item.Quantity * item.SellPrice - item.Discount) * (decimal)item.Tax / 100;
+                }
                 SalesDTO.Total += item.SubTotal;
             }
         }

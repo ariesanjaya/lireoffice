@@ -22,6 +22,15 @@ namespace LireOffice.Models
             set => SetProperty(ref _receivedDate, value, nameof(ReceivedDate));
         }
 
+        private string _invoiceId;
+
+        public string InvoiceId
+        {
+            get => _invoiceId;
+            set => SetProperty(ref _invoiceId, value, nameof(InvoiceId));
+        }
+
+
         private string _description;
 
         public string Description

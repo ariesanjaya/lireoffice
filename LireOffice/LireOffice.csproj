@@ -218,12 +218,14 @@
     <Compile Include="Models\Data\LedgerOut.cs" />
     <Compile Include="Models\Data\Product.cs" />
     <Compile Include="Models\Data\ProductCategory.cs" />
+    <Compile Include="Models\Data\ProductHistory.cs" />
     <Compile Include="Models\Data\ProductTransfer.cs" />
     <Compile Include="Models\Data\ReceivedGood.cs" />
     <Compile Include="Models\Data\ReceivedGoodItem.cs" />
     <Compile Include="Models\Data\Sales.cs" />
     <Compile Include="Models\Data\SalesItem.cs" />
     <Compile Include="Models\Data\SalesSummary.cs" />
+    <Compile Include="Models\Data\Inventory.cs" />
     <Compile Include="Models\Data\Tax.cs" />
     <Compile Include="Models\Data\UnitType.cs" />
     <Compile Include="Models\Data\User.cs" />
@@ -276,19 +278,11 @@
       <DependentUpon>Product.xaml</DependentUpon>
     </Compile>
     <Compile Include="Report\ViewModels\ReportViewerViewModel.cs" />
-    <Compile Include="Report\Views\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Report\Views\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Report\Views\ReportViewer.xaml.cs">
       <DependentUpon>ReportViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Service\IOfficeContext.cs" />
-    <Compile Include="Service\IValidationService.cs" />
     <Compile Include="Service\OfficeContext.cs" />
-    <Compile Include="Service\ValidationService.cs" />
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -490,9 +484,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Report\Views\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\LireOffice.Models.UnitType.datasource" />

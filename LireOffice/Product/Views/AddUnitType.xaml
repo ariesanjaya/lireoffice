@@ -62,10 +62,10 @@
                 </syncfusion:SfDataGrid>
 
                 <Label Grid.Row="2" Content="Nama Satuan" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" />
 
                 <Label Grid.Row="4" Content="Barcode" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Barcode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
+                <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
 
                 <Label Grid.Row="6" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
                 <syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="6" IsReadOnly="True" Value="{Binding UnitTypeDTO.LastBuyPrice}" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />
