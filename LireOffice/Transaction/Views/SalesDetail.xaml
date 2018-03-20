@@ -10,7 +10,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="720" d:DesignWidth="1280">
-    <Grid>
+    <Grid Background="Azure">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition />
@@ -61,6 +61,8 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Label Content="Nama Petugas" FontSize="14" />
 
@@ -75,11 +77,13 @@
                 </Grid>
 
                 <Label Grid.Column="2" Content="Keterangan" FontSize="14" />
-                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SalesDTO.Description}" FontSize="14" Width="280" Height="30" />
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SalesDTO.Description}" FontSize="14" Width="360" Height="30" />
+
+                <ComboBox Width="180" Grid.Row="1" Grid.Column="5" FontSize="14" VerticalContentAlignment="Center" ItemsSource="{Binding PaymentList}" SelectedItem="{Binding SelectedPayment}"/>
             </Grid>
         </Grid>
 
-        <syncfusion:SfDataGrid x:Name="dataGrid" Grid.Row="1" Margin="0 16"
+        <syncfusion:SfDataGrid x:Name="dataGrid" Grid.Row="1" Margin="12 16"
                                ItemsSource="{Binding SalesItemList}"
                                SelectedItem="{Binding SelectedSalesItem}"
                                AutoGenerateColumns="False"

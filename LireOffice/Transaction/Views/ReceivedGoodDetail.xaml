@@ -9,7 +9,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" IsTabStop="False" KeyboardNavigation.TabNavigation="Cycle">
-    <Grid>
+    <Grid Background="Azure">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition />
@@ -96,7 +96,7 @@
                 <syncfusion:GridCurrencyColumn HeaderText="Harga" MappingName="BuyPrice" MinValue="0" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
                 <syncfusion:GridCurrencyColumn HeaderText="Diskon (Rp)" MappingName="Discount" MinValue="0" AllowEditing="True" Width="140" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
                 <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SubTotal" Width="160" MinValue="0" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2" />
-                <syncfusion:GridPercentColumn HeaderText="Pjk" MappingName="Tax" Width="80" AllowEditing="False" MinValue="0"/>
+                <syncfusion:GridCurrencyColumn HeaderText="Pjk (Rp)" MappingName="TaxSubTotal" Width="120" AllowEditing="True" MinValue="0" CurrencySymbol="Rp" CurrencyDecimalSeparator="," CurrencyGroupSeparator="." CurrencyDecimalDigits="2" CurrencyGroupSizes="3" CurrencyPositivePattern="2" CurrencyNegativePattern="2"/>
             </syncfusion:SfDataGrid.Columns>
             <syncfusion:SfDataGrid.Resources>
                 <DataTemplate x:Key="UnBoundRowCellTemplate">

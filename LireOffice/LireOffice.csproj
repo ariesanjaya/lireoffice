@@ -171,6 +171,7 @@
     </Compile>
     <Compile Include="Ledger\ViewModels\AddLedgerInViewModel.cs" />
     <Compile Include="Ledger\ViewModels\AddLedgerOutViewModel.cs" />
+    <Compile Include="Ledger\ViewModels\AddPaymentViewModel.cs" />
     <Compile Include="Ledger\ViewModels\LedgerInViewModel.cs" />
     <Compile Include="Ledger\ViewModels\LedgerOutViewModel.cs" />
     <Compile Include="Ledger\Views\AddLedgerIn.xaml.cs">
@@ -178,6 +179,9 @@
     </Compile>
     <Compile Include="Ledger\Views\AddLedgerOut.xaml.cs">
       <DependentUpon>AddLedgerOut.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ledger\Views\AddPayment.xaml.cs">
+      <DependentUpon>AddPayment.xaml</DependentUpon>
     </Compile>
     <Compile Include="Ledger\Views\LedgerIn.xaml.cs">
       <DependentUpon>LedgerIn.xaml</DependentUpon>
@@ -192,6 +196,7 @@
     <Compile Include="Models\Context\GoodReturnItemContext.cs" />
     <Compile Include="Models\Context\LedgerContext.cs" />
     <Compile Include="Models\Context\LedgerSummaryContext.cs" />
+    <Compile Include="Models\Context\PaymentTypeContext.cs" />
     <Compile Include="Models\Context\ProductCategoryContext.cs" />
     <Compile Include="Models\Context\ProductContext.cs" />
     <Compile Include="Models\Context\ProductInfoContext.cs" />
@@ -216,6 +221,7 @@
     <Compile Include="Models\Data\Image.cs" />
     <Compile Include="Models\Data\LedgerIn.cs" />
     <Compile Include="Models\Data\LedgerOut.cs" />
+    <Compile Include="Models\Data\PaymentType.cs" />
     <Compile Include="Models\Data\Product.cs" />
     <Compile Include="Models\Data\ProductCategory.cs" />
     <Compile Include="Models\Data\ProductHistory.cs" />
@@ -371,6 +377,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ledger\Views\AddLedgerOut.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ledger\Views\AddPayment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

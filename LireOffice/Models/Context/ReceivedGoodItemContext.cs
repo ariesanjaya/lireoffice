@@ -17,6 +17,7 @@ namespace LireOffice.Models
         public string ProductId { get; set; }
         public string UnitTypeId { get; set; }
         public string TaxId { get; set; }
+        public int Order { get; set; }
 
         private string _barcode;
 
@@ -39,7 +40,11 @@ namespace LireOffice.Models
         public double Quantity
         {
             get => _quantity;
-            set => SetProperty(ref _quantity, value, CalculateSubTotal, nameof(Quantity));
+            set => SetProperty(ref _quantity, value,() => 
+            {
+                CalculateTax();
+                CalculateSubTotal();
+            } , nameof(Quantity));
         }
 
         private string _unitType;
@@ -55,7 +60,10 @@ namespace LireOffice.Models
         public decimal BuyPrice
         {
             get => _buyPrice;
-            set => SetProperty(ref _buyPrice, value, CalculateSubTotal, nameof(BuyPrice));
+            set => SetProperty(ref _buyPrice, value,() => 
+            {
+                CalculateSubTotal();
+            }, nameof(BuyPrice));
         }
 
         private decimal _discount;
@@ -66,6 +74,7 @@ namespace LireOffice.Models
             set => SetProperty(ref _discount, value, () =>
             {
                 CalculateDiscount();
+                CalculateTax();
                 CalculateSubTotal();
             }, nameof(Discount));
         }
@@ -76,6 +85,18 @@ namespace LireOffice.Models
         {
             get => _subTotal;
             set => SetProperty(ref _subTotal, value, nameof(SubTotal));
+        }
+
+        private decimal _taxSubTotal;
+
+        public decimal TaxSubTotal
+        {
+            get => _taxSubTotal;
+            set => SetProperty(ref _taxSubTotal, value,()=> 
+            {
+                CalculateTaxSubTotal();
+                CalculateSubTotal();
+            }, nameof(TaxSubTotal));
         }
 
         private double _tax;
@@ -93,7 +114,7 @@ namespace LireOffice.Models
             get => _taxPrice;
             set => SetProperty(ref _taxPrice, value, nameof(TaxPrice));
         }
-        
+
         private void CalculateDiscount()
         {
             if (Discount <= 100)
@@ -102,10 +123,20 @@ namespace LireOffice.Models
             }
         }
 
+        private void CalculateTax()
+        {
+            TaxPrice = (BuyPrice - Discount) * (decimal)Tax / 100;
+            TaxSubTotal = (decimal)Quantity * TaxPrice;
+        }
+
+        private void CalculateTaxSubTotal()
+        {
+            TaxPrice = TaxSubTotal / (decimal)Quantity;
+        }
+        
         private void CalculateSubTotal()
         {
-            TaxPrice = BuyPrice  * (decimal)Tax / 100;
-            SubTotal = ((decimal)Quantity * BuyPrice - Discount) + ((decimal)Quantity * TaxPrice);
+            SubTotal = ((decimal)Quantity * BuyPrice - Discount) + TaxSubTotal;
             eventAggregator.GetEvent<CalculateReceivedGoodDetailTotalEvent>().Publish("Calculate Item List");
         }
     }

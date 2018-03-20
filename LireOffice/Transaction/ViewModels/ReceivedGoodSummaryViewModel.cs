@@ -141,7 +141,7 @@ namespace LireOffice.ViewModels
                 var tempFirstDetailList = await Task.Run(() =>
                 {
                     Collection<ReceivedGoodItemContext> _itemList = new Collection<ReceivedGoodItemContext>();
-                    var itemList = context.GetReceivedGoodItem(receivedGood.Id).ToList();
+                    var itemList = context.GetReceivedGoodItem(receivedGood.Id).OrderBy(x => x.Order).ToList();
 
                     if (itemList.Count > 0)
                     {
@@ -149,6 +149,7 @@ namespace LireOffice.ViewModels
                         {
                             ReceivedGoodItemContext receivedGoodItem = new ReceivedGoodItemContext(eventAggregator)
                             {
+                                Order = item.Order,
                                 Id = item.Id,
                                 Barcode = item.Barcode,
                                 Name = item.Name,

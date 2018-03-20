@@ -179,16 +179,16 @@ namespace LireOffice.ViewModels
                     if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
                     {
                         if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProducts(IsActive).ToList();
+                            productList = context.GetProducts(IsActive).OrderBy(x => x.Name).ToList();
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByVendor(SelectedVendor.Id, IsActive).ToList();
+                            productList = context.GetProductsByVendor(SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     }      
                     else if(SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
                     {
                         if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByCategory(SelectedCategory.Id, IsActive).ToList();
+                            productList = context.GetProductsByCategory(SelectedCategory.Id, IsActive).OrderBy(x => x.Name).ToList();
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).ToList();
+                            productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     }
                 }   
                 else
@@ -196,16 +196,16 @@ namespace LireOffice.ViewModels
                     if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
                     {
                         if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProducts(text, IsActive).ToList();
+                            productList = context.GetProducts(text, IsActive).OrderBy(x => x.Name).ToList();
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByVendor(text, SelectedVendor.Id, IsActive).ToList();
+                            productList = context.GetProductsByVendor(text, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     }
                     else if (SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
                     {
                         if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByCategory(text, SelectedCategory.Id, IsActive).ToList();
+                            productList = context.GetProductsByCategory(text, SelectedCategory.Id, IsActive).OrderBy(x => x.Name).ToList();
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua"))
-                            productList = context.GetProductsByCategoryVendor(text, SelectedCategory.Id, SelectedVendor.Id, IsActive).ToList();
+                            productList = context.GetProductsByCategoryVendor(text, SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     }
                 }
                     

@@ -345,10 +345,12 @@ namespace LireOffice.ViewModels
 
             if (ReceivedGoodItemList.Count > 0)
             {
+                int i = 1;
                 foreach (var item in ReceivedGoodItemList)
                 {
                     ReceivedGoodItem receivedGoodItem = new ReceivedGoodItem
                     {
+                        Order = i,
                         ReceivedGoodId = receivedGood.Id,
                         ProductId = item.ProductId,
                         UnitTypeId = item.UnitTypeId,
@@ -365,6 +367,7 @@ namespace LireOffice.ViewModels
                     };
 
                     receivedGoodItemList.Add(receivedGoodItem);
+                    i++;
                 }
 
                 context.AddReceivedGood(receivedGood);
@@ -501,13 +504,14 @@ namespace LireOffice.ViewModels
                 var tempItemList = await Task.Run(()=> 
                 {
                     Collection<ReceivedGoodItemContext> _itemList = new Collection<ReceivedGoodItemContext>();
-                    var itemList = context.GetReceivedGoodItem(data.Id).ToList();
+                    var itemList = context.GetReceivedGoodItem(data.Id).OrderBy(x => x.Order).ToList();
                     if (itemList.Count > 0)
                     {
                         foreach (var item in itemList)
                         {
                             ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
                             {
+                                Order = item.Order,
                                 Id = item.Id,
                                 UnitTypeId = item.UnitTypeId,
                                 ProductId = item.ProductId,

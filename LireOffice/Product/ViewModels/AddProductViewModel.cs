@@ -37,7 +37,7 @@ namespace LireOffice.ViewModels
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
 
             ProductDTO = new ProductContext();
-            UnitTypeDTO = new UnitTypeContext { Name = "Pcs" };
+            UnitTypeDTO = new UnitTypeContext { Name = "PCS" };
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
             VendorList = new ObservableCollection<UserSimpleContext>();

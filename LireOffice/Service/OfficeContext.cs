@@ -10,7 +10,7 @@ namespace LireOffice.Service
     {
         private LiteDatabase db;
         private static string databasePath = @"D:/Database/OfficeDB.db";
-
+                
         public OfficeContext()
         {
             // Create new instance of database
@@ -60,6 +60,18 @@ namespace LireOffice.Service
             }
 
             #endregion Tax Data Sedding
+
+            #region Account Data Seeding
+
+            if (!db.CollectionExists("Accounts"))
+            {
+                db.GetCollection<Account>("Accounts").Insert(new Account
+                {
+                    ReferenceId = "100"
+                });
+            }
+
+            #endregion
         }
 
         #region Vendor Methods
@@ -575,6 +587,8 @@ namespace LireOffice.Service
         {
             return db.GetCollection<Account>("Accounts").FindById(id);
         }
+
+
 
         #endregion Account Methods
 
