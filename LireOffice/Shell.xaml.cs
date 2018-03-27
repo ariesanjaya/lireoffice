@@ -1,14 +1,13 @@
 ﻿using LireOffice.Views;
 using Prism.Regions;
-using Syncfusion.SfSkinManager;
-using Syncfusion.Windows.Shared;
+using System.Windows;
 
 namespace LireOffice
 {
     /// <summary>
     /// Interaction logic for Shell.xaml
     /// </summary>
-    public partial class Shell : ChromelessWindow
+    public partial class Shell : Window
     {
         public Shell(IRegionManager regionManager)
         {            

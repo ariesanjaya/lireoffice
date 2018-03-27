@@ -11,6 +11,7 @@
     <Grid>
         <TextBlock Text="Login View" FontSize="48" Margin="24" />
 
+        <DataGrid />
         <Button Command="{Binding NavigateCommand}" CommandParameter="Main" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16">Navigate to View A</Button>
     </Grid>
 </UserControl>

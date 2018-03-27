@@ -4,12 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behavior="clr-namespace:LireOffice.Behavior"
+             xmlns:converters="clr-namespace:LireOffice.Utilities"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-             xmlns:local="clr-namespace:LireOffice.Views"
+             xmlns:local="clr-namespace:LireOffice.Views" d:DesignWidth="1024"
              mc:Ignorable="d" IsTabStop="False" KeyboardNavigation.TabNavigation="Cycle">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter"/>
+            <DataTemplate x:Key="ExpandDetails">
+                <ToggleButton Name="ShowDetails" Height="36"
+                              IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                                                  Path=DetailsVisibility, 
+                                                  Converter={StaticResource VisibilityToBooleanConverter}, 
+                                                  Mode=TwoWay}" 
+                              />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70" />
@@ -17,8 +30,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="24 0" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" IsTabStop="True" Command="{Binding AddCommand}" />
-            <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" IsTabStop="False" Command="{Binding UpdateCommand}" />
+            <Button Content="Tambah" IsTabStop="True" Command="{Binding AddCommand}" />
+            <Button Margin="16 0 0 0" Content="Ubah" IsTabStop="False" Command="{Binding UpdateCommand}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -26,43 +39,22 @@
             <ComboBox Margin="16 0 8 0" Width="160" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
             <ComboBox Width="180" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
             <Button Margin="8 0" Width="30" Command="{Binding RefreshCommand}"/>
-            <syncfusion:SfTextBoxExt Watermark="Cari" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="200" FontSize="14" VerticalAlignment="Center" />
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="32" Width="200" FontSize="14" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+
         </StackPanel>
 
-        <syncfusion:SfDataGrid Grid.Row="1" x:Name="dataGrid" Margin="12 0 12 12"
-                               ItemsSource="{Binding ProductList}"
-                               SelectedItem="{Binding SelectedProduct}"
-                               FontSize="14"
-                               AutoGenerateColumns="False"
-                               AllowResizingColumns="True"
-                               ColumnSizer="Star"
-                               RowHeight="36"
-                               NavigationMode="Row"
-                               EnableDataVirtualization="True"
-                               ScrollMode="Async"
-                               HeaderRowHeight="32">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn HeaderText="Kode Barang" MappingName="Barcode" Width="120" HorizontalHeaderContentAlignment="Left" />
-                <syncfusion:GridTextColumn HeaderText="Name Barang" MappingName="Name" HorizontalHeaderContentAlignment="Left" />
-                <syncfusion:GridNumericColumn HeaderText="Jumlah" MappingName="Quantity" Width="70" HorizontalHeaderContentAlignment="Right" />
-                <syncfusion:GridTextColumn HeaderText="Satuan" MappingName="UnitType" Width="100" HorizontalHeaderContentAlignment="Left" />
-                <syncfusion:GridCurrencyColumn HeaderText="Harga Pokok" MappingName="BuyPrice" Width="140" HorizontalHeaderContentAlignment="Right" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-                <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="BuySubTotal" Width="180" HorizontalHeaderContentAlignment="Right" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-                <syncfusion:GridCurrencyColumn HeaderText="Harga Jual" MappingName="SellPrice" Width="140" HorizontalHeaderContentAlignment="Right" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-                <syncfusion:GridCurrencyColumn HeaderText="Total" MappingName="SellSubTotal" Width="180" HorizontalHeaderContentAlignment="Right" CurrencySymbol="Rp" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyGroupSeparator="." CurrencyDecimalSeparator="," CurrencyDecimalDigits="2" CurrencyGroupSizes="3" />
-                <syncfusion:GridTextColumn HeaderText="" MappingName="UnboundColumn" Width="40" />
-            </syncfusion:SfDataGrid.Columns>
-            <i:Interaction.Behaviors>
-                <local:SelectionController />
-            </i:Interaction.Behaviors>
-            <i:Interaction.Triggers>
-                <local:EnterKeyDownEventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
-                </local:EnterKeyDownEventTrigger>
-                <i:EventTrigger EventName="CellDoubleTapped">
-                    <i:InvokeCommandAction Command="{Binding CellDoubleTappedCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </syncfusion:SfDataGrid>
+        <DataGrid Grid.Row="1" x:Name="dataGrid" Margin="12 0 12 12"
+                  ItemsSource="{Binding ProductList}"
+                  SelectedItem="{Binding SelectedProduct}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="" CellTemplate="{StaticResource ExpandDetails}" Width="30" />
+                <DataGridTextColumn Header="Kode Barang" Binding="{Binding Barcode}" Width="140"/>
+                <DataGridTextColumn Header="Nama Barang" Binding="{Binding Name}" Width="3*"/>
+                <DataGridTextColumn Header="Jumlah" Binding="{Binding Quantity}" Width="80"/>
+                <DataGridTextColumn Header="Satuan" Binding="{Binding UnitType}" Width="120"/>
+                <DataGridTextColumn Header="Harga Pokok" Binding="{Binding BuyPrice}" Width=".8*"/>
+                <DataGridTextColumn Header="Total" Binding="{Binding BuySubTotal}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

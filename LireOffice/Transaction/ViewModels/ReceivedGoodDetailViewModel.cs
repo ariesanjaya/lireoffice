@@ -8,7 +8,6 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

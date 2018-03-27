@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:GrosirOffice.Assets.Themes" >
+
+    <SolidColorBrush x:Key="AccentHighColor" Color="#FF2B7402"/>
+    <SolidColorBrush x:Key="AccentLowColor" Color="#FF86B90E"/>
+    <SolidColorBrush x:Key="AlternativeColor" Color="#FF1D1E21"/>
+    <SolidColorBrush x:Key="BorderColor" Color="#3e3e3e"/>
+    <SolidColorBrush x:Key="ComplementaryColor" Color="#FF444446"/>
+    <SolidColorBrush x:Key="HighColor" Color="#FF131313"/>
+    <SolidColorBrush x:Key="LowColor" Color="#FF343434"/>
+    <SolidColorBrush x:Key="MainColor" Color="#FF1B1B1F"/>
+    <!--BackgroundColor-->
+    <SolidColorBrush x:Key="FontColor" Color="#FFF1F1F1"/>
+    <!--FontDefaultColor-->
+    <SolidColorBrush x:Key="FontMouseOverColor" Color="#FF2F2F30"/>
+    <!--Color when mouse over-->
+    <SolidColorBrush x:Key="DetailFontColor" Color="#c0c0c4"/>
+    <SolidColorBrush x:Key="MouseOverColor" Color="#FF669933"/>
+    <SolidColorBrush x:Key="PrimaryColor" Color="#FF2B2C2E"/>
+    <SolidColorBrush x:Key="SelectedColor" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="SemiAccentColor" Color="#5986B90E"/>
+    <SolidColorBrush x:Key="StrongColor" Color="#FF646464"/>
+    <SolidColorBrush x:Key="ValidationColor" Color="#FFE60000"/>
+
+    
+
+</ResourceDictionary>

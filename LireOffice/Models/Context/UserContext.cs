@@ -2,7 +2,6 @@
 
 namespace LireOffice.Models
 {
-    using ReactiveUI;
     using static LireOffice.Models.RuleCollection<UserContext>;
 
     public class UserContext : NotifyDataErrorInfo<UserContext>

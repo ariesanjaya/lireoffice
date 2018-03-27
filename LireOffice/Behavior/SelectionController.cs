@@ -1,4 +1,5 @@
 ﻿using Syncfusion.UI.Xaml.Grid;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
@@ -30,5 +31,5 @@ namespace LireOffice.Views
             else
                 base.ProcessKeyDown(e);
         }
-    }
+    }    
 }

@@ -4,7 +4,10 @@
              xmlns:local="clr-namespace:LireOffice">
     <Application.Resources>
         <ResourceDictionary>
-            
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Themes/DarkColors.xaml"/>
+                <ResourceDictionary Source="Assets/Themes/Controls.xaml"/>    
+            </ResourceDictionary.MergedDictionaries>            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

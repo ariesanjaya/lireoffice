@@ -1,8 +1,7 @@
 ﻿namespace LireOffice.Models
 {
-    using ReactiveUI;
-    using static LireOffice.Models.RuleCollection<AccountContext>;
-    public class AccountContext : NotifyDataErrorInfo<AccountContext>
+    using Prism.Mvvm;
+    public class AccountContext : BindableBase
     {
         public string Id { get; set; }
 

@@ -6,9 +6,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using ReactiveUI;
 using System;
-using System.Reactive;
 
 
 namespace LireOffice.ViewModels
@@ -45,9 +43,9 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        public ReactiveCommand<Unit, Unit> SaveCommand => ReactiveCommand.Create(OnSave, 
-            this.WhenAnyValue(x => x.VendorDTO.RegisterId, x => x.VendorDTO.Name, (registerId, name) => !string.IsNullOrEmpty(registerId) && !string.IsNullOrEmpty(name)));
-        public ReactiveCommand<Unit, Unit> CancelCommand => ReactiveCommand.Create(OnCancel);
+        //public ReactiveCommand<Unit, Unit> SaveCommand => ReactiveCommand.Create(OnSave, 
+        //    this.WhenAnyValue(x => x.VendorDTO.RegisterId, x => x.VendorDTO.Name, (registerId, name) => !string.IsNullOrEmpty(registerId) && !string.IsNullOrEmpty(name)));
+        //public ReactiveCommand<Unit, Unit> CancelCommand => ReactiveCommand.Create(OnCancel);
 
         private void OnSave()
         {

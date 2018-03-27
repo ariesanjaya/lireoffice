@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LireOffice.Ledger.Views
+namespace LireOffice.Views
 {
     /// <summary>
     /// Interaction logic for AddPayment.xaml

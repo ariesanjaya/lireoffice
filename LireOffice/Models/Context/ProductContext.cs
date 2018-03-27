@@ -1,17 +1,13 @@
 ﻿using Prism.Mvvm;
-using ReactiveUI;
 using System.ComponentModel;
 
 namespace LireOffice.Models
 {
-    using static LireOffice.Models.RuleCollection<ProductContext>;
-    public class ProductContext : NotifyDataErrorInfo<ProductContext>
+    public class ProductContext : BindableBase
     {
         public ProductContext()
         {
             IsActive = true;
-
-            Rules.Add(new DelegateRule<ProductContext>(nameof(Name), "Nama Barang harus diisi", x => !string.IsNullOrEmpty(Name)));
         }
 
         public string Id { get; set; }
@@ -23,11 +19,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set
-            {
-                SetProperty(ref _name, value, nameof(Name));
-                OnPropertyChange(nameof(Name));
-            }
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
         private bool _isActive;
