@@ -4,7 +4,6 @@ using LireOffice.Service;
 using LireOffice.Utilities;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
@@ -13,34 +12,53 @@ using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
-    public class AddCategoryViewModel : BindableBase, INavigationAware
+    using System.Collections.Generic;
+    using static LireOffice.Models.RuleCollection<AddCategoryViewModel>;
+    public class AddCategoryViewModel : NotifyDataErrorInfo<AddCategoryViewModel>, INavigationAware
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService; 
 
+        private string categoryId;
         private string Instigator;
 
-        public AddCategoryViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
+        private const string documentType = "category-list";
+
+        public AddCategoryViewModel(IEventAggregator ea, IRegionManager rm,ICouchBaseService service, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.context = context;
+            databaseService = service;
 
-            CategoryDTO = new ProductCategoryContext();
+            IsActive = true;
+
+            Rules.Add(new DelegateRule<AddCategoryViewModel>(nameof(Name), 
+                "Nama harus diisi", 
+                x => !string.IsNullOrEmpty(Name)));
+
             CategoryList = new ObservableCollection<ProductCategoryContext>();
-
+            
             LoadCategoryList();
         }
 
         #region Binding Properties
+        private string _name;
 
-        private ProductCategoryContext _categoryDTO;
-
-        public ProductCategoryContext CategoryDTO
+        public string Name
         {
-            get => _categoryDTO;
-            set => SetProperty(ref _categoryDTO, value, nameof(CategoryDTO));
+            get => _name;
+            set => SetProperty(ref _name, value, nameof(Name));
+        }
+
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
 
         private ObservableCollection<ProductCategoryContext> _categoryList;
@@ -70,15 +88,27 @@ namespace LireOffice.ViewModels
 
         private void OnSelectionChanged()
         {
-            if (SelectedCategory == null) return;
-            CategoryDTO = SelectedCategory;
+            if (SelectedCategory != null)
+            {
+                categoryId = SelectedCategory.Id;
+                Name = SelectedCategory.Name;
+                IsActive = SelectedCategory.IsActive;
+            }
         }
 
         private void OnAdd()
         {
-            ProductCategory category = Mapper.Map<ProductCategoryContext, ProductCategory>(CategoryDTO);
+            if (!string.IsNullOrEmpty(Name))
+            {
+                var properties = new Dictionary<string, object>
+                {
+                    ["type"] = documentType,
+                    ["name"] = Name,
+                    ["isActive"] = IsActive
+                };
 
-            context.AddCategory(category);
+                databaseService.AddData(properties);
+            }
 
             ResetValue();
             LoadCategoryList();
@@ -89,15 +119,16 @@ namespace LireOffice.ViewModels
         {
             if (SelectedCategory != null)
             {
-                var result = context.GetCategoryById(SelectedCategory.Id);
-                if (result != null)
+                var properties = new Dictionary<string, object>
                 {
-                    result = Mapper.Map(CategoryDTO, result);
-                    result.Version += 1;
-                    result.UpdatedAt = DateTime.Now;
-                    context.UpdateCategory(result);
-                }
+                    ["type"] = documentType,
+                    ["name"] = Name,
+                    ["isActive"] = IsActive
+                };
+
+                databaseService.UpdateData(properties, categoryId);                
             }
+
             ResetValue();
             LoadCategoryList();
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Publish("Load Category List");
@@ -107,8 +138,9 @@ namespace LireOffice.ViewModels
         {
             if (SelectedCategory != null)
             {
-                context.DeleteCategory(SelectedCategory.Id);
+                databaseService.DeleteData(SelectedCategory.Id);
             }
+
             ResetValue();
             LoadCategoryList();
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Publish("Load Category List");
@@ -142,12 +174,17 @@ namespace LireOffice.ViewModels
             var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
-                var categoryList = context.GetCategory().ToList();
+                var categoryList = databaseService.GetProductCategory();
                 if (categoryList.Count > 0)
                 {
                     foreach (var category in categoryList)
                     {
-                        ProductCategoryContext item = Mapper.Map<ProductCategory, ProductCategoryContext>(category);
+                        ProductCategoryContext item = new ProductCategoryContext
+                        {
+                            Id = category["id"] as string,
+                            Name = category["name"] as string,
+                            IsActive = Convert.ToBoolean(category["isActive"])
+                        };
                         _categoryList.Add(item);
                     }
                 }
@@ -160,7 +197,9 @@ namespace LireOffice.ViewModels
         private void ResetValue()
         {
             SelectedCategory = null;
-            CategoryDTO = new ProductCategoryContext();
+            categoryId = string.Empty;
+            Name = string.Empty;
+            IsActive = true;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

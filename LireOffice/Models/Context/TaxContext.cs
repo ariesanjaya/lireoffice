@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace LireOffice.Models
 {
-    public class TaxContext : BindableBase, IDataErrorInfo
+    public class TaxContext : BindableBase
     {
         public TaxContext()
         {
@@ -17,7 +17,7 @@ namespace LireOffice.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, CheckBtnAvailability, nameof(Name));
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
         private double _value;
@@ -42,41 +42,6 @@ namespace LireOffice.Models
         {
             get => _isActive;
             set => SetProperty(ref _isActive, value, nameof(IsActive));
-        }
-
-        private bool _isBtnEnabled;
-
-        public bool IsBtnEnabled
-        {
-            get => _isBtnEnabled;
-            set => SetProperty(ref _isBtnEnabled, value, nameof(IsBtnEnabled));
-        }
-
-        public string Error => null;
-
-        public string this[string propertyName]
-        {
-            get
-            {
-                switch (propertyName)
-                {
-                    case nameof(Name):
-                        if (string.IsNullOrEmpty(Name))
-                        {
-                            return "Kotak ini harus diisi !!";
-                        }
-                        break;
-                }
-                return string.Empty;
-            }
-        }
-
-        private void CheckBtnAvailability()
-        {
-            if (!string.IsNullOrEmpty(Name))
-                IsBtnEnabled = true;
-            else
-                IsBtnEnabled = false;
-        }
+        }        
     }
 }

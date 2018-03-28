@@ -9,64 +9,60 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
-    <Grid Background="Black">
-        <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid Margin="8 8 16 8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="240" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="120" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="Black" Opacity="0.4"/>
+        </Grid.Background>
+        <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Grid Background="{StaticResource AlternativeColor}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid Margin="8 8 16 8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="240" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="120" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
 
-                <Label Content="Detail Kategori " Grid.ColumnSpan="4" FontSize="22" />
+                    <Label Content="Detail Kategori " Grid.ColumnSpan="4" FontSize="22" />
 
-                <Grid Grid.Column="4" Grid.Row="2" Grid.RowSpan="6">
-                    <syncfusion:SfDataGrid x:Name="CategoryGrid"
-                                       ColumnSizer="Star"
-                                       FontSize="14"
-                                       AutoGenerateColumns="False"
-                                       AllowEditing="False"
-                                       AllowDrop="False"
-                                       ItemsSource="{Binding CategoryList}"
-                                       SelectedItem="{Binding SelectedCategory}"
-                                       HeaderRowHeight="32"
-                                       RowHeight="32">
-                        <syncfusion:SfDataGrid.Columns>
-                            <syncfusion:GridTextColumn HeaderText="Kategori" MappingName="Name" />
-                        </syncfusion:SfDataGrid.Columns>
+                    <DataGrid Grid.Column="4" Grid.Row="2" Grid.RowSpan="6"
+                              ItemsSource="{Binding CategoryList}"
+                              SelectedItem="{Binding SelectedCategory}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Kategori" Binding="{Binding Name}" Width="*"/>
+                        </DataGrid.Columns>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                    </syncfusion:SfDataGrid>
+                    </DataGrid>
+                    
+                    <Label Grid.Row="4" Content="Nama Kategori" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox FontSize="14" Text="{Binding Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
+
+                    <CheckBox Grid.Row="6" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding CategoryDTO.IsActive}" VerticalAlignment="Center" />
+
+                    <StackPanel Margin="12" Grid.Row="9" Grid.ColumnSpan="4" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        <Button Content="Tambah" Command="{Binding AddCommand}" IsEnabled="{Binding CategoryDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Content="Ubah" Margin="16 0 0 0" Command="{Binding UpdateCommand}"/>
+                        <Button Content="Hapus" Margin="16 0 0 0" Command="{Binding DeleteCommand}"/>
+                        <Button Content="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />
+                    </StackPanel>
                 </Grid>
-
-                <Label Grid.Row="4" Content="Nama Kategori" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding CategoryDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
-
-                <CheckBox Grid.Row="6" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding CategoryDTO.IsActive}" VerticalAlignment="Center" />
-
-                <StackPanel Margin="12" Grid.Row="9" Grid.ColumnSpan="4" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Tambah" Command="{Binding AddCommand}" IsEnabled="{Binding CategoryDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Update" Margin="16 0 0 0" Command="{Binding UpdateCommand}" IsEnabled="{Binding CategoryDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Hapus" Margin="16 0 0 0" Command="{Binding DeleteCommand}" IsEnabled="{Binding CategoryDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />
-                </StackPanel>
             </Grid>
-        </Grid>
+        </Border>        
     </Grid>
 </UserControl>

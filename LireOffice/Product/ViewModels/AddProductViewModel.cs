@@ -17,24 +17,32 @@ using System.Windows.Media.Imaging;
 
 namespace LireOffice.ViewModels
 {
-    public class AddProductViewModel : BindableBase, INavigationAware
+    using System.Collections.Generic;
+    using static LireOffice.Models.RuleCollection<AddProductViewModel>;
+    public class AddProductViewModel : NotifyDataErrorInfo<AddProductViewModel>, INavigationAware
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
-
+        private readonly ICouchBaseService databaseService;
+                
         private bool IsUpdated = false;
         private string Instigator;
 
-        public AddProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
+        private const string documentType = "product-list";
+
+        public AddProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
             this.context = context;
+            databaseService = service;
 
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
+
+            IsActive = true;
 
             ProductDTO = new ProductContext();
             UnitTypeDTO = new UnitTypeContext { Name = "PCS" };
@@ -59,6 +67,31 @@ namespace LireOffice.ViewModels
         {
             get => _productDTO;
             set => SetProperty(ref _productDTO, value, nameof(ProductDTO));
+        }
+
+        private string productId;
+        private string categoryId;
+        private string vendorId;
+        private string unitTypeId;
+
+        private string _name;
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                SetProperty(ref _name, value, nameof(Name));
+                OnPropertyChange(nameof(Name));
+            }
+        }
+
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
 
         private UnitTypeContext _unitTypeDTO;
@@ -215,28 +248,50 @@ namespace LireOffice.ViewModels
 
         private void AddData()
         {
-            Models.Product product = Mapper.Map<ProductContext, Models.Product>(ProductDTO);
+            var productProperties = new Dictionary<string, object>
+            {
+                ["type"] = documentType,
+                ["name"] = Name,
+                ["isActive"] = IsActive                
+            };
+            //Models.Product product = Mapper.Map<ProductContext, Models.Product>(ProductDTO);
 
             if (SelectedCategory != null)
-                product.CategoryId = SelectedCategory.Id;
+                productProperties["categoryId"] = SelectedCategory.Id;
 
             if (SelectedVendor != null)
-                product.VendorId = SelectedVendor.Id;
+                productProperties["vendorId"] = SelectedVendor.Id;
 
             foreach (var item in UnitTypeList)
             {
-                UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(item);
+                var unitTypeProperties = new Dictionary<string, object>
+                {
+                    ["productId"] = productId,
+                    ["name"] = item.Name,
+                    ["barcode"] = item.Barcode,
+                    ["taxInId"] = item.TaxInId,
+                    ["taxOutId"] = item.TaxOutId,
+                    ["lastTaxInPrice"] = item.LastTaxInPrice,
+                    ["taxInPrice"] = item.TaxInPrice,
+                    ["lastBuyPrice"] = item.LastBuyPrice,
+                    ["buyPrice"] = item.BuyPrice,
+                    ["sellPrice"] = item.SellPrice,
+                    ["stock"] = item.Stock,
+                    ["isActive"] = item.IsActive
+                };
 
-                var taxOut = context.GetTaxById(unitType.TaxOutId);
+                //UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(item);
+
+                //var taxOut = context.GetTaxById(unitType.TaxOutId);
+                var taxOut = databaseService.GetData(unitTypeProperties["taxOutId"] as string);
                 if (taxOut != null)
                 {
-                    unitType.TaxOutPrice = item.SellPrice * (decimal)taxOut.Value / 100;
+                    unitTypeProperties["taxOutPrice"] = item.SellPrice * Convert.ToDecimal(taxOut["value"]) / 100;
                 }
-                unitType.ProductId = product.Id;
-                context.AddUnitType(unitType);
+                //context.AddUnitType(unitType);
             }
 
-            context.AddProduct(product);
+            //context.AddProduct(product);
         }
 
         private void UpdateData()
@@ -279,12 +334,13 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private void LoadData(ProductInfoContext _product)
+        private void LoadData(string productId)
         {
-            Models.Product product = context.GetProductById(_product.Id);
+            var product = databaseService.GetData(productId);
             if (product != null)
             {
-                ProductDTO = Mapper.Map<Models.Product, ProductContext>(product);
+                Name = product["name"] as string;
+                IsActive = Convert.ToBoolean(product["isActive"]);
             }
 
             IsUnitTypeBtnActive = true;
@@ -386,15 +442,16 @@ namespace LireOffice.ViewModels
             var tempUnitTypeList = await Task.Run(() =>
             {
                 Collection<UnitTypeContext> _unitTypeList = new Collection<UnitTypeContext>();
-                var unitTypeList = context.GetUnitType(productId).ToList();
+                var unitTypeList = databaseService.GetUnitTypes(productId);
                 if (unitTypeList.Count > 0)
                 {
                     foreach (var unitType in unitTypeList)
                     {
-                        UnitTypeContext item = Mapper.Map<UnitType, UnitTypeContext>(unitType);
-                        item.LastBuyPrice += item.LastTaxInPrice;
-                        item.BuyPrice += item.TaxInPrice;
-                        _unitTypeList.Add(item);
+                        //UnitTypeContext item = Mapper.Map<UnitType, UnitTypeContext>(unitType);
+                        //item.LastBuyPrice += item.LastTaxInPrice;
+                        //item.BuyPrice += item.TaxInPrice;
+                        //_unitTypeList.Add(item);
+
                     }
                 }
 
@@ -418,12 +475,17 @@ namespace LireOffice.ViewModels
             var tempVendorList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> userSimpleList = new Collection<UserSimpleContext>();
-                var vendorList = context.GetVendor().ToList();
+                var vendorList = databaseService.GetVendor();
                 if (vendorList.Count > 0)
                 {
                     foreach (var vendor in vendorList)
                     {
-                        UserSimpleContext user = Mapper.Map<User, UserSimpleContext>(vendor);
+                        UserSimpleContext user = new UserSimpleContext
+                        {
+                            Id = vendor["id"] as string,
+                            RegisterId = vendor["registerId"] as string,
+                            Name = vendor["name"] as string
+                        };
                         userSimpleList.Add(user);
                     }
                 }
@@ -446,12 +508,18 @@ namespace LireOffice.ViewModels
             var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
-                var categoryList = context.GetCategory().ToList();
+                var categoryList = databaseService.GetProductCategory();
                 if (categoryList.Count > 0)
                 {
                     foreach (var item in categoryList)
                     {
-                        ProductCategoryContext category = Mapper.Map<ProductCategory, ProductCategoryContext>(item);
+                        ProductCategoryContext category = new ProductCategoryContext
+                        {
+                            Id = item["id"] as string,
+                            Name = item["name"] as string,
+                            IsActive = Convert.ToBoolean(item["isActive"])
+                        };
+
                         _categoryList.Add(category);
                     }
                 }
@@ -473,12 +541,19 @@ namespace LireOffice.ViewModels
             var tempTaxList = await Task.Run(() =>
             {
                 Collection<TaxContext> _taxList = new Collection<TaxContext>();
-                var taxList = context.GetTaxes().ToList();
+                var taxList = databaseService.GetTaxes();
                 if (taxList.Count > 0)
                 {
                     foreach (var item in taxList)
                     {
-                        TaxContext tax = Mapper.Map<Tax, TaxContext>(item);
+                        TaxContext tax = new TaxContext
+                        {
+                            Id = item["id"] as string,
+                            Name = item["name"] as string,
+                            Value = Convert.ToDouble(item["value"]),
+                            Description = item["description"] as string
+                        };
+
                         _taxList.Add(tax);
                     }
                 }
@@ -509,9 +584,14 @@ namespace LireOffice.ViewModels
 
             if (parameter["SelectedProduct"] is ProductInfoContext product)
             {
+                productId = product.Id;
+                categoryId = product.CategoryId;
+                vendorId = product.VendorId;
+                unitTypeId = product.UnitTypeId;
+
                 IsUpdated = true;
 
-                LoadData(product);
+                LoadData(product.Id);
                 LoadUnitTypeList(product.Id, product.UnitTypeId);
                 LoadCategoryList(product.CategoryId);
                 LoadVendorList(product.VendorId);

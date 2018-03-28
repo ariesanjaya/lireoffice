@@ -18,14 +18,16 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
         private string ProductId;
 
-        public AddUnitTypeViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
+        public AddUnitTypeViewModel(IRegionManager rm, IEventAggregator ea, ICouchBaseService service, IOfficeContext context)
         {
             regionManager = rm;
             eventAggregator = ea;
             this.context = context;
+            databaseService = service;
 
             UnitTypeDTO = new UnitTypeContext();
 
@@ -101,10 +103,7 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        //public ReactiveCommand<Unit, Unit> AddCommand => ReactiveCommand.Create(OnAdd, 
-        //    this.WhenAnyValue(x => x.UnitTypeDTO.Name, x => x.UnitTypeDTO.Barcode, (name, barcode) => !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(barcode)));
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
-        //public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
         public DelegateCommand SelectionChangedCommand => new DelegateCommand(OnSelectionChanged);

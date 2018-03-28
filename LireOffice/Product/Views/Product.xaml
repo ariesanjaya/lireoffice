@@ -52,8 +52,20 @@
                 <DataGridTextColumn Header="Nama Barang" Binding="{Binding Name}" Width="3*"/>
                 <DataGridTextColumn Header="Jumlah" Binding="{Binding Quantity}" Width="80"/>
                 <DataGridTextColumn Header="Satuan" Binding="{Binding UnitType}" Width="120"/>
-                <DataGridTextColumn Header="Harga Pokok" Binding="{Binding BuyPrice}" Width=".8*"/>
-                <DataGridTextColumn Header="Total" Binding="{Binding BuySubTotal}" Width="*"/>
+                <DataGridTemplateColumn Header="Harga Pokok" Width=".8*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Margin="8 0" HorizontalAlignment="Right" Text="{Binding BuyPrice, StringFormat=C2}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Total" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Margin="8 0" HorizontalAlignment="Right" Text="{Binding BuySubTotal, StringFormat=C2}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

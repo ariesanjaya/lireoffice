@@ -6,143 +6,154 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:control="clr-namespace:LireOffice.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d">
     <UserControl.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
     </UserControl.InputBindings>
-    <Grid Background="Black">
-        <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid Margin="8 8 16 8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="24" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="200" />
-                </Grid.ColumnDefinitions>
-
-                <Label Content="Detail Produk" Grid.ColumnSpan="2" FontSize="22" />
-
-                <Label Grid.Row="2" Content="Nama Produk" FontSize="14" VerticalAlignment="Center" />
-                <TextBox x:Name="NameTextBox" FontSize="14" Text="{Binding ProductDTO.Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" VerticalContentAlignment="Center" />
-
-                <CheckBox Grid.Row="2" Grid.Column="4" IsTabStop="False" Content="Aktif" IsChecked="{Binding ProductDTO.IsActive}" FontSize="14" Margin="24 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-
-                <Label Grid.Row="4" Content="Satuan" FontSize="14" VerticalAlignment="Center" />
-                <Grid Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Left">
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="Black" Opacity="0.4"/>
+        </Grid.Background>
+        <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Grid Background="{StaticResource AlternativeColor}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid Margin="8 8 16 8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="24" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="30" />
                         <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="200" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox FontSize="14" Width="150"  ItemsSource="{Binding UnitTypeList}" SelectedItem="{Binding SelectedUnitType}" DisplayMemberPath="Name" VerticalContentAlignment="Center" />
+                    <Label Content="Detail Produk" Grid.ColumnSpan="2" FontSize="22" />
 
-                    <Button Grid.Column="1" Command="{Binding AddUnitTypeCommand}" IsEnabled="{Binding IsUnitTypeBtnActive}" />
-                    <Button Grid.Column="2" Content="Atur Pemindahan" Command="{Binding SettingUnitTypeCommand}" IsEnabled="{Binding IsUnitTypeBtnActive}" />
+                    <Label Grid.Row="2" Content="Nama Produk" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox x:Name="NameTextBox" FontSize="14" Text="{Binding Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" VerticalContentAlignment="Center" />
+
+                    <CheckBox Grid.Row="2" Grid.Column="4" IsTabStop="False" Content="Aktif" IsChecked="{Binding IsActive}" FontSize="14" Margin="24 0 0 0" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+
+                    <Label Grid.Row="4" Content="Satuan" FontSize="14" VerticalAlignment="Center" />
+                    <Grid Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="120" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox FontSize="14" Width="150"  ItemsSource="{Binding UnitTypeList}" SelectedItem="{Binding SelectedUnitType}" DisplayMemberPath="Name" VerticalContentAlignment="Center" />
+
+                        <Button Grid.Column="1" Width="30" Command="{Binding AddUnitTypeCommand}" IsEnabled="{Binding IsUnitTypeBtnActive}" />
+                        <Button Grid.Column="2" Content="Pemindahan" Command="{Binding SettingUnitTypeCommand}" IsEnabled="{Binding IsUnitTypeBtnActive}" />
+                    </Grid>
+
+                    <Label Grid.Row="6" Content="Kategori" FontSize="14" VerticalAlignment="Center" />
+                    <Grid Grid.Row="6" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name"/>
+                        <Button Grid.Column="1" Width="30" Command="{Binding AddCategoryCommand}" />
+                    </Grid>
+
+                    <Label Grid.Row="6" Grid.Column="3" Content="Supplier" FontSize="14" VerticalAlignment="Center" />
+                    <Grid Grid.Row="6" Grid.Column="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--<syncfusion:AutoComplete CustomSource="{Binding VendorList}" IsFilter="True" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" />-->
+                        <ComboBox ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name"/>
+                        <Button Grid.Column="1" Width="30" Command="{Binding AddVendorCommand}" />
+                    </Grid>
+
+                    <TabControl Grid.Row="8" Grid.ColumnSpan="5">
+                        <TabItem Header="Detail" Width="80" FontSize="14">
+                            <Grid Margin="12" Height="220">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="8" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="8" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="8" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="8" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="8" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Kode" FontSize="14" VerticalAlignment="Center" />
+                                <TextBox FontSize="14" Text="{Binding Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged" />
+
+                                <Label Grid.Row="2" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
+                                <!--<syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="2" Value="{Binding LastBuyPrice}" IsReadOnly="True" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />-->
+                                <control:CurrencyTextBox Grid.Column="1" Grid.Row="2" Number="{Binding LastBuyPrice}" IsReadOnly="True"/>
+
+                                <Label Grid.Row="4" Content="Harga Jual" FontSize="14" VerticalAlignment="Center" />
+                                <!--<syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="4" Value="{Binding SellPrice}" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />-->
+                                <control:CurrencyTextBox Grid.Column="1" Grid.Row="4" Number="{Binding SellPrice}"/>
+                                
+                                <Label Grid.Row="6" Content="HPP" FontSize="14" VerticalAlignment="Center" />
+                                <!--<syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="6" Value="{Binding BuyPrice}" IsReadOnly="True" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />-->
+                                <control:CurrencyTextBox Grid.Column="1" Grid.Row="6" Number="{Binding BuyPrice}" IsReadOnly="True"/>
+
+                                <Label Grid.Row="2" Grid.Column="3" Content="Pjk Masukan" FontSize="14" VerticalAlignment="Center" />
+                                <ComboBox FontSize="14" Grid.Column="4" Grid.Row="2" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxIn}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
+
+                                <Label Grid.Row="4" Grid.Column="3" Content="Pjk Keluaran" FontSize="14" VerticalAlignment="Center" />
+                                <ComboBox FontSize="14" Grid.Column="4" Grid.Row="4" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxOut}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
+
+                                <Label Grid.Row="8" Grid.Column="3" Content="Jumlah Stok" FontSize="14" VerticalAlignment="Center" />
+                                <!--<syncfusion:DoubleTextBox IsTabStop="False" FontSize="14" IsReadOnly="True" Width="80" Value="{Binding UnitTypeDTO.Stock}"  VerticalAlignment="Stretch" HorizontalAlignment="Left" HorizontalContentAlignment="Right" />-->
+                                <control:CurrencyTextBox Grid.Row="8" Grid.Column="4" Width="80" StringFormat="n2" VerticalAlignment="Stretch" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Info" Width="80" FontSize="14">
+                            <Grid Margin="8 8 16 8" Height="220">
+                                <Image HorizontalAlignment="Right" Height="180" Width="180" Source="{Binding ImageSource}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding ImageChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Image>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+
+                    <StackPanel Margin="10" Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <Button Content="Simpan" Command="{Binding SaveCommand}"/>
+                        <Button Content="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />
+                    </StackPanel>
                 </Grid>
-
-                <Label Grid.Row="6" Content="Kategori" FontSize="14" VerticalAlignment="Center" />
-                <Grid Grid.Row="6" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="30" />
-                    </Grid.ColumnDefinitions>
-
-                    <syncfusion:AutoComplete CustomSource="{Binding CategoryList}" IsFilter="True" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name" FontSize="14" />
-                    <Button Grid.Column="1" Command="{Binding AddCategoryCommand}" />
-                </Grid>
-
-                <Label Grid.Row="6" Grid.Column="3" Content="Supplier" FontSize="14" VerticalAlignment="Center" />
-                <Grid Grid.Row="6" Grid.Column="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="30" />
-                    </Grid.ColumnDefinitions>
-
-                    <syncfusion:AutoComplete CustomSource="{Binding VendorList}" IsFilter="True" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" />
-                    <Button Grid.Column="1" Command="{Binding AddVendorCommand}" />
-                </Grid>
-
-                <TabControl Grid.Row="8" Grid.ColumnSpan="5">
-                    <TabItem Header="Detail" Width="80" FontSize="14">
-                        <Grid Margin="12" Height="220">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="12" />
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="30" />
-                            </Grid.RowDefinitions>
-
-                            <Label Content="Kode" FontSize="14" VerticalAlignment="Center" />
-                            <TextBox FontSize="14" Text="{Binding UnitTypeDTO.Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="TextBox_TextChanged" />
-
-                            <Label Grid.Row="2" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
-                            <syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="2" Value="{Binding UnitTypeDTO.LastBuyPrice}" IsReadOnly="True" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />
-
-                            <Label Grid.Row="4" Content="Harga Jual" FontSize="14" VerticalAlignment="Center" />
-                            <syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="4" Value="{Binding UnitTypeDTO.SellPrice}" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />
-
-                            <Label Grid.Row="6" Content="HPP" FontSize="14" VerticalAlignment="Center" />
-                            <syncfusion:CurrencyTextBox FontSize="14" Grid.Column="1" Grid.Row="6" Value="{Binding UnitTypeDTO.BuyPrice}" IsReadOnly="True" Culture="id-ID" CurrencyPositivePattern="2" CurrencyNegativePattern="2" CurrencyDecimalDigits="2" HorizontalContentAlignment="Right" VerticalAlignment="Stretch" />
-
-                            <Label Grid.Row="2" Grid.Column="3" Content="Pjk Masukan" FontSize="14" VerticalAlignment="Center" />
-                            <ComboBox FontSize="14" Grid.Column="4" Grid.Row="2" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxIn}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
-
-                            <Label Grid.Row="4" Grid.Column="3" Content="Pjk Keluaran" FontSize="14" VerticalAlignment="Center" />
-                            <ComboBox FontSize="14" Grid.Column="4" Grid.Row="4" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxOut}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
-
-                            <Label Grid.Row="8" Grid.Column="3" Content="Jumlah Stok" FontSize="14" VerticalAlignment="Center" />
-                            <syncfusion:DoubleTextBox IsTabStop="False" FontSize="14" IsReadOnly="True" Width="80" Value="{Binding UnitTypeDTO.Stock}" Grid.Row="8" Grid.Column="4" VerticalAlignment="Stretch" HorizontalAlignment="Left" HorizontalContentAlignment="Right" />
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Info" Width="80" FontSize="14">
-                        <Grid Margin="8 8 16 8" Height="220">
-                            <Image HorizontalAlignment="Right" Height="180" Width="180" Source="{Binding ImageSource}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="PreviewMouseDown">
-                                        <i:InvokeCommandAction Command="{Binding ImageChangedCommand}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Image>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-
-                <StackPanel Margin="15" Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}"/>
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="24 0 0 0" Command="{Binding CancelCommand}" />
-                </StackPanel>
             </Grid>
-        </Grid>
+        </Border>        
     </Grid>
 </UserControl>

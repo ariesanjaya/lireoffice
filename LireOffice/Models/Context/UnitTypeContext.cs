@@ -3,14 +3,11 @@ using System.ComponentModel;
 
 namespace LireOffice.Models
 {
-    using static LireOffice.Models.RuleCollection<UnitTypeContext>;
-    public class UnitTypeContext : NotifyDataErrorInfo<UnitTypeContext>
+    public class UnitTypeContext : BindableBase
     {
         public UnitTypeContext()
         {
             IsActive = true;
-            Rules.Add(new DelegateRule<UnitTypeContext>(nameof(Barcode), "Tipe Barang harus diisi.", x => !string.IsNullOrEmpty(x.Name)));
-            Rules.Add(new DelegateRule<UnitTypeContext>(nameof(Barcode), "Kode barang harus diisi.", x => !string.IsNullOrEmpty(x.Barcode)));
         }
 
         public string Id { get; set; }
@@ -26,7 +23,6 @@ namespace LireOffice.Models
             set
             {
                 SetProperty(ref _name, value, nameof(Name));
-                OnPropertyChange(nameof(Name));
             }
         }
         
@@ -38,7 +34,6 @@ namespace LireOffice.Models
             set
             {
                 SetProperty(ref _barcode, value, nameof(Barcode));
-                OnPropertyChange(nameof(Barcode));
             }
         }
 

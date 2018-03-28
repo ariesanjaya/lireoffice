@@ -15,21 +15,38 @@ namespace LireOffice.Service
         public CouchBaseService()
         {
             manager = Manager.SharedInstance;
-            database = manager.GetDatabase("office");            
+            database = manager.GetDatabase("office");
+
+            //SeedData();
         }
 
         public void SeedData()
         {
-            Dictionary<string, object> properties = new Dictionary<string, object>
-            {
-                { "title", "Couchbase Mobile"},
-                { "sdk", "C#" }
-            };
+            #region Tax Methods
             // Create a new document
-            Document document = database.CreateDocument();
+            Document document = database.GetDocument($"tax-list.{Guid.NewGuid()}");
             // Save the document to the database
-            document.PutProperties(properties);
-            
+            document.PutProperties(new Dictionary<string, object>
+            {
+                ["type"] = "tax-list",
+                ["name"] = "Non Pjk",
+                ["value"] = 0,
+                ["description"] = "Non Pjk",
+                ["isActive"] = true
+            });
+
+            document = database.GetDocument($"tax-list.{Guid.NewGuid()}");
+            // Save the document to the database
+            document.PutProperties(new Dictionary<string, object>
+            {
+                ["type"] = "tax-list",
+                ["name"] = "PPn 10%",
+                ["value"] = 10,
+                ["description"] = "PPn 10%",
+                ["isActive"] = true
+            });
+
+            #endregion
         }
 
         #region General Methods
@@ -166,6 +183,56 @@ namespace LireOffice.Service
             }, "1.0");
 
             var query = view.CreateQuery();
+
+            return GetData(query);
+        }
+
+        public List<Dictionary<string, object>> GetProductCategory()
+        {
+            var view = database.GetView("productCategorylistByName");
+            view.SetMap((doc, emit) =>
+            {
+                if (!doc.ContainsKey("type") || doc["type"] as string != "category-list" || !doc.ContainsKey("name"))
+                    return;
+
+                emit(doc["name"], null);
+            }, "1.0");
+
+            var query = view.CreateQuery();
+
+            return GetData(query);
+        }
+
+        public List<Dictionary<string, object>> GetTaxes()
+        {
+            var view = database.GetView("taxlistByName");
+            view.SetMap((doc, emit) =>
+            {
+                if (!doc.ContainsKey("type") || doc["type"] as string != "tax-list" || !doc.ContainsKey("name"))
+                    return;
+
+                emit(doc["name"], null);
+            }, "1.0");
+
+            var query = view.CreateQuery();
+
+            return GetData(query);
+        }
+
+        public List<Dictionary<string, object>> GetUnitTypes(string productId)
+        {
+            var view = database.GetView("taxlistByName");
+            view.SetMap((doc, emit) =>
+            {
+                if (!doc.ContainsKey("type") || doc["type"] as string != "unitType-list" || !doc.ContainsKey("productId"))
+                    return;
+
+                emit(doc["productId"], null);
+            }, "1.0");
+
+            var query = view.CreateQuery();
+            query.StartKey = productId;
+            query.EndKey = productId;
 
             return GetData(query);
         }

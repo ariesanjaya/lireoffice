@@ -45,6 +45,9 @@
     <Reference Include="Couchbase.Lite.Storage.SystemSQLite, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Couchbase.Lite.Storage.SystemSQLite.1.4.1\lib\net45\Couchbase.Lite.Storage.SystemSQLite.dll</HintPath>
     </Reference>
+    <Reference Include="CurrencyTextBoxControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CurrencyTextBox.1.4.3\lib\CurrencyTextBoxControl.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib.Portable, Version=0.86.0.51803, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.Portable.0.86.0.0003\lib\portable-net45+netcore45+wp8+win8+wpa81+MonoTouch+MonoAndroid+Xamarin.iOS10\ICSharpCode.SharpZipLib.Portable.dll</HintPath>
     </Reference>
@@ -173,6 +176,7 @@
     <Compile Include="Behavior\SelectionController.cs" />
     <Compile Include="Behavior\TextBoxWatermarkBehavior.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\CurrencyTextBox.cs" />
     <Compile Include="Customer\ViewModels\AddCustomerViewModel.cs" />
     <Compile Include="Customer\ViewModels\CustomerViewModel.cs" />
     <Compile Include="Customer\Views\AddCustomer.xaml.cs">
@@ -419,6 +423,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Assets\Themes\TabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Assets\Themes\TextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -586,7 +594,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\ReportTemplates\" />
-    <Folder Include="Controls\" />
     <Folder Include="Models\Report\" />
     <Folder Include="Setting\ViewModels\" />
     <Folder Include="Setting\Views\" />

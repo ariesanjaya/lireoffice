@@ -15,8 +15,11 @@ namespace LireOffice.Service
         void DeleteData(string Id);
         IDictionary<string, object> GetData(string Id);
 
+        List<Dictionary<string, object>> GetProductCategory();
         List<Dictionary<string, object>> GetEmployee();
         List<Dictionary<string, object>> GetVendor();
         List<Dictionary<string, object>> GetCustomer();
+        List<Dictionary<string, object>> GetTaxes();
+        List<Dictionary<string, object>> GetUnitTypes(string productId);
     }
 }

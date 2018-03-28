@@ -2,7 +2,10 @@
 using LireOffice.Models;
 using Syncfusion.SfSkinManager;
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
+using System.Windows.Markup;
 
 namespace LireOffice
 {
@@ -14,8 +17,7 @@ namespace LireOffice
         public static string LocalConnectionString = Environment.CurrentDirectory + @"/OfficeDB.db";
 
         protected override void OnStartup(StartupEventArgs e)
-        {
-            
+        {            
             Mapper.Initialize(config =>
             {
                 #region User Configuration
@@ -103,8 +105,7 @@ namespace LireOffice
 
                 config.CreateMap<ReceivedGoodDetailContext, ReceivedGood>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
-                //.ForMember(dest => dest.)
-
+                
                 #endregion ReceivedGood Configuration
 
                 #region Account Configuration
@@ -135,7 +136,7 @@ namespace LireOffice
 
                 #endregion Ledger Configuration
             });
-
+            
             base.OnStartup(e);
 
             var bootstrapper = new Bootstrapper();
