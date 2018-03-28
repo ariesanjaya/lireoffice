@@ -18,10 +18,11 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}" />
-                <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}" />
+                <Button Content="Tambah" Command="{Binding AddCommand}" />
+                <Button Margin="16 0 0 0" Content="Ubah" Command="{Binding UpdateCommand}" />
+                <Button Margin="16 0 0 0" Content="Hapus" Command="{Binding DeleteCommand}" />
             </StackPanel>
-            <ListView Grid.Row="1" Width="240" HorizontalAlignment="Right" Background="Lime" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}">
+            <ListView Grid.Row="1" Width="240" HorizontalAlignment="Right" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>

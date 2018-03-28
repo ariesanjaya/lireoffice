@@ -23,6 +23,7 @@ namespace LireOffice
             base.ConfigureContainer();
 
             Container.RegisterType<IOfficeContext, OfficeContext>();
+            Container.RegisterType<ICouchBaseService, CouchBaseService>();
 
             Container.RegisterTypeForNavigation<Main>();
 

@@ -31,7 +31,7 @@
 
         <StackPanel Orientation="Horizontal" Margin="24 0" VerticalAlignment="Center" HorizontalAlignment="Left">
             <Button Content="Tambah" IsTabStop="True" Command="{Binding AddCommand}" />
-            <Button Margin="16 0 0 0" Content="Ubah" IsTabStop="False" Command="{Binding UpdateCommand}" />
+            <Button Margin="16 0 0 0" Content="Ubah" IsTabStop="False" Command="{Binding UpdateCommand}"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="18 0" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -39,7 +39,7 @@
             <ComboBox Margin="16 0 8 0" Width="160" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
             <ComboBox Width="180" ItemsSource="{Binding VendorList}" SelectedItem="{Binding SelectedVendor}" DisplayMemberPath="Name" FontSize="14" VerticalContentAlignment="Center" />
             <Button Margin="8 0" Width="30" Command="{Binding RefreshCommand}"/>
-            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Height="32" Width="200" FontSize="14" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchTextBoxStyle}" Height="32" Width="200" FontSize="14" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
 
         </StackPanel>
 

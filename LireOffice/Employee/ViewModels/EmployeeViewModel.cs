@@ -20,13 +20,14 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
-        public EmployeeViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
+        public EmployeeViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
-            this.context = context;
+            databaseService = service;
 
             EmployeeList = new ObservableCollection<UserProfileContext>();
 
@@ -81,7 +82,7 @@ namespace LireOffice.ViewModels
         {
             if (SelectedEmployee != null)
             {
-                context.DeleteEmployee(SelectedEmployee.Id);
+                databaseService.DeleteData(SelectedEmployee.Id);
             }
 
             LoadEmployeeList();
@@ -95,7 +96,7 @@ namespace LireOffice.ViewModels
 
             var parameter = new NavigationParameters
             {
-                { "SelectedEmployee", SelectedEmployee }
+                { "EmployeeId", SelectedEmployee.Id }
             };
 
             regionManager.RequestNavigate("Option01Region", "AddEmployee", parameter);
@@ -110,12 +111,18 @@ namespace LireOffice.ViewModels
             var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
-                var employeeList = context.GetEmployee().ToList();
+                var employeeList = databaseService.GetEmployee();
                 if (employeeList.Count > 0)
                 {
                     foreach (var employee in employeeList)
                     {
-                        UserProfileContext user = Mapper.Map<User, UserProfileContext>(employee);
+                        UserProfileContext user = new UserProfileContext
+                        {
+                            Id = employee["id"] as string,
+                            RegisterId = employee["registerId"] as string,
+                            Name = employee["name"] as string,
+                            Phone = employee["cellPhone01"] as string,
+                        };
                         userProfileList.Add(user);
                     }
                 }

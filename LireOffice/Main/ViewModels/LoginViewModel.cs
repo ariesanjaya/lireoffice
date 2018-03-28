@@ -9,12 +9,12 @@ namespace LireOffice.ViewModels
     public class LoginViewModel : BindableBase
     {
         private readonly IRegionManager regionManager;
-        private readonly IOfficeContext context;
+        //private readonly IOfficeContext context;
 
-        public LoginViewModel(IRegionManager rm, IOfficeContext context)
+        public LoginViewModel(IRegionManager rm)
         {
             regionManager = rm;
-            this.context = context;
+            //this.context = context;
 
             SeedData();
         }
@@ -25,7 +25,7 @@ namespace LireOffice.ViewModels
         {
             await Task.Run(() =>
             {
-                context.SeedData();
+                //context.SeedData();
             });
         }
     }

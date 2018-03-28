@@ -10,7 +10,9 @@
         <ResourceDictionary Source="ComboBox.xaml"/>
         <ResourceDictionary Source="DataGrid.xaml"/>
         <ResourceDictionary Source="ListBox.xaml"/>
+        <ResourceDictionary Source="ListView.xaml"/>
         <ResourceDictionary Source="Expander.xaml"/>
+        <ResourceDictionary Source="DatePicker.xaml"/>
         <ResourceDictionary Source="LiveChart.xaml"/>
     </ResourceDictionary.MergedDictionaries>    
 </ResourceDictionary>

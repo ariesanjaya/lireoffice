@@ -20,13 +20,15 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
-
-        public VendorViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
+        private readonly ICouchBaseService databaseService;
+        
+        public VendorViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
         {
             regionManager = rm;
             eventAggregator = ea;
             this.container = container;
             this.context = context;
+            databaseService = service;
 
             VendorList = new ObservableCollection<UserProfileContext>();
 
@@ -87,7 +89,7 @@ namespace LireOffice.ViewModels
         {
             if (SelectedVendor != null)
             {
-                context.DeleteVendor(SelectedVendor.Id);
+                databaseService.DeleteData(SelectedVendor.Id);
             }
 
             LoadVendorList();
@@ -102,7 +104,7 @@ namespace LireOffice.ViewModels
             var parameter = new NavigationParameters
             {
                 { "Instigator", "ContentRegion" },
-                { "SelectedVendor", SelectedVendor }
+                { "VendorId", SelectedVendor.Id }
             };
 
             regionManager.RequestNavigate("Option01Region", "AddVendor", parameter);
@@ -116,12 +118,18 @@ namespace LireOffice.ViewModels
             var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
-                var vendorList = context.GetVendor().ToList();
+                var vendorList = databaseService.GetVendor();
                 if (vendorList.Count > 0)
                 {
                     foreach (var vendor in vendorList)
                     {
-                        UserProfileContext user = Mapper.Map<User, UserProfileContext>(vendor);
+                        UserProfileContext user = new UserProfileContext
+                        {
+                            Id = vendor["id"] as string,
+                            RegisterId = vendor["registerId"] as string,
+                            Name = vendor["name"] as string,
+                            Phone = vendor["cellPhone01"] as string
+                        };
                         userProfileList.Add(user);
                     }
                 }

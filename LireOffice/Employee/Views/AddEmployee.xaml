@@ -8,96 +8,107 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d">
-    <Grid Background="Black">
-        <Grid Background="Azure" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid Margin="8 8 16 8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="8" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="200" />
-                </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="Black" Opacity="0.4"/>
+        </Grid.Background>
+        <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Grid Background="{StaticResource AlternativeColor}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid Margin="8 8 16 8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
 
-                <Label Content="Detail Karyawan" Grid.ColumnSpan="2" FontSize="22" />
+                    <Label Content="Detail Karyawan" Grid.ColumnSpan="2" Style="{StaticResource TitleLabelStyle}"/>
 
-                <Label Grid.Row="2" Content="No. Register" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.RegisterId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" />
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <Label Content="No. Register"/>
+                        <Label Content="*" Foreground="Red"/>
+                    </StackPanel>
+                    <TextBox FontSize="14" Text="{Binding RegisterId, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" />
 
-                <Label Grid.Row="2" Grid.Column="3" Content="NPWP" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.TaxId}" Grid.Column="4" Grid.Row="2" />
+                    <Label Grid.Row="2" Grid.Column="3" Content="NPWP" FontSize="14" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding TaxId}" Grid.Column="4" Grid.Row="2" />
 
-                <Label Grid.Row="4" Content="No. Identitas" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.SelfId}" Grid.Column="1" Grid.Row="4" />
+                    <Label Grid.Row="4" Content="No. Identitas" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding SelfId}" Grid.Column="1" Grid.Row="4" />
 
-                <Label Grid.Row="6" Grid.Column="0" Content="Nama" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="6" />
+                    <StackPanel Grid.Row="6" Orientation="Horizontal" >
+                        <Label Content="Nama"/>
+                        <Label Content="*" Foreground="Red"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="6" />
 
-                <CheckBox Content="Aktif" IsTabStop="False" IsChecked="{Binding EmployeeDTO.IsActive}" FontSize="14" Grid.Column="4" Grid.Row="6" Margin="20 0 0 0" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+                    <CheckBox Content="Aktif" IsTabStop="False" IsChecked="{Binding IsActive}" FontSize="14" Grid.Column="4" Grid.Row="6" Margin="20 0 0 0" VerticalContentAlignment="Center" VerticalAlignment="Center" />
 
-                <Label Grid.Row="8" Grid.Column="0" Content="Tgl Lahir" FontSize="14" VerticalAlignment="Center" />
-                <DatePicker FontSize="14" Height="29" SelectedDate="{Binding EmployeeDTO.DateOfBirth}" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="8" />
+                    <Label Grid.Row="8" Grid.Column="0" Content="Tgl Lahir" FontSize="14" VerticalAlignment="Center" />
+                    <DatePicker SelectedDate="{Binding DateOfBirth}" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="8" />
 
-                <Label Grid.Row="8" Grid.Column="3" Content="Tgl Masuk" FontSize="14" VerticalAlignment="Center" />
-                <DatePicker FontSize="14" Height="29" SelectedDate="{Binding EmployeeDTO.EnterDate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4" Grid.Row="8" />
+                    <Label Grid.Row="8" Grid.Column="3" Content="Tgl Masuk" FontSize="14" VerticalAlignment="Center" />
+                    <DatePicker SelectedDate="{Binding EnterDate}" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4" Grid.Row="8" />
 
-                <Label Grid.Row="10" Grid.Column="0" Content="Bagian" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.Occupation}" Grid.Column="1" Grid.Row="10" />
+                    <Label Grid.Row="10" Grid.Column="0" Content="Bagian" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Occupation}" Grid.Column="1" Grid.Row="10" />
 
-                <Label Grid.Row="12" Content="Alamat" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.AddressLine}" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="12" />
+                    <Label Grid.Row="12" Content="Alamat" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding AddressLine}" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="12" />
 
-                <Label Grid.Row="14" Content="Kelurahan" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.SubDistrict}" Grid.Column="1" Grid.Row="14" />
+                    <Label Grid.Row="14" Content="Kelurahan" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding SubDistrict}" Grid.Column="1" Grid.Row="14" />
 
-                <Label Grid.Row="14" Grid.Column="3" Content="Kecamatan" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.District}" Grid.Column="4" Grid.Row="14" />
+                    <Label Grid.Row="14" Grid.Column="3" Content="Kecamatan" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding District}" Grid.Column="4" Grid.Row="14" />
 
-                <Label Grid.Row="16" Content="Kota/Kabupaten" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.Regency}" Grid.Column="1" Grid.Row="16" />
+                    <Label Grid.Row="16" Content="Kota/Kabupaten" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Regency}" Grid.Column="1" Grid.Row="16" />
 
-                <Label Grid.Row="18" Content="Email" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.Email}" Grid.Column="1" Grid.Row="18" />
+                    <Label Grid.Row="18" Content="Email" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Email}" Grid.Column="1" Grid.Row="18" />
 
-                <Label Grid.Row="20" Content="Telpon" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.Phone}" Grid.Column="1" Grid.Row="20" />
+                    <Label Grid.Row="20" Content="Telpon" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Phone}" Grid.Column="1" Grid.Row="20" />
 
-                <Label Grid.Row="18" Grid.Column="3" Content="Sales HP" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.CellPhone01}" Grid.Column="4" Grid.Row="18" />
+                    <Label Grid.Row="18" Grid.Column="3" Content="Sales HP" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding CellPhone01}" Grid.Column="4" Grid.Row="18" />
 
-                <Label Grid.Row="20" Grid.Column="3" Content="Sales HP" FontSize="14" VerticalAlignment="Center" />
-                <TextBox FontSize="14" Text="{Binding EmployeeDTO.CellPhone02}" Grid.Column="4" Grid.Row="20" />
+                    <Label Grid.Row="20" Grid.Column="3" Content="Sales HP" FontSize="14" VerticalAlignment="Center" />
+                    <TextBox Text="{Binding CellPhone02}" Grid.Column="4" Grid.Row="20" />
 
-                <StackPanel Margin="12" Grid.Row="22" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Simpan" Command="{Binding SaveCommand}" IsEnabled="{Binding EmployeeDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
-                    <syncfusion:ButtonAdv Height="30" Width="80" Label="Batal" Margin="24 0 0 0" Command="{Binding CancelCommand}" />
-                </StackPanel>
+                    <StackPanel Margin="12" Grid.Row="22" Grid.Column="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <Button Content="Simpan" Command="{Binding SaveCommand}"/>
+                        <Button Content="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Grid>
+        </Border>        
     </Grid>
 </UserControl>

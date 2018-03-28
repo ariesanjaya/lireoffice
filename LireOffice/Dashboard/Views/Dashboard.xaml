@@ -3,13 +3,72 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBlock Text="Dashboard" FontSize="48" Margin="5" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="46"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="12 0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <DatePicker Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" FontSize="14"/>
+            <Button Height="30" Width="30" Margin="8 0"/>
+            <DatePicker Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Width="140" FontSize="14"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height=".725*"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="260"/>
+                </Grid.ColumnDefinitions>
+
+                <lvc:CartesianChart Margin="16"/>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <lvc:Gauge Margin="24" From="0" To="100" Value="50"/>
+
+                    <lvc:PieChart Grid.Row="1" Margin="24">
+                        <lvc:PieChart.Series>
+                            <lvc:PieSeries Title="Maria" Values="3" DataLabels="True"
+                               />
+                            <lvc:PieSeries Title="Charles" Values="4" DataLabels="True" 
+                               />
+                            <lvc:PieSeries Title="Frida" Values="6" DataLabels="True" 
+                               />
+                            <lvc:PieSeries Title="Frederic" Values="2" DataLabels="True" 
+                               />
+                        </lvc:PieChart.Series>
+                    </lvc:PieChart>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <lvc:CartesianChart Margin="12"/>
+                <lvc:CartesianChart Grid.Column="1" Margin="12"/>
+                <lvc:CartesianChart Grid.Column="2" Margin="12"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
