@@ -8,13 +8,14 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>LireOffice</RootNamespace>
     <AssemblyName>LireOffice</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,11 +40,11 @@
     <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Couchbase.Lite, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Couchbase.Lite.1.4.1\lib\net45\Couchbase.Lite.dll</HintPath>
+    <Reference Include="Couchbase.Lite, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Couchbase.Lite.2.0.0-db023\lib\netstandard2.0\Couchbase.Lite.dll</HintPath>
     </Reference>
-    <Reference Include="Couchbase.Lite.Storage.SystemSQLite, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Couchbase.Lite.Storage.SystemSQLite.1.4.1\lib\net45\Couchbase.Lite.Storage.SystemSQLite.dll</HintPath>
+    <Reference Include="Couchbase.Lite.Support.NetDesktop, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Couchbase.Lite.Support.NetDesktop.2.0.0-db023\lib\net461\Couchbase.Lite.Support.NetDesktop.dll</HintPath>
     </Reference>
     <Reference Include="CurrencyTextBoxControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CurrencyTextBox.1.4.3\lib\CurrencyTextBoxControl.dll</HintPath>
@@ -98,6 +99,9 @@
       <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="ReachFramework" />
+    <Reference Include="SimpleInjector, Version=4.0.12.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.0.12\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCL.raw, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCL.raw.0.9.3\lib\net45\SQLitePCL.raw.dll</HintPath>
     </Reference>
@@ -158,9 +162,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="websocket-sharp, Version=1.0.2.22794, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Couchbase.Lite.1.4.1\lib\net45\websocket-sharp.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -291,6 +292,7 @@
     <Compile Include="Product\ViewModels\AddProductViewModel.cs" />
     <Compile Include="Product\ViewModels\AddUnitTypeViewModel.cs" />
     <Compile Include="Product\ViewModels\ProductViewModel.cs" />
+    <Compile Include="Product\ViewModels\UnitTypeSettingViewModel.cs" />
     <Compile Include="Product\Views\AddCategory.xaml.cs">
       <DependentUpon>AddCategory.xaml</DependentUpon>
     </Compile>
@@ -302,6 +304,9 @@
     </Compile>
     <Compile Include="Product\Views\Product.xaml.cs">
       <DependentUpon>Product.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Product\Views\UnitTypeSetting.xaml.cs">
+      <DependentUpon>UnitTypeSetting.xaml</DependentUpon>
     </Compile>
     <Compile Include="Report\ViewModels\ReportViewerViewModel.cs" />
     <Compile Include="Report\Views\ReportViewer.xaml.cs">
@@ -511,6 +516,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Product\Views\UnitTypeSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Report\Views\ReportViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -618,5 +627,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SQLitePCL.native.sqlite3.v110_xp.0.9.3\build\SQLitePCL.native.sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCL.native.sqlite3.v110_xp.0.9.3\build\SQLitePCL.native.sqlite3.v110_xp.targets'))" />
+    <Error Condition="!Exists('..\packages\Couchbase.Lite.Support.NetDesktop.2.0.0-db023\build\Couchbase.Lite.Support.NetDesktop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Couchbase.Lite.Support.NetDesktop.2.0.0-db023\build\Couchbase.Lite.Support.NetDesktop.targets'))" />
   </Target>
+  <Import Project="..\packages\Couchbase.Lite.Support.NetDesktop.2.0.0-db023\build\Couchbase.Lite.Support.NetDesktop.targets" Condition="Exists('..\packages\Couchbase.Lite.Support.NetDesktop.2.0.0-db023\build\Couchbase.Lite.Support.NetDesktop.targets')" />
 </Project>

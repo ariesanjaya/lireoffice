@@ -18,7 +18,7 @@ namespace LireOffice.ViewModels
         private readonly IOfficeContext context;
 
         private DispatcherTimer timer;
-        private bool IsLedgerListLoaded = false;
+        //private bool IsLedgerListLoaded = false;
 
         public MainLedgerViewModel(IRegionManager rm, IEventAggregator ea, IOfficeContext context)
         {
@@ -115,7 +115,7 @@ namespace LireOffice.ViewModels
 
         private void LoadLedgerList()
         {
-            IsLedgerListLoaded = true;
+            //IsLedgerListLoaded = true;
         }
 
         private void SearchData()

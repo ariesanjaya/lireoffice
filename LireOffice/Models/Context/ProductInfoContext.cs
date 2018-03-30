@@ -10,7 +10,6 @@ namespace LireOffice.Models
         public string VendorId { get; set; }
         public string TaxId { get; set; }
         public double Tax { get; set; }
-        public string UnboundColumn { get; set; }
 
         private string _barcode;
 
@@ -51,15 +50,7 @@ namespace LireOffice.Models
             get => _buyPrice;
             set => SetProperty(ref _buyPrice, value, nameof(BuyPrice));
         }
-
-        private decimal _taxInPrice;
-
-        public decimal TaxInPrice
-        {
-            get => _taxInPrice;
-            set => SetProperty(ref _taxInPrice, value, nameof(TaxInPrice));
-        }
-        
+                
         private decimal _buySubTotal;
 
         public decimal BuySubTotal
@@ -74,14 +65,6 @@ namespace LireOffice.Models
         {
             get => _sellPrice;
             set => SetProperty(ref _sellPrice, value, nameof(SellPrice));
-        }
-
-        private decimal _taxOutPrice;
-
-        public decimal TaxOutPrice
-        {
-            get => _taxOutPrice;
-            set => SetProperty(ref _taxOutPrice, value, nameof(TaxOutPrice));
         }
         
         private decimal _sellSubTotal;

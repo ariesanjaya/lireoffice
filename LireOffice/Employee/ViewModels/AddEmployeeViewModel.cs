@@ -86,17 +86,17 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private DateTime? _dateOfBirth;
+        private DateTime _dateOfBirth;
 
-        public DateTime? DateOfBirth
+        public DateTime DateOfBirth
         {
             get => _dateOfBirth;
             set => SetProperty(ref _dateOfBirth, value, nameof(DateOfBirth));
         }
 
-        private DateTime? _enterDate;
+        private DateTime _enterDate;
 
-        public DateTime? EnterDate
+        public DateTime EnterDate
         {
             get => _enterDate;
             set => SetProperty(ref _enterDate, value, nameof(EnterDate));
@@ -208,6 +208,11 @@ namespace LireOffice.ViewModels
 
         private void AddData()
         {
+            DateOfBirth = DateTime.SpecifyKind(DateOfBirth, DateTimeKind.Unspecified);
+            DateTimeOffset tempDateOfBirth = DateOfBirth;
+            EnterDate = DateTime.SpecifyKind(EnterDate, DateTimeKind.Unspecified);
+            DateTimeOffset tempEnterDate = EnterDate;
+
             var properties = new Dictionary<string, object>
             {
                 ["type"] = documentType,
@@ -215,8 +220,9 @@ namespace LireOffice.ViewModels
                 ["selfId"] = SelfId,
                 ["taxId"] = TaxId,
                 ["name"] = Name,
-                ["dateOfBirth"] = DateOfBirth,
-                ["enterDate"] = EnterDate,
+                ["dateOfBirth"] = tempDateOfBirth,
+                ["enterDate"] = tempEnterDate,
+                ["occupation"] = Occupation,
                 ["isActive"] = IsActive,
                 ["addressLine"] = AddressLine,
                 ["subDistrict"] = SubDistrict,
@@ -233,6 +239,11 @@ namespace LireOffice.ViewModels
 
         private void UpdateData()
         {
+            DateOfBirth = DateTime.SpecifyKind(DateOfBirth, DateTimeKind.Unspecified);
+            DateTimeOffset tempDateOfBirth = DateOfBirth;
+            EnterDate = DateTime.SpecifyKind(EnterDate, DateTimeKind.Unspecified);
+            DateTimeOffset tempEnterDate = EnterDate;
+
             var properties = new Dictionary<string, object>
             {
                 ["type"] = documentType,
@@ -240,8 +251,9 @@ namespace LireOffice.ViewModels
                 ["selfId"] = SelfId,
                 ["taxId"] = TaxId,
                 ["name"] = Name,
-                ["dateOfBirth"] = DateOfBirth,
-                ["enterDate"] = EnterDate,
+                ["dateOfBirth"] = tempDateOfBirth,
+                ["enterDate"] = tempEnterDate,
+                ["occupation"] = Occupation,
                 ["isActive"] = IsActive,
                 ["addressLine"] = AddressLine,
                 ["subDistrict"] = SubDistrict,
@@ -259,12 +271,14 @@ namespace LireOffice.ViewModels
         private void LoadData(string employeeId)
         {
             var employee = databaseService.GetData(employeeId);
+            
             if (employee != null)
             {
                 RegisterId = employee["registerId"] as string;
                 SelfId = employee["selfId"] as string;
                 TaxId = employee["taxId"] as string;
                 Name = employee["name"] as string;
+                Occupation = employee["occupation"] as string;
                 DateOfBirth = Convert.ToDateTime(employee["dateOfBirth"]);
                 EnterDate = Convert.ToDateTime(employee["enterDate"]);
                 IsActive = Convert.ToBoolean(employee["isActive"]);

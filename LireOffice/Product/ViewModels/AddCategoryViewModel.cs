@@ -34,6 +34,7 @@ namespace LireOffice.ViewModels
             databaseService = service;
 
             IsActive = true;
+            IsListActive = true;
 
             Rules.Add(new DelegateRule<AddCategoryViewModel>(nameof(Name), 
                 "Nama harus diisi", 
@@ -61,6 +62,14 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
 
+        private bool _isListActive;
+
+        public bool IsListActive
+        {
+            get => _isListActive;
+            set => SetProperty(ref _isListActive, value, nameof(IsListActive));
+        }
+
         private ObservableCollection<ProductCategoryContext> _categoryList;
 
         public ObservableCollection<ProductCategoryContext> CategoryList
@@ -76,11 +85,10 @@ namespace LireOffice.ViewModels
             get => _selectedCategory;
             set => SetProperty(ref _selectedCategory, value, nameof(SelectedCategory));
         }
-
         #endregion Binding Properties
 
-        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
-        public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
+        public DelegateCommand AddCommand => new DelegateCommand(OnAdd, () => !string.IsNullOrEmpty(Name)).ObservesProperty(() => Name);
+        public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate, () => !string.IsNullOrEmpty(Name)).ObservesProperty(() => Name);
         public DelegateCommand DeleteCommand => new DelegateCommand(OnDelete);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
@@ -174,7 +182,7 @@ namespace LireOffice.ViewModels
             var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
-                var categoryList = databaseService.GetProductCategory();
+                var categoryList = databaseService.GetProductCategory(IsListActive);
                 if (categoryList.Count > 0)
                 {
                     foreach (var category in categoryList)

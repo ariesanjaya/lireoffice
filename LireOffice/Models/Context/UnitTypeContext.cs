@@ -2,7 +2,7 @@
 using System.ComponentModel;
 
 namespace LireOffice.Models
-{
+{    
     public class UnitTypeContext : BindableBase
     {
         public UnitTypeContext()
@@ -31,10 +31,7 @@ namespace LireOffice.Models
         public string Barcode
         {
             get => _barcode;
-            set
-            {
-                SetProperty(ref _barcode, value, nameof(Barcode));
-            }
+            set => SetProperty(ref _barcode, value, nameof(Barcode));
         }
 
         private decimal _lastBuyPrice;
@@ -44,14 +41,6 @@ namespace LireOffice.Models
             get => _lastBuyPrice;
             set => SetProperty(ref _lastBuyPrice, value, nameof(LastBuyPrice));
         }
-
-        private decimal _lastTaxInPrice;
-
-        public decimal LastTaxInPrice
-        {
-            get => _lastTaxInPrice;
-            set => SetProperty(ref _lastTaxInPrice, value, nameof(LastTaxInPrice));
-        }
         
         private decimal _buyPrice;
 
@@ -59,14 +48,6 @@ namespace LireOffice.Models
         {
             get => _buyPrice;
             set => SetProperty(ref _buyPrice, value, nameof(BuyPrice));
-        }
-
-        private decimal _taxInPrice;
-
-        public decimal TaxInPrice
-        {
-            get => _taxInPrice;
-            set => SetProperty(ref _taxInPrice, value, nameof(TaxInPrice));
         }
         
         private decimal _sellPrice;

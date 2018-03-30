@@ -10,18 +10,7 @@ namespace LireOffice.Views
     {
         public AddProduct()
         {
-            InitializeComponent();
-
-            Loaded += AddProduct_Loaded;
-        }
-
-        private void AddProduct_Loaded(object sender, RoutedEventArgs e)
-        {
-            NameTextBox.Focus();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
+            InitializeComponent();            
+        }        
     }
 }

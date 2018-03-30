@@ -19,18 +19,18 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IUnityContainer container;
-        private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
-        public CustomerViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
+        public CustomerViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
-            this.context = context;
+            databaseService = service;
 
+            IsActive = true;
             CustomerList = new ObservableCollection<UserProfileContext>();
 
-            LoadCustomerList();
             eventAggregator.GetEvent<CustomerListUpdatedEvent>().Subscribe((string text) => LoadCustomerList());
         }
 
@@ -52,6 +52,14 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _selectedCustomer, value, nameof(SelectedCustomer));
         }
 
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, LoadCustomerList, nameof(IsActive));
+        }
+        
         #endregion Binding Properties
 
         public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
@@ -81,7 +89,7 @@ namespace LireOffice.ViewModels
         {
             if (SelectedCustomer != null)
             {
-                context.DeleteCustomer(SelectedCustomer.Id);
+                databaseService.DeleteData(SelectedCustomer.Id);
             }
 
             LoadCustomerList();
@@ -110,12 +118,18 @@ namespace LireOffice.ViewModels
             var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileContext = new Collection<UserProfileContext>();
-                var customerList = context.GetCustomer().ToList();
+                var customerList = databaseService.GetCustomerProfile(IsActive);
                 if (customerList.Count > 0)
                 {
                     foreach (var customer in customerList)
                     {
-                        UserProfileContext user = Mapper.Map<User, UserProfileContext>(customer);
+                        UserProfileContext user = new UserProfileContext
+                        {
+                            Id = customer["id"] as string,
+                            RegisterId = customer["registerId"] as string,
+                            Name = customer["name"] as string,
+                            Phone = customer["cellPhone01"] as string
+                        };
                         userProfileContext.Add(user);
                     }
                 }

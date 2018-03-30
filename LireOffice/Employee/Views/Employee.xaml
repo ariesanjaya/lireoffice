@@ -17,8 +17,9 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Tambah" Command="{Binding AddCommand}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <CheckBox Content="Aktif" IsChecked="{Binding IsActive}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button Margin="24 0 0 0" Content="Tambah" Command="{Binding AddCommand}" />
                 <Button Margin="16 0 0 0" Content="Ubah" FontSize="14" Command="{Binding UpdateCommand}" />
                 <Button Margin="16 0 0 0" Content="Hapus" Command="{Binding DeleteCommand}" />
             </StackPanel>

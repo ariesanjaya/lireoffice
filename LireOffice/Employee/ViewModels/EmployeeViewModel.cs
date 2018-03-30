@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LireOffice.Models;
+﻿using LireOffice.Models;
 using LireOffice.Service;
 using LireOffice.Utilities;
 using LireOffice.Views;
@@ -19,7 +18,6 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IUnityContainer container;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
 
         public EmployeeViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
@@ -30,8 +28,8 @@ namespace LireOffice.ViewModels
             databaseService = service;
 
             EmployeeList = new ObservableCollection<UserProfileContext>();
-
-            LoadEmployeeList();
+            IsActive = true;
+            
             eventAggregator.GetEvent<EmployeeListUpdateEvent>().Subscribe((string text) => LoadEmployeeList());
         }
 
@@ -51,6 +49,14 @@ namespace LireOffice.ViewModels
         {
             get => _selectedEmployee;
             set => SetProperty(ref _selectedEmployee, value, nameof(SelectedEmployee));
+        }
+
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, LoadEmployeeList, nameof(IsActive));
         }
 
         #endregion Binding Properties
@@ -111,7 +117,7 @@ namespace LireOffice.ViewModels
             var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
-                var employeeList = databaseService.GetEmployee();
+                var employeeList = databaseService.GetEmployeeProfile(IsActive);
                 if (employeeList.Count > 0)
                 {
                     foreach (var employee in employeeList)

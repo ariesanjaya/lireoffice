@@ -585,7 +585,7 @@ namespace LireOffice.Controls
             try
             {
                 //Fix the number then dont have a comma
-                if (Number.ToString(CultureInfo.CurrentCulture).LastIndexOf(",", StringComparison.Ordinal) == -1)
+               if (Number.ToString(CultureInfo.CurrentCulture).LastIndexOf(",", StringComparison.Ordinal) == -1)
                     Number = Convert.ToDecimal(Number + GetNumberAdjuster());
 
                 //Remove the right most digit after is fixed

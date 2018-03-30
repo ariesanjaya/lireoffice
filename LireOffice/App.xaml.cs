@@ -71,9 +71,9 @@ namespace LireOffice
 
                 #region Product Configuration
 
-                config.CreateMap<Product, ProductContext>();
+                config.CreateMap<Models.Product, ProductContext>();
 
-                config.CreateMap<ProductContext, Product>()
+                config.CreateMap<ProductContext, Models.Product>()
                         .ForMember(dest => dest.Id, opt => opt.Ignore());
 
                 #endregion Product Configuration
@@ -136,7 +136,20 @@ namespace LireOffice
 
                 #endregion Ledger Configuration
             });
-            
+
+            var culture = new CultureInfo("id-ID", true);
+            culture.NumberFormat.CurrencyPositivePattern = 2;
+            culture.NumberFormat.CurrencyNegativePattern = 2;
+            culture.NumberFormat.CurrencySymbol = "AD";
+
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(
+                XmlLanguage.GetLanguage(CultureInfo.CurrentUICulture.IetfLanguageTag)));
+
             base.OnStartup(e);
 
             var bootstrapper = new Bootstrapper();

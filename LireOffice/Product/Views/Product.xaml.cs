@@ -15,5 +15,10 @@ namespace LireOffice.Views
 
             ea.GetEvent<ProductDataGridFocusEvent>().Subscribe((string text) => dataGrid.Focus());
         }
+
+        private void UserControl_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            e.Handled = false;
+        }
     }
 }

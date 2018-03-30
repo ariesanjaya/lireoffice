@@ -7,7 +7,7 @@
              xmlns:behavior="clr-namespace:LireOffice.Behavior"
              xmlns:converters="clr-namespace:LireOffice.Utilities"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
+             prism:ViewModelLocator.AutoWireViewModel="True" 
              xmlns:local="clr-namespace:LireOffice.Views" d:DesignWidth="1024"
              mc:Ignorable="d" IsTabStop="False" KeyboardNavigation.TabNavigation="Cycle">
     <UserControl.Resources>
@@ -63,6 +63,20 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Margin="8 0" HorizontalAlignment="Right" Text="{Binding BuySubTotal, StringFormat=C2}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Harga Pokok" Width=".8*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Margin="8 0" HorizontalAlignment="Right" Text="{Binding SellPrice, StringFormat=C2}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Total" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Margin="8 0" HorizontalAlignment="Right" Text="{Binding SellSubTotal, StringFormat=C2}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

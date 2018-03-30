@@ -9,24 +9,19 @@ namespace LireOffice.ViewModels
     public class LoginViewModel : BindableBase
     {
         private readonly IRegionManager regionManager;
-        //private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
-        public LoginViewModel(IRegionManager rm)
+        public LoginViewModel(IRegionManager rm, ICouchBaseService service)
         {
             regionManager = rm;
-            //this.context = context;
+            databaseService = service;
 
-            SeedData();
+            //databaseService.DeleteDatabase();
+            databaseService.SeedData();
         }
 
-        public DelegateCommand<string> NavigateCommand => new DelegateCommand<string>(text => regionManager.RequestNavigate("MainRegion", text));
-
-        private async void SeedData()
-        {
-            await Task.Run(() =>
-            {
-                //context.SeedData();
-            });
-        }
+        public DelegateCommand<string> NavigateCommand => 
+            new DelegateCommand<string>(text => regionManager.RequestNavigate("MainRegion", text));
+        
     }
 }

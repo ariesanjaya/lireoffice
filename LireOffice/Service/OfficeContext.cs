@@ -18,7 +18,7 @@ namespace LireOffice.Service
             // Indexing UserType property on Users Collection to speed up query
             db.GetCollection<User>("Users").EnsureIndex(c => c.UserType);
 
-            db.GetCollection<Product>("Products").EnsureIndex(c => c.Name);
+            db.GetCollection<Models.Product>("Products").EnsureIndex(c => c.Name);
             // Indexing ProductId property on UnitTypes Collection to speed up query
             db.GetCollection<UnitType>("UnitTypes").EnsureIndex(c => c.ProductId);
             db.GetCollection<UnitType>("UnitTypes").EnsureIndex(c => c.Barcode);
@@ -310,19 +310,19 @@ namespace LireOffice.Service
 
         #region Product Methods
 
-        public void AddProduct(Product product)
+        public void AddProduct(Models.Product product)
         {
-            db.GetCollection<Product>("Products").Insert(product);
+            db.GetCollection<Models.Product>("Products").Insert(product);
         }
 
-        public void UpdateProduct(Product product)
+        public void UpdateProduct(Models.Product product)
         {
-            db.GetCollection<Product>("Products").Update(product);
+            db.GetCollection<Models.Product>("Products").Update(product);
         }
 
         public void DeleteProduct(string id)
         {
-            var productResult = db.GetCollection<Product>("Products").FindById(id);
+            var productResult = db.GetCollection<Models.Product>("Products").FindById(id);
             if (productResult != null)
             {
                 var unitTypeResult = db.GetCollection<UnitType>("UnitTypes").Find(Query.EQ("ProductId", productResult.Id)).ToList();
@@ -333,59 +333,59 @@ namespace LireOffice.Service
                         db.GetCollection<UnitType>("UnitTypes").Delete(unitType.Id);
                     }
 
-                    db.GetCollection<Product>("Products").Delete(productResult.Id);
+                    db.GetCollection<Models.Product>("Products").Delete(productResult.Id);
                 }
             }
         }
 
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<Models.Product> GetProducts()
         {
-            return db.GetCollection<Product>("Products").FindAll();
+            return db.GetCollection<Models.Product>("Products").FindAll();
         }
 
-        public IEnumerable<Product> GetProducts(bool isActive)
+        public IEnumerable<Models.Product> GetProducts(bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.EQ("IsActive", isActive));
+            return db.GetCollection<Models.Product>("Products").Find(Query.EQ("IsActive", isActive));
         }
 
-        public IEnumerable<Product> GetProductsByVendor(string vendorId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByVendor(string vendorId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProductsByCategory(string categoryId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByCategory(string categoryId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProductsByCategoryVendor(string categoryId, string vendorId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByCategoryVendor(string categoryId, string vendorId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId),Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.EQ("CategoryId", categoryId),Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProducts(string text, bool isActive)
+        public IEnumerable<Models.Product> GetProducts(string text, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProductsByVendor(string text, string vendorId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByVendor(string text, string vendorId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProductsByCategory(string text, string categoryId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByCategory(string text, string categoryId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("IsActive", isActive)));
         }
 
-        public IEnumerable<Product> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive)
+        public IEnumerable<Models.Product> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive)
         {
-            return db.GetCollection<Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
+            return db.GetCollection<Models.Product>("Products").Find(Query.And(Query.Where("Name", c => c.AsString.ToLower().Contains(text.ToLower())), Query.EQ("CategoryId", categoryId), Query.EQ("VendorId", vendorId), Query.EQ("IsActive", isActive)));
         }
 
-        public Product GetProductById(string id)
+        public Models.Product GetProductById(string id)
         {
-            return db.GetCollection<Product>("Products").FindById(id);
+            return db.GetCollection<Models.Product>("Products").FindById(id);
         }
 
         #endregion Product Methods

@@ -53,10 +53,10 @@
                     <Label Grid.Row="4" Content="Nama Kategori" FontSize="14" VerticalAlignment="Center" />
                     <TextBox FontSize="14" Text="{Binding Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Center" />
 
-                    <CheckBox Grid.Row="6" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding CategoryDTO.IsActive}" VerticalAlignment="Center" />
+                    <CheckBox Grid.Row="6" Grid.Column="1" Content="Aktif" FontSize="14" IsChecked="{Binding IsActive}" VerticalAlignment="Center" />
 
                     <StackPanel Margin="12" Grid.Row="9" Grid.ColumnSpan="4" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                        <Button Content="Tambah" Command="{Binding AddCommand}" IsEnabled="{Binding CategoryDTO.IsBtnEnabled, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Content="Tambah" Command="{Binding AddCommand}" />
                         <Button Content="Ubah" Margin="16 0 0 0" Command="{Binding UpdateCommand}"/>
                         <Button Content="Hapus" Margin="16 0 0 0" Command="{Binding DeleteCommand}"/>
                         <Button Content="Batal" Margin="16 0 0 0" Command="{Binding CancelCommand}" />

@@ -24,28 +24,31 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
                 
-        private bool IsUpdated = false;
         private string Instigator;
 
         private const string documentType = "product-list";
 
-        public AddProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
+        public AddProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
-            this.context = context;
             databaseService = service;
+
+            UnitTypeDTO = new UnitTypeContext { Name = "Pcs" };
 
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
 
             IsActive = true;
 
-            ProductDTO = new ProductContext();
-            UnitTypeDTO = new UnitTypeContext { Name = "PCS" };
+            Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Name), 
+                "Nama harus diisi.", 
+                x => !string.IsNullOrEmpty(x.Name)));
+            //Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Barcode),
+            //    "Barcode harus diisi.",
+            //    x => !string.IsNullOrEmpty(x.Barcode)));
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
             VendorList = new ObservableCollection<UserSimpleContext>();
@@ -60,15 +63,7 @@ namespace LireOffice.ViewModels
         }
 
         #region Binding Properties
-
-        private ProductContext _productDTO;
-
-        public ProductContext ProductDTO
-        {
-            get => _productDTO;
-            set => SetProperty(ref _productDTO, value, nameof(ProductDTO));
-        }
-
+        
         private string productId;
         private string categoryId;
         private string vendorId;
@@ -86,6 +81,18 @@ namespace LireOffice.ViewModels
             }
         }
 
+        //private string _barcode;
+
+        //public string Barcode
+        //{
+        //    get => _barcode;
+        //    set
+        //    {
+        //        SetProperty(ref _barcode, value, nameof(Barcode));
+        //        OnPropertyChange(nameof(Barcode));
+        //    }
+        //}
+        
         private bool _isActive;
 
         public bool IsActive
@@ -94,12 +101,26 @@ namespace LireOffice.ViewModels
             set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
 
+        private bool _isUpdated;
+
+        public bool IsUpdated
+        {
+            get => _isUpdated;
+            set => SetProperty(ref _isUpdated, value, nameof(IsUpdated));
+        }
+        
         private UnitTypeContext _unitTypeDTO;
 
         public UnitTypeContext UnitTypeDTO
         {
             get => _unitTypeDTO;
-            set => SetProperty(ref _unitTypeDTO, value, () => SelectedUnitType = _unitTypeDTO, nameof(UnitTypeDTO));
+            set => SetProperty(ref _unitTypeDTO, value, () => 
+            {
+                if (SelectedUnitType != null)
+                {
+                    SelectedUnitType = _unitTypeDTO;
+                }
+            }, nameof(UnitTypeDTO));
         }
 
         private ObservableCollection<UnitTypeContext> _unitTypeList;
@@ -115,23 +136,11 @@ namespace LireOffice.ViewModels
         public UnitTypeContext SelectedUnitType
         {
             get => _selectedUnitType;
-            set => SetProperty(ref _selectedUnitType, value, () =>
-             {
-                 if (_selectedUnitType != null)
-                 {
-                     UnitTypeDTO = _selectedUnitType;
-                 }
-             }, nameof(SelectedUnitType));
+            set => SetProperty(ref _selectedUnitType, value, 
+                () => { if (UnitTypeDTO != null) UnitTypeDTO = _selectedUnitType; }, 
+                nameof(SelectedUnitType));
         }
-
-        private bool _isUnitTypeBtnActive;
-
-        public bool IsUnitTypeBtnActive
-        {
-            get => _isUnitTypeBtnActive;
-            set => SetProperty(ref _isUnitTypeBtnActive, value, nameof(IsUnitTypeBtnActive));
-        }
-
+        
         private ObservableCollection<ProductCategoryContext> _categoryList;
 
         public ObservableCollection<ProductCategoryContext> CategoryList
@@ -210,13 +219,18 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        public DelegateCommand SaveCommand => new DelegateCommand(OnSave);
+        public DelegateCommand SaveCommand => new DelegateCommand(OnSave, () => !string.IsNullOrEmpty(Name))
+            .ObservesProperty(() => Name);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
         public DelegateCommand ImageChangedCommand => new DelegateCommand(OnImageChanged);
 
-        public DelegateCommand AddUnitTypeCommand => new DelegateCommand(OnAddUnitType);
+        public DelegateCommand AddUnitTypeCommand => new DelegateCommand(OnAddUnitType)
+            .ObservesCanExecute(() => IsUpdated);
         public DelegateCommand AddCategoryCommand => new DelegateCommand(OnAddCategory);
         public DelegateCommand AddVendorCommand => new DelegateCommand(OnAddVendor);
+
+        public DelegateCommand SettingUnitTypeCommand => new DelegateCommand(OnSettingUnitType)
+            .ObservesCanExecute(() => IsUpdated);
 
         private void OnSave()
         {
@@ -246,106 +260,11 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private void AddData()
+        private void OnSettingUnitType()
         {
-            var productProperties = new Dictionary<string, object>
-            {
-                ["type"] = documentType,
-                ["name"] = Name,
-                ["isActive"] = IsActive                
-            };
-            //Models.Product product = Mapper.Map<ProductContext, Models.Product>(ProductDTO);
 
-            if (SelectedCategory != null)
-                productProperties["categoryId"] = SelectedCategory.Id;
-
-            if (SelectedVendor != null)
-                productProperties["vendorId"] = SelectedVendor.Id;
-
-            foreach (var item in UnitTypeList)
-            {
-                var unitTypeProperties = new Dictionary<string, object>
-                {
-                    ["productId"] = productId,
-                    ["name"] = item.Name,
-                    ["barcode"] = item.Barcode,
-                    ["taxInId"] = item.TaxInId,
-                    ["taxOutId"] = item.TaxOutId,
-                    ["lastTaxInPrice"] = item.LastTaxInPrice,
-                    ["taxInPrice"] = item.TaxInPrice,
-                    ["lastBuyPrice"] = item.LastBuyPrice,
-                    ["buyPrice"] = item.BuyPrice,
-                    ["sellPrice"] = item.SellPrice,
-                    ["stock"] = item.Stock,
-                    ["isActive"] = item.IsActive
-                };
-
-                //UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(item);
-
-                //var taxOut = context.GetTaxById(unitType.TaxOutId);
-                var taxOut = databaseService.GetData(unitTypeProperties["taxOutId"] as string);
-                if (taxOut != null)
-                {
-                    unitTypeProperties["taxOutPrice"] = item.SellPrice * Convert.ToDecimal(taxOut["value"]) / 100;
-                }
-                //context.AddUnitType(unitType);
-            }
-
-            //context.AddProduct(product);
         }
-
-        private void UpdateData()
-        {
-            var productResult = context.GetProductById(ProductDTO.Id);
-            if (productResult != null)
-            {
-                productResult = Mapper.Map(ProductDTO, productResult);
-                productResult.Version += 1;
-                productResult.UpdatedAt = DateTime.Now;
-
-                if (SelectedCategory != null)
-                    productResult.CategoryId = SelectedCategory.Id;
-
-                if (SelectedVendor != null)
-                    productResult.VendorId = SelectedVendor.Id;
-
-                context.UpdateProduct(productResult);
-            }
-
-            if (UnitTypeList.Count > 0)
-            {
-                foreach (var unitType in UnitTypeList)
-                {
-                    var unitTypeResult = context.GetUnitTypeById(unitType.Id);
-                    if (unitTypeResult != null)
-                    {
-                        unitTypeResult = Mapper.Map(unitType, unitTypeResult);
-                        unitTypeResult.Version += 1;
-                        unitTypeResult.UpdatedAt = DateTime.Now;
-
-                        var taxOut = context.GetTaxById(unitType.TaxOutId);
-                        if (taxOut != null)
-                        {
-                            unitTypeResult.TaxOutPrice = unitType.SellPrice * (decimal)taxOut.Value / 100;
-                        }
-                        context.UpdateUnitType(unitTypeResult);
-                    }
-                }
-            }
-        }
-
-        private void LoadData(string productId)
-        {
-            var product = databaseService.GetData(productId);
-            if (product != null)
-            {
-                Name = product["name"] as string;
-                IsActive = Convert.ToBoolean(product["isActive"]);
-            }
-
-            IsUnitTypeBtnActive = true;
-        }
-
+        
         private void OnAddUnitType()
         {
             var view = container.Resolve<AddUnitType>();
@@ -354,8 +273,8 @@ namespace LireOffice.ViewModels
 
             var parameter = new NavigationParameters
             {
-                { "ProductId", ProductDTO.Id },
-                { "ProductName", ProductDTO.Name }
+                { "ProductId", productId },
+                { "ProductName", Name }
             };
 
             regionManager.RequestNavigate("Option02Region", "AddUnitType", parameter);
@@ -433,6 +352,95 @@ namespace LireOffice.ViewModels
                 ImageSource = new BitmapImage(new Uri(openDialog.FileName, UriKind.RelativeOrAbsolute));
             }
         }
+        
+        private void AddData()
+        {
+            var productProperties = new Dictionary<string, object>
+            {
+                ["type"] = documentType,
+                ["name"] = Name,
+                ["isActive"] = IsActive
+            };
+
+            if (SelectedCategory != null)
+                productProperties["categoryId"] = SelectedCategory.Id;
+
+            if (SelectedVendor != null)
+                productProperties["vendorId"] = SelectedVendor.Id;
+            
+            databaseService.AddData(productProperties, out productId);
+
+            foreach (var item in UnitTypeList)
+            {
+                var unitTypeProperties = new Dictionary<string, object>
+                {
+                    ["type"] = "unitType-list",
+                    ["productId"] = productId,
+                    ["name"] = item.Name,
+                    ["barcode"] = item.Barcode,
+                    ["taxInId"] = item.TaxInId,
+                    ["taxOutId"] = item.TaxOutId,
+                    ["lastBuyPrice"] = item.LastBuyPrice,
+                    ["buyPrice"] = item.BuyPrice,
+                    ["sellPrice"] = item.SellPrice,
+                    ["stock"] = item.Stock,
+                    ["isActive"] = item.IsActive
+                };
+
+                databaseService.AddData(unitTypeProperties);                
+            }            
+        }
+
+        private void UpdateData()
+        {
+            //var productResult = context.GetProductById(ProductDTO.Id);
+            //if (productResult != null)
+            //{
+            //    productResult = Mapper.Map(ProductDTO, productResult);
+            //    productResult.Version += 1;
+            //    productResult.UpdatedAt = DateTime.Now;
+
+            //    if (SelectedCategory != null)
+            //        productResult.CategoryId = SelectedCategory.Id;
+
+            //    if (SelectedVendor != null)
+            //        productResult.VendorId = SelectedVendor.Id;
+
+            //    context.UpdateProduct(productResult);
+            //}
+
+            //if (UnitTypeList.Count > 0)
+            //{
+            //    foreach (var unitType in UnitTypeList)
+            //    {
+            //        var unitTypeResult = context.GetUnitTypeById(unitType.Id);
+            //        if (unitTypeResult != null)
+            //        {
+            //            unitTypeResult = Mapper.Map(unitType, unitTypeResult);
+            //            unitTypeResult.Version += 1;
+            //            unitTypeResult.UpdatedAt = DateTime.Now;
+
+            //            var taxOut = context.GetTaxById(unitType.TaxOutId);
+            //            if (taxOut != null)
+            //            {
+            //                unitTypeResult.TaxOutPrice = unitType.SellPrice * (decimal)taxOut.Value / 100;
+            //            }
+            //            context.UpdateUnitType(unitTypeResult);
+            //        }
+            //    }
+            //}
+        }
+
+        private void LoadData(string productId)
+        {
+            var product = databaseService.GetData(productId);
+            if (product != null)
+            {
+                Name = product["name"] as string;
+                IsActive = Convert.ToBoolean(product["isActive"]);
+            }
+
+        }
 
         private async void LoadUnitTypeList(string productId, string unitTypeId = null)
         {
@@ -445,13 +453,22 @@ namespace LireOffice.ViewModels
                 var unitTypeList = databaseService.GetUnitTypes(productId);
                 if (unitTypeList.Count > 0)
                 {
-                    foreach (var unitType in unitTypeList)
+                    foreach (var item in unitTypeList)
                     {
-                        //UnitTypeContext item = Mapper.Map<UnitType, UnitTypeContext>(unitType);
-                        //item.LastBuyPrice += item.LastTaxInPrice;
-                        //item.BuyPrice += item.TaxInPrice;
-                        //_unitTypeList.Add(item);
-
+                        UnitTypeContext unitType = new UnitTypeContext
+                        {
+                            Id = item["id"] as string,
+                            ProductId = item["productId"] as string,
+                            Name = item["name"] as string,
+                            Barcode = item["name"] as string,
+                            LastBuyPrice = Convert.ToDecimal(item["lastBuyPrice"]),
+                            BuyPrice = Convert.ToDecimal(item["buyPrice"]),
+                            SellPrice = Convert.ToDecimal(item["sellPrice"]),
+                            TaxInId = item["taxInId"] as string,
+                            TaxOutId = item["taxOutId"] as string
+                        };
+                        
+                        _unitTypeList.Add(unitType);
                     }
                 }
 
@@ -475,7 +492,7 @@ namespace LireOffice.ViewModels
             var tempVendorList = await Task.Run(() =>
             {
                 Collection<UserSimpleContext> userSimpleList = new Collection<UserSimpleContext>();
-                var vendorList = databaseService.GetVendor();
+                var vendorList = databaseService.GetVendorProfile(true);
                 if (vendorList.Count > 0)
                 {
                     foreach (var vendor in vendorList)
@@ -508,7 +525,7 @@ namespace LireOffice.ViewModels
             var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
-                var categoryList = databaseService.GetProductCategory();
+                var categoryList = databaseService.GetProductCategory(true);
                 if (categoryList.Count > 0)
                 {
                     foreach (var item in categoryList)
@@ -591,8 +608,8 @@ namespace LireOffice.ViewModels
 
                 IsUpdated = true;
 
-                LoadData(product.Id);
-                LoadUnitTypeList(product.Id, product.UnitTypeId);
+                //LoadData(product.Id);
+                //LoadUnitTypeList(product.Id, product.UnitTypeId);
                 LoadCategoryList(product.CategoryId);
                 LoadVendorList(product.VendorId);
             }

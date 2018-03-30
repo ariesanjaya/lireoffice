@@ -19,20 +19,18 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IUnityContainer container;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
         
-        public VendorViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
+        public VendorViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
         {
             regionManager = rm;
             eventAggregator = ea;
             this.container = container;
-            this.context = context;
             databaseService = service;
 
             VendorList = new ObservableCollection<UserProfileContext>();
-
-            LoadVendorList();
+            IsActive = true;
+            
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Subscribe((string text) => LoadVendorList());
         }
 
@@ -52,6 +50,14 @@ namespace LireOffice.ViewModels
         {
             get => _selectedVendor;
             set => SetProperty(ref _selectedVendor, value, nameof(SelectedVendor));
+        }
+
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, LoadVendorList, nameof(IsActive));
         }
 
         #endregion Binding Properties
@@ -118,7 +124,7 @@ namespace LireOffice.ViewModels
             var tempProfileList = await Task.Run(() =>
             {
                 Collection<UserProfileContext> userProfileList = new Collection<UserProfileContext>();
-                var vendorList = databaseService.GetVendor();
+                var vendorList = databaseService.GetVendorProfile(IsActive);
                 if (vendorList.Count > 0)
                 {
                     foreach (var vendor in vendorList)

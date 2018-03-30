@@ -102,19 +102,19 @@ namespace LireOffice.Service
 
         #region Product Methods
 
-        void AddProduct(Product product);
-        void UpdateProduct(Product product);
+        void AddProduct(Models.Product product);
+        void UpdateProduct(Models.Product product);
         void DeleteProduct(string id);
-        IEnumerable<Product> GetProducts();
-        IEnumerable<Product> GetProducts(bool isActive);
-        IEnumerable<Product> GetProductsByCategoryVendor(string categoryId, string vendorId, bool isActive);
-        IEnumerable<Product> GetProductsByCategory(string categoryId, bool isActive);
-        IEnumerable<Product> GetProductsByVendor(string vendorId, bool isActive);
-        IEnumerable<Product> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive);
-        IEnumerable<Product> GetProductsByCategory(string text, string categoryId, bool isActive);
-        IEnumerable<Product> GetProductsByVendor(string text, string vendorId, bool isActive);
-        IEnumerable<Product> GetProducts(string text, bool isActive);
-        Product GetProductById(string id);
+        IEnumerable<Models.Product> GetProducts();
+        IEnumerable<Models.Product> GetProducts(bool isActive);
+        IEnumerable<Models.Product> GetProductsByCategoryVendor(string categoryId, string vendorId, bool isActive);
+        IEnumerable<Models.Product> GetProductsByCategory(string categoryId, bool isActive);
+        IEnumerable<Models.Product> GetProductsByVendor(string vendorId, bool isActive);
+        IEnumerable<Models.Product> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive);
+        IEnumerable<Models.Product> GetProductsByCategory(string text, string categoryId, bool isActive);
+        IEnumerable<Models.Product> GetProductsByVendor(string text, string vendorId, bool isActive);
+        IEnumerable<Models.Product> GetProducts(string text, bool isActive);
+        Models.Product GetProductById(string id);
 
         #endregion Product Methods
 

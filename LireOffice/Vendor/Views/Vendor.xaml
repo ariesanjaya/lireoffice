@@ -9,7 +9,7 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
         <Grid Margin="16">
             <Grid.RowDefinitions>
@@ -18,7 +18,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Tambah" Command="{Binding AddCommand}" />
+                <CheckBox Content="Aktif" VerticalAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsActive}"/>
+                <Button Margin="24 0 0 0" Content="Tambah" Command="{Binding AddCommand}" />
                 <Button Margin="16 0 0 0" Content="Ubah" Command="{Binding UpdateCommand}" />
                 <Button Margin="16 0 0 0" Content="Hapus" Command="{Binding DeleteCommand}" />
             </StackPanel>
