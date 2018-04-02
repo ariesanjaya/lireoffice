@@ -21,18 +21,16 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
 
         private DispatcherTimer timer;
         private bool IsProductListLoaded = false;
 
-        public ProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
+        public ProductViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
-            this.context = context;
             databaseService = service;
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
@@ -290,9 +288,8 @@ namespace LireOffice.ViewModels
                     {
                         ProductCategoryContext _category = new ProductCategoryContext
                         {
-                            Id = category["id"] as string,
-                            Name = category["name"] as string,
-                            IsActive = Convert.ToBoolean(category["isActive"])
+                            Id = category.Id,
+                            Name = category.Name
                         };
 
                         _categoryList.Add(_category);
@@ -307,34 +304,34 @@ namespace LireOffice.ViewModels
             SelectedCategory = CategoryList.ElementAtOrDefault(0);
         }
 
-        private void LoadVendorList()
+        private async void LoadVendorList()
         {
             VendorList.Clear();
 
-            //var tempVendorList = await Task.Run(()=> 
-            //{
-            //    Collection<UserSimpleContext> _vendorList = new Collection<UserSimpleContext>();
-            //    var vendorList = databaseService.GetVendor();
-            //    if (vendorList.Count > 0)
-            //    {
-            //        foreach (var vendor in vendorList)
-            //        {
-            //            UserSimpleContext _vendor = new UserSimpleContext
-            //            {
-            //                Id = vendor["id"] as string,
-            //                RegisterId = vendor["registerId"] as string,
-            //                Name = vendor["name"] as string
-            //            };
-            //            _vendorList.Add(_vendor);
-            //        }
-            //    }
+            var tempVendorList = await Task.Run(() =>
+            {
+                Collection<UserSimpleContext> _vendorList = new Collection<UserSimpleContext>();
+                var vendorList = databaseService.GetVendorProfile(true);
+                if (vendorList.Count > 0)
+                {
+                    foreach (var vendor in vendorList)
+                    {
+                        UserSimpleContext _vendor = new UserSimpleContext
+                        {
+                            Id = vendor["id"] as string,
+                            RegisterId = vendor["registerId"] as string,
+                            Name = vendor["name"] as string
+                        };
+                        _vendorList.Add(_vendor);
+                    }
+                }
 
-            //    return _vendorList;
-            //});
+                return _vendorList;
+            });
 
-            //VendorList.AddRange(tempVendorList);
-            //VendorList.Insert(0, new UserSimpleContext { Id = Guid.NewGuid().ToString(), Name = "Semua", RegisterId = "000" });
-            //SelectedVendor = VendorList.ElementAtOrDefault(0);
+            VendorList.AddRange(tempVendorList);
+            VendorList.Insert(0, new UserSimpleContext { Id = Guid.NewGuid().ToString(), Name = "Semua", RegisterId = "000" });
+            SelectedVendor = VendorList.ElementAtOrDefault(0);
         }        
     }
 }

@@ -262,6 +262,7 @@
         <Setter Property="Background" Value="{StaticResource MainColor}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
         <Setter Property="Foreground" Value="{StaticResource FontColor}"/>
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="BorderThickness" Value="1"/>

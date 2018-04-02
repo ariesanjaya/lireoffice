@@ -18,7 +18,6 @@ namespace LireOffice.ViewModels
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService; 
 
         private string categoryId;
@@ -26,11 +25,10 @@ namespace LireOffice.ViewModels
 
         private const string documentType = "category-list";
 
-        public AddCategoryViewModel(IEventAggregator ea, IRegionManager rm,ICouchBaseService service, IOfficeContext context)
+        public AddCategoryViewModel(IEventAggregator ea, IRegionManager rm,ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
-            this.context = context;
             databaseService = service;
 
             IsActive = true;
@@ -189,9 +187,9 @@ namespace LireOffice.ViewModels
                     {
                         ProductCategoryContext item = new ProductCategoryContext
                         {
-                            Id = category["id"] as string,
-                            Name = category["name"] as string,
-                            IsActive = Convert.ToBoolean(category["isActive"])
+                            Id = category.Id,
+                            Name = category.Name,
+                            IsActive = category.IsActive
                         };
                         _categoryList.Add(item);
                     }

@@ -81,7 +81,11 @@ namespace LireOffice.ViewModels
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value, nameof(Name));
+            set
+            {
+                SetProperty(ref _name, value, nameof(Name));
+                OnPropertyChange(nameof(Name));
+            }
         }
 
         private DateTime _dateOfBirth;
@@ -214,11 +218,25 @@ namespace LireOffice.ViewModels
 
         private void LoadData(string customerId)
         {
-            var customer = databaseService.GetCustomer(customerId);
+            var customer = databaseService.GetData(customerId);
             if (customer != null)
             {
-
-                //CustomerDTO = Mapper.Map<User, UserContext>(customer);
+                RegisterId = customer["registerId"] as string;
+                CardId = customer["cardId"] as string;
+                SelfId = customer["selfId"] as string;
+                TaxId = customer["taxId"] as string;
+                Name = customer["name"] as string;
+                IsActive = Convert.ToBoolean(customer["isActive"]);
+                DateOfBirth = Convert.ToDateTime(customer["dateOfBirth"]);
+                SelectedUserType = customer["customerType"] as string;
+                AddressLine = customer["addressLine"] as string;
+                SubDistrict = customer["subDistrict"] as string;
+                District = customer["district"] as string;
+                Regency = customer["regency"] as string;
+                Email = customer["email"] as string;
+                Phone = customer["phone"] as string;
+                CellPhone01 = customer["cellPhone01"] as string;
+                CellPhone02 = customer["cellPhone02"] as string;
             }
         }
 

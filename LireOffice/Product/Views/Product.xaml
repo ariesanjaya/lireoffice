@@ -18,8 +18,7 @@
                               IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
                                                   Path=DetailsVisibility, 
                                                   Converter={StaticResource VisibilityToBooleanConverter}, 
-                                                  Mode=TwoWay}" 
-                              />
+                                                  Mode=TwoWay}" />
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>

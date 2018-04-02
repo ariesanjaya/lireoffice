@@ -28,9 +28,10 @@ namespace LireOffice.ViewModels
             this.container = container;
             databaseService = service;
 
-            IsActive = true;
             CustomerList = new ObservableCollection<UserProfileContext>();
+            IsActive = true;
 
+            LoadCustomerList();
             eventAggregator.GetEvent<CustomerListUpdatedEvent>().Subscribe((string text) => LoadCustomerList());
         }
 
@@ -57,7 +58,7 @@ namespace LireOffice.ViewModels
         public bool IsActive
         {
             get => _isActive;
-            set => SetProperty(ref _isActive, value, LoadCustomerList, nameof(IsActive));
+            set => SetProperty(ref _isActive, value,  nameof(IsActive));
         }
         
         #endregion Binding Properties

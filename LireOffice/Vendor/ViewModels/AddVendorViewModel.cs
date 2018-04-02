@@ -196,69 +196,71 @@ namespace LireOffice.ViewModels
 
         private void LoadData(string vendorId)
         {
-            var vendor = databaseService.GetData(vendorId);
+            var vendor = databaseService.GetVendor(vendorId);
             if (vendor != null)
             {
-                RegisterId = vendor["registerId"] as string;
-                TaxId = vendor["taxId"] as string;
-                Name = vendor["name"] as string;
-                SalesName = vendor["salesName"] as string;
-                IsActive = Convert.ToBoolean(vendor["isActive"]);
-                AddressLine = vendor["addressLine"] as string;
-                SubDistrict = vendor["subDistrict"] as string;
-                District = vendor["district"] as string;
-                Regency = vendor["regency"] as string;
-                Email = vendor["email"] as string;
-                Phone = vendor["phone"] as string;
-                CellPhone01 = vendor["cellPhone01"] as string;
-                CellPhone02 = vendor["cellPhone02"] as string;
+                RegisterId = vendor.RegisterId;
+                TaxId = vendor.TaxId;
+                Name = vendor.Name;
+                SalesName = vendor.SalesName;
+                IsActive = vendor.IsActive;
+                AddressLine = vendor.AddressLine;
+                SubDistrict = vendor.SubDistrict;
+                District = vendor.District;
+                Regency = vendor.Regency;
+                Email = vendor.Email;
+                Phone = vendor.Phone;
+                CellPhone01 = vendor.CellPhone01;
+                CellPhone02 = vendor.CellPhone02;
             }
         }
 
         private void AddData()
         {
-            var properties = new Dictionary<string, object>
+            Vendor vendor = new Vendor
             {
-                ["type"] = documentType,
-                ["registerId"] = RegisterId,
-                ["taxId"] = TaxId,
-                ["name"] = Name,
-                ["salesName"] = SalesName,
-                ["isActive"] = IsActive,
-                ["addressLine"] = AddressLine,
-                ["subDistrict"] = SubDistrict,
-                ["district"] = District,
-                ["regency"] = Regency,
-                ["email"] = Email,
-                ["phone"] = Phone,
-                ["cellPhone01"] = CellPhone01,
-                ["cellPhone02"] = CellPhone02
+                Id = $"{documentType}.{Guid.NewGuid()}",
+                DocumentType = documentType,
+                RegisterId = RegisterId,
+                TaxId = TaxId,
+                Name = Name,
+                SalesName = SalesName,
+                IsActive = IsActive,
+                AddressLine = AddressLine,
+                SubDistrict = SubDistrict,
+                District = District,
+                Regency = Regency,
+                Email = Email,
+                Phone = Phone,
+                CellPhone01 = CellPhone01,
+                CellPhone02 = CellPhone02
             };
-            
-            databaseService.AddData(properties);            
+
+            databaseService.AddVendor(vendor);            
         }
 
         private void UpdateData()
         {
-            var properties = new Dictionary<string, object>
+            Vendor vendor = new Vendor
             {
-                ["type"] = documentType,
-                ["registerId"] = RegisterId,
-                ["taxId"] = TaxId,
-                ["name"] = Name,
-                ["salesName"] = SalesName,
-                ["isActive"] = IsActive,
-                ["addressLine"] = AddressLine,
-                ["subDistrict"] = SubDistrict,
-                ["district"] = District,
-                ["regency"] = Regency,
-                ["email"] = Email,
-                ["phone"] = Phone,
-                ["cellPhone01"] = CellPhone01,
-                ["cellPhone02"] = CellPhone02
+                Id = vendorId,
+                DocumentType = documentType,
+                RegisterId = RegisterId,
+                TaxId = TaxId,
+                Name = Name,
+                SalesName = SalesName,
+                IsActive = IsActive,
+                AddressLine = AddressLine,
+                SubDistrict = SubDistrict,
+                District = District,
+                Regency = Regency,
+                Email = Email,
+                Phone = Phone,
+                CellPhone01 = CellPhone01,
+                CellPhone02 = CellPhone02
             };
 
-            databaseService.UpdateData(properties, vendorId);
+            databaseService.UpdateVendor(vendor);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

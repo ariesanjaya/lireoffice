@@ -37,25 +37,26 @@ namespace LireOffice.ViewModels
             this.container = container;
             databaseService = service;
 
+            Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Name),
+                "Nama harus diisi.",
+                x => !string.IsNullOrEmpty(x.Name)));
+            Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Barcode),
+                "barcode harus diisi.",
+                x => !string.IsNullOrEmpty(x.Barcode)));
+
             UnitTypeDTO = new UnitTypeContext { Name = "Pcs" };
+            UnitTypeList = new ObservableCollection<UnitTypeContext> { UnitTypeDTO };
+            SelectedUnitType = UnitTypeDTO;
+            Barcode = string.Empty;
 
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
-
             IsActive = true;
 
-            Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Name), 
-                "Nama harus diisi.", 
-                x => !string.IsNullOrEmpty(x.Name)));
-            //Rules.Add(new DelegateRule<AddProductViewModel>(nameof(Barcode),
-            //    "Barcode harus diisi.",
-            //    x => !string.IsNullOrEmpty(x.Barcode)));
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
             VendorList = new ObservableCollection<UserSimpleContext>();
             TaxList = new ObservableCollection<TaxContext>();
 
-            UnitTypeList = new ObservableCollection<UnitTypeContext> { UnitTypeDTO };
-            SelectedUnitType = UnitTypeDTO;
 
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
             eventAggregator.GetEvent<VendorListUpdatedEvent>().Subscribe((string text) => LoadVendorList());
@@ -81,18 +82,22 @@ namespace LireOffice.ViewModels
             }
         }
 
-        //private string _barcode;
+        private string _barcode;
 
-        //public string Barcode
-        //{
-        //    get => _barcode;
-        //    set
-        //    {
-        //        SetProperty(ref _barcode, value, nameof(Barcode));
-        //        OnPropertyChange(nameof(Barcode));
-        //    }
-        //}
-        
+        public string Barcode
+        {
+            get => _barcode;
+            set
+            {
+                SetProperty(ref _barcode, value, nameof(Barcode));
+                OnPropertyChange(nameof(Barcode));
+                if (!string.IsNullOrEmpty(_barcode))
+                {
+                    UnitTypeDTO.Barcode = Barcode;
+                }
+            }
+        }
+
         private bool _isActive;
 
         public bool IsActive
@@ -219,8 +224,8 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
-        public DelegateCommand SaveCommand => new DelegateCommand(OnSave, () => !string.IsNullOrEmpty(Name))
-            .ObservesProperty(() => Name);
+        public DelegateCommand SaveCommand => new DelegateCommand(OnSave, () => !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Barcode))
+            .ObservesProperty(() => Name).ObservesProperty(() => Barcode);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
         public DelegateCommand ImageChangedCommand => new DelegateCommand(OnImageChanged);
 
@@ -240,7 +245,7 @@ namespace LireOffice.ViewModels
                 UpdateData();
 
             OnCancel();
-            eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
+            //eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
         private void OnCancel()
@@ -380,15 +385,20 @@ namespace LireOffice.ViewModels
                     ["barcode"] = item.Barcode,
                     ["taxInId"] = item.TaxInId,
                     ["taxOutId"] = item.TaxOutId,
-                    ["lastBuyPrice"] = item.LastBuyPrice,
+                    ["lastBuyPrice"] = Convert.ToDouble(item.LastBuyPrice),
                     ["buyPrice"] = item.BuyPrice,
                     ["sellPrice"] = item.SellPrice,
                     ["stock"] = item.Stock,
                     ["isActive"] = item.IsActive
                 };
 
-                databaseService.AddData(unitTypeProperties);                
-            }            
+                if (SelectedTaxIn != null)
+                    unitTypeProperties["taxInId"] = SelectedTaxIn.Id;
+                if (SelectedTaxOut != null)
+                    unitTypeProperties["taxOutId"] = SelectedTaxOut.Id;
+
+                databaseService.AddData(unitTypeProperties);
+            }
         }
 
         private void UpdateData()
@@ -532,9 +542,8 @@ namespace LireOffice.ViewModels
                     {
                         ProductCategoryContext category = new ProductCategoryContext
                         {
-                            Id = item["id"] as string,
-                            Name = item["name"] as string,
-                            IsActive = Convert.ToBoolean(item["isActive"])
+                            Id = item.Id,
+                            Name = item.Name
                         };
 
                         _categoryList.Add(category);

@@ -24,7 +24,8 @@ namespace LireOffice.Service
                 ValueIndexItem.Expression(Expression.Property("type")), 
                 ValueIndexItem.Expression(Expression.Property("name")),
                 ValueIndexItem.Expression(Expression.Property("isActive"))));
-            
+
+            SeedData();
         }
 
         public void DeleteDatabase()
@@ -34,27 +35,30 @@ namespace LireOffice.Service
 
         public void SeedData()
         {
-            var properties = new Dictionary<string, object>
+            if (!Database.Exists("office", Environment.CurrentDirectory))
             {
-                ["type"] = "tax-list",
-                ["name"] = "Non Pjk",
-                ["value"] = 0,
-                ["description"] = "Non Pjk",
-                ["isActive"] = true
-            };
+                var properties = new Dictionary<string, object>
+                {
+                    ["type"] = "tax-list",
+                    ["name"] = "Non Pjk",
+                    ["value"] = 0,
+                    ["description"] = "Non Pjk",
+                    ["isActive"] = true
+                };
 
-            AddData(properties);
+                AddData(properties);
 
-            properties = new Dictionary<string, object>
-            {
-                ["type"] = "tax-list",
-                ["name"] = "PPn 10%",
-                ["value"] = 10,
-                ["description"] = "PPn 10%",
-                ["isActive"] = true
-            };
+                properties = new Dictionary<string, object>
+                {
+                    ["type"] = "tax-list",
+                    ["name"] = "PPn 10%",
+                    ["value"] = 10,
+                    ["description"] = "PPn 10%",
+                    ["isActive"] = true
+                };
 
-            AddData(properties);
+                AddData(properties);
+            }            
         }
 
         #region General Methods
@@ -103,7 +107,6 @@ namespace LireOffice.Service
             }
             catch (Exception)
             {
-                //var test = ex.Message;
                 throw new ApplicationException("Couldn't update data");
             }
         }
@@ -155,7 +158,7 @@ namespace LireOffice.Service
         }
         #endregion
 
-        #region Vendor Methods
+        #region test Methods
         public List<Dictionary<string, object>> GetVendorProfile(bool isActive)
         {
             var query = QueryBuilder.Select(SelectResult.Expression(Meta.ID), SelectResult.Property("registerId"),
@@ -186,43 +189,26 @@ namespace LireOffice.Service
 
             return GetData(query);
         }
+        
+        //public List<Dictionary<string, object>> GetProductCategory(bool isActive)
+        //{
+        //    var query = QueryBuilder.Select(SelectResult.Expression(Meta.ID),
+        //        SelectResult.Property("name"), SelectResult.Property("isActive"))
+        //        .From(DataSource.Database(database))
+        //        .Where(Expression.Property("type").EqualTo(Expression.String("category-list"))
+        //        .And(Expression.Property("isActive")).EqualTo(Expression.Boolean(isActive)));
 
-        public List<Dictionary<string, object>> GetCustomer(string customerId)
-        {
-            var query = QueryBuilder.Select(SelectResult.All())
-                .From(DataSource.Database(database))
-                .Where(Expression.Property("type").EqualTo(Expression.String("customer-list"))
-                .And(Meta.ID).EqualTo(Expression.String(customerId)));
-
-            return GetData(query);
-        }
-
-        public List<Dictionary<string, object>> GetProductCategory(bool isActive)
-        {
-            var query = QueryBuilder.Select(SelectResult.Expression(Meta.ID),
-                SelectResult.Property("name"))
-                .From(DataSource.Database(database))
-                .Where(Expression.Property("type").EqualTo(Expression.String("category-list"))
-                .And(Expression.Property("isActive")).EqualTo(Expression.Boolean(isActive)));
-
-            return GetData(query);
-        }
+        //    return GetData(query);
+        //}
 
         public List<Dictionary<string, object>> GetTaxes()
         {
-            //var view = database.GetView("taxlistByName");
-            //view.SetMap((doc, emit) =>
-            //{
-            //    if (!doc.ContainsKey("type") || doc["type"] as string != "tax-list" || !doc.ContainsKey("name"))
-            //        return;
-
-            //    emit(doc["name"], null);
-            //}, "1.0");
-
-            //var query = view.CreateQuery();
-
-            //return GetData(query);
-            return null;
+            var query = QueryBuilder.Select(SelectResult.Expression(Meta.ID), SelectResult.Property("name"), 
+                SelectResult.Property("value"), SelectResult.Property("description"))
+                .From(DataSource.Database(database))
+                .Where(Expression.Property("type").EqualTo(Expression.String("tax-list")));
+            
+            return GetData(query);            
         }
 
         public List<Dictionary<string, object>> GetUnitTypes(string productId)
@@ -257,34 +243,41 @@ namespace LireOffice.Service
 
         public List<Dictionary<string, object>> GetProducts(string filterText, bool isActive)
         {
-            //var view = database.GetView("productlistByIsActive");
-            //view.SetMap((doc, emit) =>
-            //{
-            //    if (!doc.ContainsKey("type") || doc["type"] as string != "product-list" || !doc.ContainsKey("name") || !doc.ContainsKey("isActive"))
-            //        return;
+            //var queryTest = QueryBuilder.Select(
+            //            SelectResult.Expression(Expression.Property("name").From("airline")),
+            //            SelectResult.Expression(Expression.Property("callsign").From("airline")),
+            //            SelectResult.Expression(Expression.Property("destinationairport").From("route")),
+            //            SelectResult.Expression(Expression.Property("stops").From("route")),
+            //            SelectResult.Expression(Expression.Property("airline").From("route")))
+            //            .From(DataSource.Database(database).As("airline"))
+            //            .Join(Join.InnerJoin(DataSource.Database(database).As("route"))
+            //                .On(Meta.ID.From("airline").EqualTo(Expression.Property("airlineid").From("route"))))
+            //            .Where(
+            //            Expression.Property("type").From("route").EqualTo(Expression.String("route"))
+            //            .And(Expression.Property("type").From("airline").EqualTo(Expression.String("airline")))
+            //            .And(Expression.Property("sourceairport").From("route").EqualTo(Expression.String("RIX"))));
 
-            //    Dictionary<string, object> key = new Dictionary<string, object>
-            //    {
-            //        ["name"] = doc["name"],
-            //        ["isActive"] = doc["isActive"]
-            //    };
+            //var query = QueryBuilder.Select(
+            //    SelectResult.Expression(Expression.Property("productId").From("unitType")),
+            //    SelectResult.Expression(Expression.Property("name").From("product")),
+            //    SelectResult.Expression(Expression.Property("barcode").From("unitType")),
+            //    SelectResult.Expression(Expression.Property("name").From("unitType")).As("unitType"),
+            //    SelectResult.Expression(Expression.Property("stock").From("unitType")),
+            //    SelectResult.Expression(Expression.Property("buyPrice").From("unitType")),
+            //    SelectResult.Expression(Expression.Property("sellPrice").From("unitType")),
+            //    SelectResult.Expression(Expression.Property("isActive").From("product")))
+            //    .From(DataSource.Database(database).As("unitType"))
+            //    .Join(Join.LeftOuterJoin(DataSource.Database(database).As("product"))
+            //        .On(Expression.Property("productId").From("unitType").EqualTo(Meta.ID.From("product"))))
+            //    .Where(Expression.Property("type").From("product").EqualTo(Expression.String("product-list"))
+            //    .And(Expression.Property("type").From("unitType").EqualTo(Expression.String("unitType-list"))
+            //    .And(Expression.Property("isActive").From("product").EqualTo(Expression.Boolean(isActive))
+            //    .And(Expression.Property("name").From("product").Like(Expression.String($"%{filterText}%"))))));
 
-            //    emit(key, null);
-            //}, "2.0");
+            var query = QueryBuilder.Select(
+                SelectResult.All()).From(DataSource.Database(database)).Where(Expression.Property("type").EqualTo(Expression.String("unitType-list")));
 
-            //var query = view.CreateQuery();
-
-            //List<object> filterKey = new List<object> { isActive };
-            //if (!string.IsNullOrEmpty(filterText))
-            //{
-            //    filterKey.Add(filterText);
-            //}
-            //query.StartKey = filterKey;
-            //query.InclusiveStart = true;
-            //query.PrefixMatchLevel = 1;
-
-            //return GetData(query);
-            return null;
+            return GetData(query);
         }
 
         public List<Dictionary<string, object>> GetProductsByVendor(string filterText, string vendorId, bool isActive)
@@ -317,5 +310,474 @@ namespace LireOffice.Service
         }
         #endregion
 
+        #region Customer Methods
+        public void AddCustomer(Models.Customer customer)
+        {
+            try
+            {
+                customer.DateofBirth = DateTime.SpecifyKind(customer.DateofBirth, DateTimeKind.Unspecified);
+                DateTimeOffset tempDateOfBirth = customer.DateofBirth;
+
+                var doc = new MutableDocument(customer.Id);
+                doc.SetString("type", customer.DocumentType);
+                doc.SetString("registerId", customer.RegisterId);
+                doc.SetString("cardId", customer.CardId);
+                doc.SetString("taxId", customer.TaxId);
+                doc.SetString("selfId", customer.SelfId);
+                doc.SetString("name", customer.Name);
+                doc.SetDate("dateOfBirth", tempDateOfBirth);
+                doc.SetString("occupation", customer.Occupation);
+                doc.SetString("customerType", customer.CustomerType);
+                doc.SetBoolean("isActive", customer.IsActive);
+                doc.SetString("addressLine", customer.AddressLine);
+                doc.SetString("subDistrict", customer.SubDistrict);
+                doc.SetString("district", customer.District);
+                doc.SetString("regency", customer.Regency);
+                doc.SetString("email", customer.Email);
+                doc.SetString("phone", customer.Phone);
+                doc.SetString("cellPhone01", customer.CellPhone01);
+                doc.SetString("cellPhone02", customer.CellPhone02);
+
+                database.Save(doc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateCustomer(Models.Customer customer)
+        {
+            try
+            {
+                customer.DateofBirth = DateTime.SpecifyKind(customer.DateofBirth, DateTimeKind.Unspecified);
+                DateTimeOffset tempDateOfBirth = customer.DateofBirth;
+
+                var _doc = database.GetDocument(customer.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("registerId", customer.RegisterId);
+                    doc.SetString("cardId", customer.CardId);
+                    doc.SetString("taxId", customer.TaxId);
+                    doc.SetString("selfId", customer.SelfId);
+                    doc.SetString("name", customer.Name);
+                    doc.SetDate("dateOfBirth", tempDateOfBirth);
+                    doc.SetString("occupation", customer.Occupation);
+                    doc.SetString("customerType", customer.CustomerType);
+                    doc.SetBoolean("isActive", customer.IsActive);
+                    doc.SetString("addressLine", customer.AddressLine);
+                    doc.SetString("subDistrict", customer.SubDistrict);
+                    doc.SetString("district", customer.District);
+                    doc.SetString("regency", customer.Regency);
+                    doc.SetString("email", customer.Email);
+                    doc.SetString("phone", customer.Phone);
+                    doc.SetString("cellPhone01", customer.CellPhone01);
+                    doc.SetString("cellPhone02", customer.CellPhone02);
+
+                    database.Save(doc);
+                }                
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DeleteCustomer(string customerId)
+        {
+            try
+            {
+                var doc = database.GetDocument(customerId);
+                if (doc != null)
+                {
+                    database.Delete(doc);
+                }
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException("Couldn't delete data");
+            }
+        }
+
+        public IList<Models.Customer> GetCustomer()
+        {
+            return null;
+        }
+
+        public Models.Customer GetCustomer(string customerId)
+        {
+            try
+            {
+                var doc = database.GetDocument(customerId);
+                if (doc != null)
+                {
+                    DateTimeOffset tempDateOfBirth = doc.GetDate("dateOfBirth");
+
+                    Models.Customer customer = new Models.Customer
+                    {
+                        Id = customerId,
+                        DocumentType = doc.GetString("type"),
+                        RegisterId = doc.GetString("registerId"),
+                        TaxId = doc.GetString("taxId"),
+                        Name = doc.GetString("name"),
+                        CardId = doc.GetString("cardId"),
+                        SelfId = doc.GetString("selfId"),
+                        CustomerType = doc.GetString("customerType"),
+                        Occupation = doc.GetString("occupation"),
+                        DateofBirth = tempDateOfBirth.Date,
+                        IsActive = doc.GetBoolean("isActive"),
+                        AddressLine = doc.GetString("addressLine"),
+                        SubDistrict = doc.GetString("subDistrict"),
+                        District = doc.GetString("district"),
+                        Regency = doc.GetString("regency"),
+                        Email = doc.GetString("email"),
+                        Phone = doc.GetString("phone"),
+                        CellPhone01 = doc.GetString("cellPhone01"),
+                        CellPhone02 = doc.GetString("cellPhone02")
+                    };
+
+                    return customer;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Employee Methods
+
+        public void AddEmployee(Models.Employee employee)
+        {
+            try
+            {
+                employee.DateOfBirth = DateTime.SpecifyKind(employee.DateOfBirth, DateTimeKind.Unspecified);
+                DateTimeOffset tempDateOfBirth = employee.DateOfBirth;
+                employee.EnterDate = DateTime.SpecifyKind(employee.EnterDate, DateTimeKind.Unspecified);
+                DateTimeOffset tempEnterDate = employee.EnterDate;
+
+                var doc = new MutableDocument(employee.Id);
+                doc.SetString("type", employee.DocumentType);
+                doc.SetString("registerId", employee.RegisterId);
+                doc.SetString("taxId", employee.TaxId);
+                doc.SetString("name", employee.Name);
+                doc.SetDate("dateOfBirth", tempDateOfBirth);
+                doc.SetDate("enterDate", tempEnterDate);
+                doc.SetString("occupation", employee.Occupation);
+                doc.SetBoolean("isActive", employee.IsActive);
+                doc.SetString("addressLine", employee.AddressLine);
+                doc.SetString("subDistrict", employee.SubDistrict);
+                doc.SetString("district", employee.District);
+                doc.SetString("regency", employee.Regency);
+                doc.SetString("email", employee.Email);
+                doc.SetString("phone", employee.Phone);
+                doc.SetString("cellPhone01", employee.CellPhone01);
+                doc.SetString("cellPhone02", employee.CellPhone02);
+
+                database.Save(doc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateEmployee(Models.Employee employee)
+        {
+            try
+            {
+                employee.DateOfBirth = DateTime.SpecifyKind(employee.DateOfBirth, DateTimeKind.Unspecified);
+                DateTimeOffset tempDateOfBirth = employee.DateOfBirth;
+                employee.EnterDate = DateTime.SpecifyKind(employee.EnterDate, DateTimeKind.Unspecified);
+                DateTimeOffset tempEnterDate = employee.EnterDate;
+
+                var _doc = database.GetDocument(employee.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("registerId", employee.RegisterId);
+                    doc.SetString("taxId", employee.TaxId);
+                    doc.SetString("name", employee.Name);
+                    doc.SetDate("dateOfBirth", tempDateOfBirth);
+                    doc.SetDate("enterDate", tempEnterDate);
+                    doc.SetString("occupation", employee.Occupation);
+                    doc.SetBoolean("isActive", employee.IsActive);
+                    doc.SetString("addressLine", employee.AddressLine);
+                    doc.SetString("subDistrict", employee.SubDistrict);
+                    doc.SetString("district", employee.District);
+                    doc.SetString("regency", employee.Regency);
+                    doc.SetString("email", employee.Email);
+                    doc.SetString("phone", employee.Phone);
+                    doc.SetString("cellPhone01", employee.CellPhone01);
+                    doc.SetString("cellPhone02", employee.CellPhone02);
+
+                    database.Save(doc);
+                }                
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DeleteEmployee(string employeeId)
+        {
+            try
+            {
+                var doc = database.GetDocument(employeeId);
+                if (doc != null)
+                {
+                    database.Delete(doc);
+                }
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException("Couldn't delete data");
+            }
+        }
+
+        public IList<Models.Employee> GetEmployee()
+        {
+            return null;
+        }
+
+        public Models.Employee GetEmployee(string employeeId)
+        {
+            return null;
+        }
+
+        #endregion
+
+        #region Ledger Methods
+
+        #endregion
+
+        #region Product Methods
+        public void AddProductCategory(Models.ProductCategory category)
+        {
+            try
+            {
+                var doc = new MutableDocument(category.Id);
+                doc.SetString("type", category.DocumentType);
+                doc.SetString("name", category.Name);
+                doc.SetBoolean("isActive", category.IsActive);
+
+                database.Save(doc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateProductCategory(Models.ProductCategory category)
+        {
+            try
+            {
+                var _doc = database.GetDocument(category.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("name", category.Name);
+                    doc.SetBoolean("isActive", category.IsActive);
+
+                    database.Save(doc);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DeleteProductCategory(string categoryId)
+        {
+            try
+            {
+                var doc = database.GetDocument(categoryId);
+                if (doc != null)
+                {
+                    database.Delete(doc);
+                }
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException("Couldn't delete data");
+            }
+        }
+
+        public List<Models.ProductCategory> GetProductCategory(bool isActive)
+        {
+            var query = QueryBuilder.Select(SelectResult.Expression(Meta.ID), SelectResult.Property("name"), SelectResult.Property("isActive"))
+                .From(DataSource.Database(database)).Where(Expression.Property("type").EqualTo(Expression.String("productCategory-list"))
+                .And(Expression.Property("isActive").EqualTo(Expression.Boolean(isActive))));
+
+            var rows = query.Execute();
+
+            var productCategory = new List<Models.ProductCategory>();
+
+            if (rows != null)
+            {
+                foreach (var row in rows)
+                {
+                    var category = new Models.ProductCategory
+                    {
+                        Id = row.GetString("id"),
+                        Name = row.GetString("name"),
+                        IsActive = row.GetBoolean("isActive")
+                    };
+                    productCategory.Add(category);
+                }
+
+                return productCategory;
+            }
+
+            return null;
+        }
+
+        public void AddProduct(Models.Product product)
+        {
+
+        }
+
+        public void UpdateProduct(Models.Product product)
+        {
+
+        }
+
+        public void DeleteProduct(string productId)
+        {
+
+        }
+        #endregion
+
+        #region Transaction Methods
+
+        #endregion
+
+        #region Vendor Methods
+        public void AddVendor(Models.Vendor vendor)
+        {
+            try
+            {
+                var doc = new MutableDocument(vendor.Id);
+                doc.SetString("type", vendor.DocumentType);
+                doc.SetString("registerId", vendor.RegisterId);
+                doc.SetString("taxId", vendor.TaxId);
+                doc.SetString("name", vendor.Name);
+                doc.SetString("salesName", vendor.SalesName);
+                doc.SetBoolean("isActive", vendor.IsActive);
+                doc.SetString("addressLine", vendor.AddressLine);
+                doc.SetString("subDistrict", vendor.SubDistrict);
+                doc.SetString("district", vendor.District);
+                doc.SetString("regency", vendor.Regency);
+                doc.SetString("email", vendor.Email);
+                doc.SetString("phone", vendor.Phone);
+                doc.SetString("cellPhone01", vendor.CellPhone01);
+                doc.SetString("cellPhone02", vendor.CellPhone02);
+
+                database.Save(doc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateVendor(Models.Vendor vendor)
+        {
+            try
+            {
+                var _doc = database.GetDocument(vendor.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("registerId", vendor.RegisterId);
+                    doc.SetString("taxId", vendor.TaxId);
+                    doc.SetString("name", vendor.Name);
+                    doc.SetString("salesName", vendor.SalesName);
+                    doc.SetBoolean("isActive", vendor.IsActive);
+                    doc.SetString("addressLine", vendor.AddressLine);
+                    doc.SetString("subDistrict", vendor.SubDistrict);
+                    doc.SetString("district", vendor.District);
+                    doc.SetString("regency", vendor.Regency);
+                    doc.SetString("email", vendor.Email);
+                    doc.SetString("phone", vendor.Phone);
+                    doc.SetString("cellPhone01", vendor.CellPhone01);
+                    doc.SetString("cellPhone02", vendor.CellPhone02);
+
+                    database.Save(doc);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DeleteVendor(string vendorId)
+        {
+            try
+            {
+                var doc = database.GetDocument(vendorId);
+                if (doc != null)
+                {
+                    database.Delete(doc);
+                }
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException("Couldn't delete data");
+            }
+        }
+
+        public IList<Models.Vendor> GetVendor()
+        {
+            return null;
+        }
+
+        public Models.Vendor GetVendor(string vendorId)
+        {
+            try
+            {
+                var doc = database.GetDocument(vendorId);
+                if (doc != null)
+                {
+                    Models.Vendor vendor = new Models.Vendor
+                    {
+                        Id = vendorId,
+                        DocumentType = doc.GetString("type"),
+                        RegisterId = doc.GetString("registerId"),
+                        TaxId = doc.GetString("taxId"),
+                        Name = doc.GetString("name"),
+                        SalesName = doc.GetString("salesName"),
+                        IsActive = doc.GetBoolean("isActive"),
+                        AddressLine = doc.GetString("addressLine"),
+                        SubDistrict = doc.GetString("subDistrict"),
+                        District = doc.GetString("district"),
+                        Regency = doc.GetString("regency"),
+                        Email = doc.GetString("email"),
+                        Phone = doc.GetString("phone"),
+                        CellPhone01 = doc.GetString("cellPhone01"),
+                        CellPhone02 = doc.GetString("cellPhone02")
+                    };
+
+                    return vendor;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+
+            return null;
+        }
+        #endregion
     }
 }

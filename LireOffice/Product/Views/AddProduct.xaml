@@ -108,7 +108,7 @@
                         </Grid.RowDefinitions>
 
                         <Label Content="Kode" FontSize="14" VerticalAlignment="Center" />
-                        <TextBox Text="{Binding UnitTypeDTO.Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
+                        <TextBox Text="{Binding Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
 
                         <Label Grid.Row="2" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
                         <control:CurrencyTextBox IsTabStop="False" Grid.Column="1" Grid.Row="2" Number="{Binding UnitTypeDTO.LastBuyPrice}" IsReadOnly="True"/>

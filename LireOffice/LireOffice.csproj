@@ -236,6 +236,8 @@
     <Compile Include="Models\Context\UserSimpleContext.cs" />
     <Compile Include="Models\Data\Account.cs" />
     <Compile Include="Models\Data\Address.cs" />
+    <Compile Include="Models\Data\Customer.cs" />
+    <Compile Include="Models\Data\Employee.cs" />
     <Compile Include="Models\Data\EntityData.cs" />
     <Compile Include="Models\Data\GoodReturn.cs" />
     <Compile Include="Models\Data\GoodReturnItem.cs" />
@@ -246,6 +248,7 @@
     <Compile Include="Models\Data\Product.cs" />
     <Compile Include="Models\Data\ProductCategory.cs" />
     <Compile Include="Models\Data\ProductHistory.cs" />
+    <Compile Include="Models\Data\ProductInventory.cs" />
     <Compile Include="Models\Data\ProductTransfer.cs" />
     <Compile Include="Models\Data\ReceivedGood.cs" />
     <Compile Include="Models\Data\ReceivedGoodItem.cs" />
@@ -288,6 +291,7 @@
     <Compile Include="Main\Views\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Data\Vendor.cs" />
     <Compile Include="Product\ViewModels\AddCategoryViewModel.cs" />
     <Compile Include="Product\ViewModels\AddProductViewModel.cs" />
     <Compile Include="Product\ViewModels\AddUnitTypeViewModel.cs" />
