@@ -8,8 +8,8 @@ namespace LireOffice.Models
         public string UnitTypeId { get; set; }
         public string CategoryId { get; set; }
         public string VendorId { get; set; }
-        public string TaxId { get; set; }
-        public double Tax { get; set; }
+        public string TaxInId { get; set; }
+        public string TaxOutId { get; set; }
 
         private string _barcode;
 

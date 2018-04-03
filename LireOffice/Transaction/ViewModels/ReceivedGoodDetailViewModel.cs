@@ -153,27 +153,27 @@ namespace LireOffice.ViewModels
                 
         private void AddReceivedGoodItem(Tuple<ProductInfoContext/*object*/, int/*index*/, bool/*isUpdated*/> productIndex)
         {
-            var product = productIndex.Item1;
-            ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
-            {
-                Id = Guid.NewGuid().ToString(),
-                ProductId = product.Id,
-                TaxId = product.TaxId,
-                UnitTypeId = product.UnitTypeId,
-                Barcode = product.Barcode,
-                Name = product.Name,
-                Tax = product.Tax,
-                UnitType = product.UnitType,
-                BuyPrice = product.BuyPrice
-            };
+            //var product = productIndex.Item1;
+            //ReceivedGoodItemContext _item = new ReceivedGoodItemContext(eventAggregator)
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    ProductId = product.Id,
+            //    TaxId = product.TaxId,
+            //    UnitTypeId = product.UnitTypeId,
+            //    Barcode = product.Barcode,
+            //    Name = product.Name,
+            //    Tax = product.Tax,
+            //    UnitType = product.UnitType,
+            //    BuyPrice = product.BuyPrice
+            //};
 
-            if (productIndex.Item3)
-            {
-                ReceivedGoodItemList.RemoveAt(productIndex.Item2);
-                ReceivedGoodItemList.Insert(productIndex.Item2, _item);
-            }
-            else
-                ReceivedGoodItemList.Add(_item);
+            //if (productIndex.Item3)
+            //{
+            //    ReceivedGoodItemList.RemoveAt(productIndex.Item2);
+            //    ReceivedGoodItemList.Insert(productIndex.Item2, _item);
+            //}
+            //else
+            //    ReceivedGoodItemList.Add(_item);
         }
 
         private void CalculateTotal()
@@ -379,113 +379,113 @@ namespace LireOffice.ViewModels
         private void UpdateData(string parameter)
         {
             // Check if data is exist in database
-            var receivedGoodResult = context.GetReceivedGoodById(ReceivedGoodDTO.Id);
-            if (receivedGoodResult != null)
-            {
-                // update data from DTO to existed data using AutoMapper
-                receivedGoodResult = Mapper.Map(ReceivedGoodDTO, receivedGoodResult);
-                receivedGoodResult.Version += 1;
-                receivedGoodResult.UpdatedAt = DateTime.Now;
+            //var receivedGoodResult = context.GetReceivedGoodById(ReceivedGoodDTO.Id);
+            //if (receivedGoodResult != null)
+            //{
+            //    // update data from DTO to existed data using AutoMapper
+            //    receivedGoodResult = Mapper.Map(ReceivedGoodDTO, receivedGoodResult);
+            //    receivedGoodResult.Version += 1;
+            //    receivedGoodResult.UpdatedAt = DateTime.Now;
 
-                // check if item list exist in database. If exist, delete all data
-                var receivedGoodItemResult = context.GetReceivedGoodItem(receivedGoodResult.Id).ToList();
-                if (receivedGoodItemResult.Count > 0)
-                {
-                    foreach (var item in receivedGoodItemResult)
-                    {
-                        context.DeleteReceivedGoodItem(item.Id);
-                    }
-                }
+            //    // check if item list exist in database. If exist, delete all data
+            //    var receivedGoodItemResult = context.GetReceivedGoodItem(receivedGoodResult.Id).ToList();
+            //    if (receivedGoodItemResult.Count > 0)
+            //    {
+            //        foreach (var item in receivedGoodItemResult)
+            //        {
+            //            context.DeleteReceivedGoodItem(item.Id);
+            //        }
+            //    }
 
-                Collection<ReceivedGoodItem> receivedGoodItemList = new Collection<ReceivedGoodItem>();
+            //    Collection<ReceivedGoodItem> receivedGoodItemList = new Collection<ReceivedGoodItem>();
 
-                foreach (var item in ReceivedGoodItemList)
-                {
-                    ReceivedGoodItem receivedGoodItem = new ReceivedGoodItem
-                    {
-                        ReceivedGoodId = receivedGoodResult.Id,
-                        ProductId = item.ProductId,
-                        UnitTypeId = item.UnitTypeId,
-                        TaxId = item.TaxId,
-                        Barcode = item.Barcode,
-                        Name = item.Name,
-                        Quantity = item.Quantity,
-                        UnitType = item.UnitType,
-                        BuyPrice = item.BuyPrice,
-                        Discount = item.Discount,
-                        SubTotal = item.SubTotal,
-                        Tax = item.Tax, 
-                        TaxPrice = item.TaxPrice
-                    };
+            //    foreach (var item in ReceivedGoodItemList)
+            //    {
+            //        ReceivedGoodItem receivedGoodItem = new ReceivedGoodItem
+            //        {
+            //            ReceivedGoodId = receivedGoodResult.Id,
+            //            ProductId = item.ProductId,
+            //            UnitTypeId = item.UnitTypeId,
+            //            TaxId = item.TaxId,
+            //            Barcode = item.Barcode,
+            //            Name = item.Name,
+            //            Quantity = item.Quantity,
+            //            UnitType = item.UnitType,
+            //            BuyPrice = item.BuyPrice,
+            //            Discount = item.Discount,
+            //            SubTotal = item.SubTotal,
+            //            Tax = item.Tax, 
+            //            TaxPrice = item.TaxPrice
+            //        };
 
-                    receivedGoodItemList.Add(receivedGoodItem);
-                }
+            //        receivedGoodItemList.Add(receivedGoodItem);
+            //    }
 
-                if (string.Equals(parameter, "Save"))
-                {
-                    foreach (var item in ReceivedGoodItemList)
-                    {
-                        var inventoryItem = new InventoryDetail
-                        {
-                            ReceivedGoodId = receivedGoodResult.Id,
-                            ReceivedDate = receivedGoodResult.ReceivedDate,
-                            Quantity = item.Quantity,
-                            BuyPrice = item.BuyPrice,
-                            TaxInPrice = item.TaxPrice
-                        };
+            //    if (string.Equals(parameter, "Save"))
+            //    {
+            //        foreach (var item in ReceivedGoodItemList)
+            //        {
+            //            var inventoryItem = new InventoryDetail
+            //            {
+            //                ReceivedGoodId = receivedGoodResult.Id,
+            //                ReceivedDate = receivedGoodResult.ReceivedDate,
+            //                Quantity = item.Quantity,
+            //                BuyPrice = item.BuyPrice,
+            //                TaxInPrice = item.TaxPrice
+            //            };
                                                 
-                        var inventoryResult = context.GetStockByProductId(item.ProductId);
-                        if (inventoryResult == null)
-                        {
-                            Inventory inventory = new Inventory { ProductId = item.ProductId, UnitTypeId = item.UnitTypeId };
+            //            var inventoryResult = context.GetStockByProductId(item.ProductId);
+            //            if (inventoryResult == null)
+            //            {
+            //                Inventory inventory = new Inventory { ProductId = item.ProductId, UnitTypeId = item.UnitTypeId };
 
-                            inventory.Detail.Add(inventoryItem);
-                            context.AddStock(inventory);
+            //                inventory.Detail.Add(inventoryItem);
+            //                context.AddStock(inventory);
 
-                            var product = context.GetUnitTypeById(item.UnitTypeId);
-                            if (product != null)
-                            {
-                                product.Stock = 0;
-                                product.Stock += inventoryItem.Quantity;
-                                product.LastTaxInPrice = item.TaxPrice;
-                                product.LastBuyPrice = item.BuyPrice;
+            //                var product = context.GetUnitTypeById(item.UnitTypeId);
+            //                if (product != null)
+            //                {
+            //                    product.Stock = 0;
+            //                    product.Stock += inventoryItem.Quantity;
+            //                    product.LastTaxInPrice = item.TaxPrice;
+            //                    product.LastBuyPrice = item.BuyPrice;
 
-                                if (product.BuyPrice == 0)
-                                {
-                                    product.BuyPrice = product.LastBuyPrice;
-                                    product.TaxInPrice = product.LastTaxInPrice;
-                                }
+            //                    if (product.BuyPrice == 0)
+            //                    {
+            //                        product.BuyPrice = product.LastBuyPrice;
+            //                        product.TaxInPrice = product.LastTaxInPrice;
+            //                    }
 
-                                context.UpdateUnitType(product);
-                            }
-                        }
-                        else
-                        {
-                            inventoryResult.Detail.Add(inventoryItem);
-                            context.UpdateStock(inventoryResult);
+            //                    context.UpdateUnitType(product);
+            //                }
+            //            }
+            //            else
+            //            {
+            //                inventoryResult.Detail.Add(inventoryItem);
+            //                context.UpdateStock(inventoryResult);
 
-                            var product = context.GetUnitTypeById(item.UnitTypeId);
-                            if (product != null)
-                            {
-                                product.Stock = 0;
-                                foreach (var itemDetail in inventoryResult.Detail)
-                                {
-                                    product.Stock += itemDetail.Quantity;
-                                }
-                                product.BuyPrice = product.LastBuyPrice;
-                                product.LastTaxInPrice = item.TaxPrice;
-                                product.LastBuyPrice = ((decimal)item.Quantity * item.BuyPrice - item.Discount);
+            //                var product = context.GetUnitTypeById(item.UnitTypeId);
+            //                if (product != null)
+            //                {
+            //                    product.Stock = 0;
+            //                    foreach (var itemDetail in inventoryResult.Detail)
+            //                    {
+            //                        product.Stock += itemDetail.Quantity;
+            //                    }
+            //                    product.BuyPrice = product.LastBuyPrice;
+            //                    product.LastTaxInPrice = item.TaxPrice;
+            //                    product.LastBuyPrice = ((decimal)item.Quantity * item.BuyPrice - item.Discount);
 
-                                context.UpdateUnitType(product);
-                            }
-                        }                        
-                    }
-                    receivedGoodResult.IsPosted = true;
-                }
+            //                    context.UpdateUnitType(product);
+            //                }
+            //            }                        
+            //        }
+            //        receivedGoodResult.IsPosted = true;
+            //    }
 
-                context.UpdateReceivedGood(receivedGoodResult);
-                context.AddBulkReceivedGoodItem(receivedGoodItemList);
-            }
+            //    context.UpdateReceivedGood(receivedGoodResult);
+            //    context.AddBulkReceivedGoodItem(receivedGoodItemList);
+            //}
         }
         
         // --------------

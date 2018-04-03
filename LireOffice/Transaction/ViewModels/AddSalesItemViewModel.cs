@@ -128,54 +128,54 @@ namespace LireOffice.ViewModels
             }
         }
 
-        private async void LoadProductList()
+        private void LoadProductList()
         {
-            ProductList.Clear();
+            //ProductList.Clear();
 
-            var tempItemList = await Task.Run(() =>
-            {
-                Collection<ProductInfoContext> _productList = new Collection<ProductInfoContext>();
-                var productList = context.GetProducts().ToList();
-                if (productList.Count > 0)
-                {
-                    foreach (var product in productList)
-                    {
-                        var unitTypeList = context.GetUnitType(product.Id).ToList();
-                        if (unitTypeList.Count > 0)
-                        {
-                            foreach (var unitType in unitTypeList)
-                            {
-                                ProductInfoContext productInfo = new ProductInfoContext()
-                                {
-                                    Id = product.Id,
-                                    Name = product.Name,
-                                    Barcode = unitType.Barcode,
-                                    CategoryId = product.CategoryId,
-                                    VendorId = product.VendorId,
-                                    UnitTypeId = unitType.Id,
-                                    TaxId = unitType.TaxOutId,
-                                    UnitType = unitType.Name,
-                                    Quantity = unitType.Stock,
-                                    BuyPrice = unitType.BuyPrice,
-                                    SellPrice = unitType.SellPrice
-                                };
+            //var tempItemList = await Task.Run(() =>
+            //{
+            //    Collection<ProductInfoContext> _productList = new Collection<ProductInfoContext>();
+            //    var productList = context.GetProducts().ToList();
+            //    if (productList.Count > 0)
+            //    {
+            //        foreach (var product in productList)
+            //        {
+            //            var unitTypeList = context.GetUnitType(product.Id).ToList();
+            //            if (unitTypeList.Count > 0)
+            //            {
+            //                foreach (var unitType in unitTypeList)
+            //                {
+            //                    ProductInfoContext productInfo = new ProductInfoContext()
+            //                    {
+            //                        Id = product.Id,
+            //                        Name = product.Name,
+            //                        Barcode = unitType.Barcode,
+            //                        CategoryId = product.CategoryId,
+            //                        VendorId = product.VendorId,
+            //                        UnitTypeId = unitType.Id,
+            //                        TaxId = unitType.TaxOutId,
+            //                        UnitType = unitType.Name,
+            //                        Quantity = unitType.Stock,
+            //                        BuyPrice = unitType.BuyPrice,
+            //                        SellPrice = unitType.SellPrice
+            //                    };
 
-                                var tax = context.GetTaxById(unitType.TaxOutId);
-                                if (tax != null)
-                                {
-                                    productInfo.Tax = tax.Value;
-                                }
+            //                    var tax = context.GetTaxById(unitType.TaxOutId);
+            //                    if (tax != null)
+            //                    {
+            //                        productInfo.Tax = tax.Value;
+            //                    }
 
-                                _productList.Add(productInfo);
-                            }
-                        }
-                    }
-                }
+            //                    _productList.Add(productInfo);
+            //                }
+            //            }
+            //        }
+            //    }
 
-                return _productList;
-            });
+            //    return _productList;
+            //});
 
-            ProductList.AddRange(tempItemList);
+            //ProductList.AddRange(tempItemList);
         }
 
         private void SearchProduct()

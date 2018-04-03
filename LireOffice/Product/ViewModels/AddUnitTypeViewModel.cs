@@ -138,17 +138,17 @@ namespace LireOffice.ViewModels
 
         private void OnUpdate()
         {
-            if (SelectedUnitType != null)
-            {
-                var result = context.GetUnitTypeById(SelectedUnitType.Id);
-                if (result != null)
-                {
-                    result = Mapper.Map(UnitTypeDTO, result);
-                    result.Version += 1;
-                    result.UpdatedAt = DateTime.Now;
-                    context.UpdateUnitType(result);
-                }
-            }
+            //if (SelectedUnitType != null)
+            //{
+            //    var result = context.GetUnitTypeById(SelectedUnitType.Id);
+            //    if (result != null)
+            //    {
+            //        result = Mapper.Map(UnitTypeDTO, result);
+            //        result.Version += 1;
+            //        result.UpdatedAt = DateTime.Now;
+            //        context.UpdateUnitType(result);
+            //    }
+            //}
             ResetValue();
             LoadUnitTypeList(ProductId);
             eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView

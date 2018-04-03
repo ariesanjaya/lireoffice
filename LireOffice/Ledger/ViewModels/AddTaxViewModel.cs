@@ -80,17 +80,17 @@ namespace LireOffice.ViewModels
 
         private void OnUpdate()
         {
-            if (SelectedTax != null)
-            {
-                var result = context.GetTaxById(SelectedTax.Id);
-                if (result != null)
-                {
-                    result = Mapper.Map(TaxDTO, result);
-                    result.Version += 1;
-                    result.UpdatedAt = DateTime.Now;
-                    context.UpdateTax(result);
-                }
-            }
+            //if (SelectedTax != null)
+            //{
+            //    var result = context.GetTaxById(SelectedTax.Id);
+            //    if (result != null)
+            //    {
+            //        result = Mapper.Map(TaxDTO, result);
+            //        result.Version += 1;
+            //        result.UpdatedAt = DateTime.Now;
+            //        context.UpdateTax(result);
+            //    }
+            //}
             ResetValue();
             LoadTaxList();
         }

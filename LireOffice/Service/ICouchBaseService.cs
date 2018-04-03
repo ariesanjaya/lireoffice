@@ -10,7 +10,6 @@ namespace LireOffice.Service
     public interface ICouchBaseService
     {
         void DeleteDatabase();
-        void SeedData();
                 
         void AddData(Dictionary<string, object> dictionary, out string productId);
         void AddData(Dictionary<string, object> dictionary);
@@ -22,13 +21,9 @@ namespace LireOffice.Service
         List<Dictionary<string, object>> GetEmployeeProfile(bool isActive);
         List<Dictionary<string, object>> GetVendorProfile(bool isActive);
         List<Dictionary<string, object>> GetCustomerProfile(bool isActive);
-        List<Dictionary<string, object>> GetTaxes();
         List<Dictionary<string, object>> GetUnitTypes(string productId);
 
-        List<Dictionary<string, object>> GetProducts(string text, bool isActive);
-        List<Dictionary<string, object>> GetProductsByVendor(string text, string vendorId, bool isActive);
-        List<Dictionary<string, object>> GetProductsByCategory(string text, string categoryId, bool isActive);
-        List<Dictionary<string, object>> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive);
+        
 
         #region Customer Methods
         void AddCustomer(Models.Customer customer);
@@ -47,22 +42,32 @@ namespace LireOffice.Service
         #endregion
 
         #region Ledger Methods
-
+        void AddTax(Models.Tax tax);
+        void UpdateTax(Models.Tax tax);
+        List<Models.Tax> GetTaxes();
         #endregion
 
         #region Product Methods
         void AddProductCategory(Models.ProductCategory category);
         void UpdateProductCategory(Models.ProductCategory category);
         void DeleteProductCategory(string categoryId);
+        List<Models.ProductCategory> GetProductCategory();
         List<Models.ProductCategory> GetProductCategory(bool isActive);
 
-        void AddUnitType();
-        void UpdateUnitType();
-        void DeleteUnitType();
+        void AddBulkUnitType(List<Models.UnitType> unitTypes);
+        void UpdateBulkUnitType(List<Models.UnitType> unitTypes);
+
+        List<Models.UnitType> GetUnitTypes(string productId, bool isActive);
 
         void AddProduct(Models.Product product);
         void UpdateProduct(Models.Product product);
         void DeleteProduct(string productId);
+
+        List<Models.ProductInfoContext> GetProducts(string text, bool isActive);
+        List<Models.ProductInfoContext> GetProductsByVendor(string text, string vendorId, bool isActive);
+        List<Models.ProductInfoContext> GetProductsByCategory(string text, string categoryId, bool isActive);
+        List<Models.ProductInfoContext> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive);
+
         #endregion
 
         #region Transaction Methods

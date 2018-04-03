@@ -12,5 +12,6 @@ namespace LireOffice.Models
         public string ProductId { get; set; }
         public string UnitTypeId { get; set; }
         public string InvoiceId { get; set; }
+
     }
 }

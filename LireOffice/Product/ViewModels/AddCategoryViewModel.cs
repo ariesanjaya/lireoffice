@@ -23,7 +23,7 @@ namespace LireOffice.ViewModels
         private string categoryId;
         private string Instigator;
 
-        private const string documentType = "category-list";
+        private const string documentType = "productCategory-list";
 
         public AddCategoryViewModel(IEventAggregator ea, IRegionManager rm,ICouchBaseService service)
         {
@@ -32,15 +32,13 @@ namespace LireOffice.ViewModels
             databaseService = service;
 
             IsActive = true;
-            IsListActive = true;
-
+            
             Rules.Add(new DelegateRule<AddCategoryViewModel>(nameof(Name), 
                 "Nama harus diisi", 
                 x => !string.IsNullOrEmpty(Name)));
 
             CategoryList = new ObservableCollection<ProductCategoryContext>();
             
-            LoadCategoryList();
         }
 
         #region Binding Properties
@@ -59,15 +57,7 @@ namespace LireOffice.ViewModels
             get => _isActive;
             set => SetProperty(ref _isActive, value, nameof(IsActive));
         }
-
-        private bool _isListActive;
-
-        public bool IsListActive
-        {
-            get => _isListActive;
-            set => SetProperty(ref _isListActive, value, nameof(IsListActive));
-        }
-
+        
         private ObservableCollection<ProductCategoryContext> _categoryList;
 
         public ObservableCollection<ProductCategoryContext> CategoryList
@@ -106,14 +96,15 @@ namespace LireOffice.ViewModels
         {
             if (!string.IsNullOrEmpty(Name))
             {
-                var properties = new Dictionary<string, object>
+                var category = new ProductCategory
                 {
-                    ["type"] = documentType,
-                    ["name"] = Name,
-                    ["isActive"] = IsActive
+                    Id = $"{documentType}.{Guid.NewGuid()}",
+                    DocumentType = documentType,
+                    Name = Name,
+                    IsActive = IsActive
                 };
 
-                databaseService.AddData(properties);
+                databaseService.AddProductCategory(category);
             }
 
             ResetValue();
@@ -125,14 +116,15 @@ namespace LireOffice.ViewModels
         {
             if (SelectedCategory != null)
             {
-                var properties = new Dictionary<string, object>
+                var category = new ProductCategory
                 {
-                    ["type"] = documentType,
-                    ["name"] = Name,
-                    ["isActive"] = IsActive
+                    Id = $"{documentType}.{Guid.NewGuid()}",
+                    DocumentType = documentType,
+                    Name = Name,
+                    IsActive = IsActive
                 };
 
-                databaseService.UpdateData(properties, categoryId);                
+                databaseService.UpdateProductCategory(category);                
             }
 
             ResetValue();
@@ -180,7 +172,7 @@ namespace LireOffice.ViewModels
             var tempCategoryList = await Task.Run(() =>
             {
                 Collection<ProductCategoryContext> _categoryList = new Collection<ProductCategoryContext>();
-                var categoryList = databaseService.GetProductCategory(IsListActive);
+                var categoryList = databaseService.GetProductCategory();
                 if (categoryList.Count > 0)
                 {
                     foreach (var category in categoryList)
@@ -215,6 +207,8 @@ namespace LireOffice.ViewModels
             {
                 Instigator = instigator;
             }
+
+            LoadCategoryList();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

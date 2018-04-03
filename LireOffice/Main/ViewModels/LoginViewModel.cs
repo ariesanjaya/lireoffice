@@ -17,7 +17,6 @@ namespace LireOffice.ViewModels
             databaseService = service;
 
             //databaseService.DeleteDatabase();
-            //databaseService.SeedData();
         }
 
         public DelegateCommand<string> NavigateCommand => 

@@ -171,27 +171,27 @@ namespace LireOffice.ViewModels
         {
             var product = productIndex.Item1;
 
-            SalesItemContext salesItem = new SalesItemContext(eventAggregator)
-            {
-                Id = Guid.NewGuid().ToString(),
-                ProductId = product.Id,
-                TaxId = product.TaxId,
-                UnitTypeId = product.UnitTypeId,
-                Barcode = product.Barcode,
-                Name = product.Name,
-                UnitType = product.UnitType,
-                Quantity = product.Quantity,
-                SellPrice = product.SellPrice,
-                Tax = product.Tax
-            };
+            //SalesItemContext salesItem = new SalesItemContext(eventAggregator)
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    ProductId = product.Id,
+            //    TaxId = product.TaxId,
+            //    UnitTypeId = product.UnitTypeId,
+            //    Barcode = product.Barcode,
+            //    Name = product.Name,
+            //    UnitType = product.UnitType,
+            //    Quantity = product.Quantity,
+            //    SellPrice = product.SellPrice,
+            //    Tax = product.Tax
+            //};
 
-            if (productIndex.Item3)
-            {
-                SalesItemList.RemoveAt(productIndex.Item2);
-                SalesItemList.Insert(productIndex.Item2, salesItem);
-            }
-            else
-                SalesItemList.Add(salesItem);
+            //if (productIndex.Item3)
+            //{
+            //    SalesItemList.RemoveAt(productIndex.Item2);
+            //    SalesItemList.Insert(productIndex.Item2, salesItem);
+            //}
+            //else
+            //    SalesItemList.Add(salesItem);
         }
 
         private void CalculateTotal()

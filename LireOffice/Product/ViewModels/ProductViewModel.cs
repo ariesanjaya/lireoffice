@@ -40,7 +40,7 @@ namespace LireOffice.ViewModels
 
             LoadCategoryList();
             LoadVendorList();
-            LoadProductList();
+            //LoadProductList();
 
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Subscribe((string text) => LoadProductList());
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
@@ -189,7 +189,7 @@ namespace LireOffice.ViewModels
                     //    else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
                     //        //productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     //}
-                    productList = databaseService.GetProducts(text, IsActive);
+                    //productList = databaseService.GetProducts(text, IsActive);
                 }   
                 else
                 {

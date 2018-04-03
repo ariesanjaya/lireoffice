@@ -360,45 +360,48 @@ namespace LireOffice.ViewModels
         
         private void AddData()
         {
-            var productProperties = new Dictionary<string, object>
+            productId = $"{documentType}.{Guid.NewGuid()}";
+            var productProperties = new Models.Product
             {
-                ["type"] = documentType,
-                ["name"] = Name,
-                ["isActive"] = IsActive
+                Id = productId,
+                DocumentType = documentType,
+                Name = Name,
+                IsActive = IsActive
             };
 
             if (SelectedCategory != null)
-                productProperties["categoryId"] = SelectedCategory.Id;
+                productProperties.CategoryId = SelectedCategory.Id;
 
             if (SelectedVendor != null)
-                productProperties["vendorId"] = SelectedVendor.Id;
+                productProperties.VendorId = SelectedVendor.Id;
             
-            databaseService.AddData(productProperties, out productId);
+            databaseService.AddProduct(productProperties);
 
+            var unitTypes = new List<UnitType>();
             foreach (var item in UnitTypeList)
             {
-                var unitTypeProperties = new Dictionary<string, object>
+                var unitTypeProperties = new UnitType
                 {
-                    ["type"] = "unitType-list",
-                    ["productId"] = productId,
-                    ["name"] = item.Name,
-                    ["barcode"] = item.Barcode,
-                    ["taxInId"] = item.TaxInId,
-                    ["taxOutId"] = item.TaxOutId,
-                    ["lastBuyPrice"] = Convert.ToDouble(item.LastBuyPrice),
-                    ["buyPrice"] = item.BuyPrice,
-                    ["sellPrice"] = item.SellPrice,
-                    ["stock"] = item.Stock,
-                    ["isActive"] = item.IsActive
+                    Id = $"unitType-list.{Guid.NewGuid()}",
+                    DocumentType = "unitType-list",
+                    ProductId = productId,
+                    Name = item.Name,
+                    Barcode = item.Barcode,
+                    TaxInId = item.TaxInId,
+                    TaxOutId = item.TaxOutId,
+                    LastBuyPrice = item.LastBuyPrice,
+                    BuyPrice = item.BuyPrice,
+                    SellPrice = item.SellPrice,
+                    Stock = item.Stock,
+                    IsActive = item.IsActive
                 };
 
                 if (SelectedTaxIn != null)
-                    unitTypeProperties["taxInId"] = SelectedTaxIn.Id;
+                    unitTypeProperties.TaxInId = SelectedTaxIn.Id;
                 if (SelectedTaxOut != null)
-                    unitTypeProperties["taxOutId"] = SelectedTaxOut.Id;
-
-                databaseService.AddData(unitTypeProperties);
+                    unitTypeProperties.TaxOutId = SelectedTaxOut.Id;                                
             }
+            databaseService.AddBulkUnitType(unitTypes);
         }
 
         private void UpdateData()
@@ -574,10 +577,10 @@ namespace LireOffice.ViewModels
                     {
                         TaxContext tax = new TaxContext
                         {
-                            Id = item["id"] as string,
-                            Name = item["name"] as string,
-                            Value = Convert.ToDouble(item["value"]),
-                            Description = item["description"] as string
+                            Id = item.Id,
+                            Name = item.Name,
+                            Value = item.Value,
+                            Description = item.Description
                         };
 
                         _taxList.Add(tax);
@@ -619,8 +622,8 @@ namespace LireOffice.ViewModels
 
                 //LoadData(product.Id);
                 //LoadUnitTypeList(product.Id, product.UnitTypeId);
-                LoadCategoryList(product.CategoryId);
-                LoadVendorList(product.VendorId);
+                //LoadCategoryList(product.CategoryId);
+                //LoadVendorList(product.VendorId);
             }
             else
             {

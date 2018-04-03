@@ -58,7 +58,7 @@ namespace LireOffice.ViewModels
         public bool IsActive
         {
             get => _isActive;
-            set => SetProperty(ref _isActive, value,  nameof(IsActive));
+            set => SetProperty(ref _isActive, value, LoadCustomerList,  nameof(IsActive));
         }
         
         #endregion Binding Properties
