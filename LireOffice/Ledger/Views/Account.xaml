@@ -18,8 +18,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <syncfusion:ButtonAdv Label="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}" />
-                <syncfusion:ButtonAdv Margin="16 0 0 0" Label="Update" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}" />
+                <Button Content="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}" />
+                <Button Margin="16 0 0 0" Content="Ubah" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}" />
             </StackPanel>
 
             <Grid Grid.Row="1">
@@ -29,7 +29,7 @@
                     <ColumnDefinition Width="240" />
                 </Grid.ColumnDefinitions>
 
-                <syncfusion:SfDataGrid x:Name="dataGrid"
+                <!--<syncfusion:SfDataGrid x:Name="dataGrid"
                                        FontSize="14"
                                        AutoGenerateColumns="False"
                                        AllowResizingColumns="True"
@@ -44,8 +44,25 @@
                         <syncfusion:GridTextColumn HeaderText="Deskripsi" />
                         <syncfusion:GridCurrencyColumn HeaderText="Total" Width="180" />
                     </syncfusion:SfDataGrid.Columns>
-                </syncfusion:SfDataGrid>
+                </syncfusion:SfDataGrid>-->
 
+                <DataGrid x:Name="dataGrid"
+                          ItemsSource="{Binding AccountList}"
+                          SelectedItem="{Binding SelectedAccount}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="No. Referensi" Width="*"/>
+                        <DataGridTextColumn Header="Tgl" Width="*"/>
+                        <DataGridTextColumn Header="Keterangan" Width="*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Total}" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                
                 <ListView Grid.Column="2" ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}">
                     <ListView.ItemTemplate>
                         <DataTemplate>

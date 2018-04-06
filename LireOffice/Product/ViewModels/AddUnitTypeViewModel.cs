@@ -13,14 +13,17 @@ using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
-    public class AddUnitTypeViewModel : BindableBase, INavigationAware
+    using System.Collections.Generic;
+    using static LireOffice.Models.RuleCollection<AddUnitTypeViewModel>;
+    public class AddUnitTypeViewModel : NotifyDataErrorInfo<AddUnitTypeViewModel>, INavigationAware
     {
         private readonly IRegionManager regionManager;
         private readonly IEventAggregator eventAggregator;
         private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
 
-        private string ProductId;
+        private string productId;
+        private string unitTypeId;
 
         public AddUnitTypeViewModel(IRegionManager rm, IEventAggregator ea, ICouchBaseService service, IOfficeContext context)
         {
@@ -29,22 +32,15 @@ namespace LireOffice.ViewModels
             this.context = context;
             databaseService = service;
 
-            UnitTypeDTO = new UnitTypeContext();
+            Rules.Add(new DelegateRule<AddUnitTypeViewModel>(nameof(Name), "Nama harus diisi.", x => !string.IsNullOrEmpty(x.Name)));
+            Rules.Add(new DelegateRule<AddUnitTypeViewModel>(nameof(Barcode), "Kode barang harus diisi.", x => !string.IsNullOrEmpty(x.Barcode)));
 
             UnitTypeList = new ObservableCollection<UnitTypeContext>();
             TaxList = new ObservableCollection<TaxContext>();
         }
 
         #region Binding Properties
-
-        private UnitTypeContext _unitTypeDTO;
-
-        public UnitTypeContext UnitTypeDTO
-        {
-            get => _unitTypeDTO;
-            set => SetProperty(ref _unitTypeDTO, value, nameof(UnitTypeDTO));
-        }
-
+        
         private string _productName;
 
         public string ProductName
@@ -52,7 +48,55 @@ namespace LireOffice.ViewModels
             get => _productName;
             set => SetProperty(ref _productName, value, nameof(ProductName));
         }
+        
+        private string _name;
 
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                SetProperty(ref _name, value, nameof(Name));
+                OnPropertyChange(nameof(Name));
+            }
+        }
+
+        private string _barcode;
+
+        public string Barcode
+        {
+            get => _barcode;
+            set
+            {
+                SetProperty(ref _barcode, value, nameof(Barcode));
+                OnPropertyChange(nameof(Barcode));
+            }
+        }
+
+        private decimal _buyPrice;
+
+        public decimal BuyPrice
+        {
+            get => _buyPrice;
+            set => SetProperty(ref _buyPrice, value, nameof(BuyPrice));
+        }
+
+        private decimal _sellPrice;
+
+        public decimal SellPrice
+        {
+            get => _sellPrice;
+            set => SetProperty(ref _sellPrice, value, nameof(SellPrice));
+        }
+
+        private bool _isActive;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value, nameof(IsActive));
+        }
+        
         private ObservableCollection<TaxContext> _taxList;
 
         public ObservableCollection<TaxContext> TaxList
@@ -66,11 +110,7 @@ namespace LireOffice.ViewModels
         public TaxContext SelectedTaxIn
         {
             get => _selectedTaxIn;
-            set => SetProperty(ref _selectedTaxIn, value, () =>
-             {
-                 if (_selectedTaxIn != null && UnitTypeDTO != null)
-                     UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
-             }, nameof(SelectedTaxIn));
+            set => SetProperty(ref _selectedTaxIn, value, nameof(SelectedTaxIn));
         }
 
         private TaxContext _selectedTaxOut;
@@ -78,11 +118,7 @@ namespace LireOffice.ViewModels
         public TaxContext SelectedTaxOut
         {
             get => _selectedTaxOut;
-            set => SetProperty(ref _selectedTaxOut, value, () =>
-            {
-                if (_selectedTaxOut != null && UnitTypeDTO != null)
-                    UnitTypeDTO.TaxOutId = _selectedTaxOut.Id;
-            }, nameof(SelectedTaxOut));
+            set => SetProperty(ref _selectedTaxOut, value, nameof(SelectedTaxOut));
         }
 
         private ObservableCollection<UnitTypeContext> _unitTypeList;
@@ -103,6 +139,7 @@ namespace LireOffice.ViewModels
 
         #endregion Binding Properties
 
+        public DelegateCommand AddCommand => new DelegateCommand(OnAdd);
         public DelegateCommand UpdateCommand => new DelegateCommand(OnUpdate);
         public DelegateCommand CancelCommand => new DelegateCommand(OnCancel);
 
@@ -110,48 +147,89 @@ namespace LireOffice.ViewModels
 
         private void OnSelectionChanged()
         {
-            if (SelectedUnitType == null) return;
-            UnitTypeDTO = SelectedUnitType;
-            SelectedTaxIn = TaxList.SingleOrDefault(c => c.Id == UnitTypeDTO.TaxInId);
-            SelectedTaxOut = TaxList.SingleOrDefault(c => c.Id == UnitTypeDTO.TaxOutId);
+            if (SelectedUnitType != null)
+            {
+                unitTypeId = SelectedUnitType.Id;
+                Name = SelectedUnitType.Name;
+                Barcode = SelectedUnitType.Barcode;
+                BuyPrice = SelectedUnitType.BuyPrice;
+                SellPrice = SelectedUnitType.SellPrice;
+                IsActive = SelectedUnitType.IsActive;
+                SelectedTaxIn = TaxList.FirstOrDefault(c => c.Id == SelectedUnitType.TaxInId);
+                SelectedTaxOut = TaxList.FirstOrDefault(c => c.Id == SelectedUnitType.TaxOutId);
+            }            
         }
 
         private void ResetValue()
         {
-            UnitTypeDTO = new UnitTypeContext();
+            Name = string.Empty;
+            Barcode = string.Empty;
+            BuyPrice = 0;
+            SellPrice = 0;
+            IsActive = true;
             SelectedTaxIn = TaxList.ElementAtOrDefault(0);
             SelectedTaxOut = TaxList.ElementAtOrDefault(0);
         }
 
         private void OnAdd()
         {
-            UnitType unitType = Mapper.Map<UnitTypeContext, UnitType>(UnitTypeDTO);
-            unitType.ProductId = ProductId;
+            UnitType unitType = new UnitType
+            {
+                Id = $"unitType-list.{Guid.NewGuid()}",
+                DocumentType = "unitType-list",
+                ProductId = productId,
+                Name = Name,
+                Barcode = Barcode,
+                BuyPrice = BuyPrice,
+                SellPrice = SellPrice,
+                IsActive = IsActive
+            };
 
-            context.AddUnitType(unitType);
+            if (SelectedTaxIn != null)
+            {
+                unitType.TaxInId = SelectedTaxIn.Id;
+            }
+            if (SelectedTaxOut != null)
+            {
+                unitType.TaxOutId = SelectedTaxOut.Id;
+            }
+
+            databaseService.AddUnitType(unitType);
 
             ResetValue();
-            LoadUnitTypeList(ProductId);
-            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView
+            LoadUnitTypeList(productId);
+            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(productId); // Load UnitType List in AddProductView
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
         private void OnUpdate()
         {
-            //if (SelectedUnitType != null)
-            //{
-            //    var result = context.GetUnitTypeById(SelectedUnitType.Id);
-            //    if (result != null)
-            //    {
-            //        result = Mapper.Map(UnitTypeDTO, result);
-            //        result.Version += 1;
-            //        result.UpdatedAt = DateTime.Now;
-            //        context.UpdateUnitType(result);
-            //    }
-            //}
+            UnitType unitType = new UnitType
+            {
+                Id = SelectedUnitType.Id,
+                DocumentType = "unitType-list",
+                ProductId = productId,
+                Name = Name,
+                Barcode = Barcode,
+                BuyPrice = BuyPrice,
+                SellPrice = SellPrice,
+                IsActive = IsActive
+            };
+
+            if (SelectedTaxIn != null)
+            {
+                unitType.TaxInId = SelectedTaxIn.Id;
+            }
+            if (SelectedTaxOut != null)
+            {
+                unitType.TaxOutId = SelectedTaxOut.Id;
+            }
+
+            databaseService.UpdateUnitType(unitType);
+
             ResetValue();
-            LoadUnitTypeList(ProductId);
-            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(ProductId); // Load UnitType List in AddProductView
+            LoadUnitTypeList(productId);
+            eventAggregator.GetEvent<UnitTypeListUpdatedEvent>().Publish(productId); // Load UnitType List in AddProductView
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
@@ -171,13 +249,20 @@ namespace LireOffice.ViewModels
 
             var tempTaxList = await Task.Run(() =>
             {
-                Collection<TaxContext> _taxList = new Collection<TaxContext>();
-                var taxList = context.GetTaxes().ToList();
+                List<TaxContext> _taxList = new List<TaxContext>();
+                var taxList = databaseService.GetTaxes();
                 if (taxList.Count > 0)
                 {
                     foreach (var item in taxList)
                     {
-                        TaxContext tax = Mapper.Map<Tax, TaxContext>(item);
+                        TaxContext tax = new TaxContext
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Value = item.Value,
+                            Description = item.Description,
+                            IsActive = item.IsActive
+                        };
                         _taxList.Add(tax);
                     }
                 }
@@ -198,13 +283,26 @@ namespace LireOffice.ViewModels
             var tempUnitTypeList = await Task.Run(() =>
             {
                 Collection<UnitTypeContext> _unitTypeList = new Collection<UnitTypeContext>();
-                var unitTypeList = context.GetUnitType(productId).ToList();
+                var unitTypeList = databaseService.GetUnitTypes(productId);
                 if (unitTypeList.Count > 0)
                 {
-                    foreach (var unitType in unitTypeList)
+                    foreach (var item in unitTypeList)
                     {
-                        UnitTypeContext item = Mapper.Map<UnitType, UnitTypeContext>(unitType);
-                        _unitTypeList.Add(item);
+                        UnitTypeContext unitType = new UnitTypeContext
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Barcode = item.Barcode,
+                            ProductId = productId,
+                            LastBuyPrice = item.LastBuyPrice,
+                            BuyPrice = item.BuyPrice,
+                            SellPrice = item.SellPrice,
+                            IsActive = item.IsActive,
+                            TaxInId = item.TaxInId,
+                            TaxOutId = item.TaxOutId,
+                            Stock = item.Stock
+                        };
+                        _unitTypeList.Add(unitType);
                     }
                 }
 
@@ -217,10 +315,10 @@ namespace LireOffice.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["ProductId"] is string productId &&
-                parameter["ProductName"] is string productName)
+            if (parameter["productId"] is string productId &&
+                parameter["productName"] is string productName)
             {
-                ProductId = productId;
+                this.productId = productId;
                 LoadUnitTypeList(productId, productName);
                 LoadTaxList();
             }

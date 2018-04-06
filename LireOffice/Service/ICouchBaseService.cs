@@ -16,15 +16,11 @@ namespace LireOffice.Service
         void UpdateData(Dictionary<string, object> dictionary, string Id);
         void DeleteData(string Id);
         IDictionary<string, object> GetData(string Id);
-
-        //List<Dictionary<string, object>> GetProductCategory(bool isActive);
+        
         List<Dictionary<string, object>> GetEmployeeProfile(bool isActive);
         List<Dictionary<string, object>> GetVendorProfile(bool isActive);
         List<Dictionary<string, object>> GetCustomerProfile(bool isActive);
-        List<Dictionary<string, object>> GetUnitTypes(string productId);
-
         
-
         #region Customer Methods
         void AddCustomer(Models.Customer customer);
         void UpdateCustomer(Models.Customer customer);
@@ -45,6 +41,12 @@ namespace LireOffice.Service
         void AddTax(Models.Tax tax);
         void UpdateTax(Models.Tax tax);
         List<Models.Tax> GetTaxes();
+
+        void AddAccount(Dictionary<string, object> dictionary);
+        void UpdateAccount(Dictionary<string, object> dictionary);
+
+        List<Dictionary<string, object>> GetAccounts();
+
         #endregion
 
         #region Product Methods
@@ -54,11 +56,14 @@ namespace LireOffice.Service
         List<Models.ProductCategory> GetProductCategory();
         List<Models.ProductCategory> GetProductCategory(bool isActive);
 
-        void AddBulkUnitType(List<Models.UnitType> unitTypes);
-        void UpdateBulkUnitType(List<Models.UnitType> unitTypes);
+        void AddUnitType(Models.UnitType unitType);
+        void AddBulkUnitType(List<Models.UnitTypeContext> unitTypes);
+        void UpdateUnitType(Models.UnitType unitType);
+        void UpdateBulkUnitType(List<Models.UnitTypeContext> unitTypes);
 
+        List<Models.UnitType> GetUnitTypes(string productId);
         List<Models.UnitType> GetUnitTypes(string productId, bool isActive);
-
+        
         void AddProduct(Models.Product product);
         void UpdateProduct(Models.Product product);
         void DeleteProduct(string productId);
@@ -67,7 +72,7 @@ namespace LireOffice.Service
         List<Models.ProductInfoContext> GetProductsByVendor(string text, string vendorId, bool isActive);
         List<Models.ProductInfoContext> GetProductsByCategory(string text, string categoryId, bool isActive);
         List<Models.ProductInfoContext> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive);
-
+        Models.Product GetProduct(string productId);
         #endregion
 
         #region Transaction Methods

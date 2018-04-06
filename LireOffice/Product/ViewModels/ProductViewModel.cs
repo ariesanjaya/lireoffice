@@ -40,7 +40,7 @@ namespace LireOffice.ViewModels
 
             LoadCategoryList();
             LoadVendorList();
-            //LoadProductList();
+            LoadProductList();
 
             eventAggregator.GetEvent<ProductListUpdatedEvent>().Subscribe((string text) => LoadProductList());
             eventAggregator.GetEvent<CategoryListUpdatedEvent>().Subscribe((string text) => LoadCategoryList());
@@ -172,31 +172,31 @@ namespace LireOffice.ViewModels
             var tempProductList = await Task.Run(() =>
             {
                 List<Dictionary<string, object>> productList = new List<Dictionary<string, object>>();
-                Collection<ProductInfoContext> productInfoList = new Collection<ProductInfoContext>();
+                List<ProductInfoContext> productInfoList = new List<ProductInfoContext>();
                 if (string.IsNullOrEmpty(text))
                 {
-                    //if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
-                    //{
-                    //    if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
-                    //        productList = databaseService.GetProducts(IsActive);
-                    //    else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
-                    //        //productList = context.GetProductsByVendor(SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
-                    //}      
-                    //else if(SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
-                    //{
-                    //    if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua")) { }
-                    //    //productList = context.GetProductsByCategory(SelectedCategory.Id, IsActive).OrderBy(x => x.Name).ToList();
-                    //    else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
-                    //        //productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
-                    //}
-                    //productList = databaseService.GetProducts(text, IsActive);
+                    if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                            productInfoList = databaseService.GetProducts(text, IsActive);
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
+                        //productList = context.GetProductsByVendor(SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
+                    }
+                    else if (SelectedCategory != null || !string.Equals(SelectedCategory.Name, "Semua"))
+                    {
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua")) { }
+                        //productList = context.GetProductsByCategory(SelectedCategory.Id, IsActive).OrderBy(x => x.Name).ToList();
+                        else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
+                        //productList = context.GetProductsByCategoryVendor(SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
+                    }
+                    
                 }   
                 else
                 {
                     if (SelectedCategory == null || string.Equals(SelectedCategory.Name, "Semua"))
                     {
-                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua")) { }
-                        //productList = context.GetProducts(text, IsActive).OrderBy(x => x.Name).ToList();
+                        if (SelectedVendor == null || string.Equals(SelectedVendor.Name, "Semua"))
+                        productInfoList = databaseService.GetProducts(text, IsActive);
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
                             //productList = context.GetProductsByVendor(text, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
                     }
@@ -206,38 +206,6 @@ namespace LireOffice.ViewModels
                         //productList = context.GetProductsByCategory(text, SelectedCategory.Id, IsActive).OrderBy(x => x.Name).ToList();
                         else if (SelectedVendor != null || !string.Equals(SelectedVendor.Name, "Semua")) { }
                             //productList = context.GetProductsByCategoryVendor(text, SelectedCategory.Id, SelectedVendor.Id, IsActive).OrderBy(x => x.Name).ToList();
-                    }
-                }
-                    
-                if (productList.Count > 0)
-                {
-                    foreach (var product in productList)
-                    {
-                        var unitTypeList = databaseService.GetUnitTypes(product["id"] as string);
-                        if (unitTypeList.Count > 0)
-                        {
-                            foreach (var unitType in unitTypeList)
-                            {
-                                ProductInfoContext productInfo = new ProductInfoContext
-                                {
-                                    Id = product["id"] as string,
-                                    Name = product["name"] as string,
-                                    Barcode = unitType["barcode"] as string,
-                                    CategoryId = product["categoryId"] as string,
-                                    VendorId = product["vendorId"] as string,
-                                    UnitTypeId = unitType["id"] as string,
-                                    UnitType = unitType["name"] as string,
-                                    Quantity = Convert.ToDouble(unitType["stock"]),
-                                    BuyPrice = Convert.ToDecimal(unitType["buyPrice"]),
-                                    SellPrice = Convert.ToDecimal(unitType["sellPrice"])
-                                };
-
-                                productInfo.BuySubTotal = (decimal)productInfo.Quantity * productInfo.BuyPrice;
-                                productInfo.SellSubTotal = (decimal)productInfo.Quantity * productInfo.SellPrice;
-
-                                productInfoList.Add(productInfo);
-                            }
-                        }
                     }
                 }
 

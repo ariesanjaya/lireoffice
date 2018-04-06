@@ -27,6 +27,7 @@ namespace LireOffice.ViewModels
         private readonly ICouchBaseService databaseService;
                 
         private string Instigator;
+        private int unitTypeIndex;
 
         private const string documentType = "product-list";
 
@@ -44,10 +45,8 @@ namespace LireOffice.ViewModels
                 "barcode harus diisi.",
                 x => !string.IsNullOrEmpty(x.Barcode)));
 
-            UnitTypeDTO = new UnitTypeContext { Name = "Pcs" };
-            UnitTypeList = new ObservableCollection<UnitTypeContext> { UnitTypeDTO };
-            SelectedUnitType = UnitTypeDTO;
-            Barcode = string.Empty;
+            UnitTypeList = new ObservableCollection<UnitTypeContext> { new UnitTypeContext { Name = "Pcs"} };
+            SelectedUnitType = UnitTypeList.ElementAtOrDefault(0);
 
             ImageSource = new BitmapImage(new Uri(@"../../Assets/Images/profile_icon.png", UriKind.RelativeOrAbsolute));
             IsActive = true;
@@ -89,12 +88,14 @@ namespace LireOffice.ViewModels
             get => _barcode;
             set
             {
-                SetProperty(ref _barcode, value, nameof(Barcode));
-                OnPropertyChange(nameof(Barcode));
-                if (!string.IsNullOrEmpty(_barcode))
+                SetProperty(ref _barcode, value,() => 
                 {
-                    UnitTypeDTO.Barcode = Barcode;
-                }
+                    if (!string.IsNullOrEmpty(Barcode))
+                    {
+                        UnitTypeList.ElementAt(unitTypeIndex).Barcode = Barcode;
+                    }
+                }, nameof(Barcode));
+                OnPropertyChange(nameof(Barcode));
             }
         }
 
@@ -113,21 +114,42 @@ namespace LireOffice.ViewModels
             get => _isUpdated;
             set => SetProperty(ref _isUpdated, value, nameof(IsUpdated));
         }
-        
-        private UnitTypeContext _unitTypeDTO;
 
-        public UnitTypeContext UnitTypeDTO
+        private decimal _lastBuyPrice;
+
+        public decimal LastBuyPrice
         {
-            get => _unitTypeDTO;
-            set => SetProperty(ref _unitTypeDTO, value, () => 
-            {
-                if (SelectedUnitType != null)
-                {
-                    SelectedUnitType = _unitTypeDTO;
-                }
-            }, nameof(UnitTypeDTO));
+            get => _lastBuyPrice;
+            set => SetProperty(ref _lastBuyPrice, value, nameof(LastBuyPrice));
         }
 
+        private decimal _sellPrice;
+
+        public decimal SellPrice
+        {
+            get => _sellPrice;
+            set => SetProperty(ref _sellPrice, value, ()=> 
+            {
+                UnitTypeList.ElementAt(unitTypeIndex).SellPrice = SellPrice;
+            }, nameof(SellPrice));
+        }
+        
+        private decimal _buyPrice;
+
+        public decimal BuyPrice
+        {
+            get => _buyPrice;
+            set => SetProperty(ref _buyPrice, value, nameof(BuyPrice));
+        }
+
+        private double _stock;
+
+        public double Stock
+        {
+            get => _stock;
+            set => SetProperty(ref _stock, value, nameof(Stock));
+        }
+        
         private ObservableCollection<UnitTypeContext> _unitTypeList;
 
         public ObservableCollection<UnitTypeContext> UnitTypeList
@@ -141,9 +163,18 @@ namespace LireOffice.ViewModels
         public UnitTypeContext SelectedUnitType
         {
             get => _selectedUnitType;
-            set => SetProperty(ref _selectedUnitType, value, 
-                () => { if (UnitTypeDTO != null) UnitTypeDTO = _selectedUnitType; }, 
-                nameof(SelectedUnitType));
+            set => SetProperty(ref _selectedUnitType, value,() => 
+            {
+                unitTypeIndex = UnitTypeList.IndexOf(SelectedUnitType);
+                if (unitTypeIndex >= 0)
+                {
+                    Barcode = UnitTypeList.ElementAt(unitTypeIndex).Barcode;
+                    LastBuyPrice = UnitTypeList.ElementAt(unitTypeIndex).LastBuyPrice;
+                    BuyPrice = UnitTypeList.ElementAt(unitTypeIndex).BuyPrice;
+                    SellPrice = UnitTypeList.ElementAt(unitTypeIndex).SellPrice;
+                    Stock = UnitTypeList.ElementAt(unitTypeIndex).Stock;
+                }                
+            }, nameof(SelectedUnitType));
         }
         
         private ObservableCollection<ProductCategoryContext> _categoryList;
@@ -193,9 +224,9 @@ namespace LireOffice.ViewModels
             get => _selectedTaxIn;
             set => SetProperty(ref _selectedTaxIn, value, () =>
              {
-                 if (_selectedTaxIn != null)
+                 if (SelectedTaxIn != null)
                  {
-                     UnitTypeDTO.TaxInId = _selectedTaxIn.Id;
+                     UnitTypeList.ElementAt(unitTypeIndex).TaxInId = SelectedTaxIn.Id;
                  }
              }, nameof(SelectedTaxIn));
         }
@@ -207,9 +238,9 @@ namespace LireOffice.ViewModels
             get => _selectedTaxOut;
             set => SetProperty(ref _selectedTaxOut, value, () =>
              {
-                 if (_selectedTaxOut != null)
+                 if (SelectedTaxOut != null)
                  {
-                     UnitTypeDTO.TaxOutId = _selectedTaxOut.Id;
+                     UnitTypeList.ElementAt(unitTypeIndex).TaxOutId = SelectedTaxOut.Id;
                  }
              }, nameof(SelectedTaxOut));
         }
@@ -245,7 +276,7 @@ namespace LireOffice.ViewModels
                 UpdateData();
 
             OnCancel();
-            //eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
+            eventAggregator.GetEvent<ProductListUpdatedEvent>().Publish("Load Product List");
         }
 
         private void OnCancel()
@@ -278,8 +309,8 @@ namespace LireOffice.ViewModels
 
             var parameter = new NavigationParameters
             {
-                { "ProductId", productId },
-                { "ProductName", Name }
+                { "productId", productId },
+                { "productName", Name }
             };
 
             regionManager.RequestNavigate("Option02Region", "AddUnitType", parameter);
@@ -377,82 +408,44 @@ namespace LireOffice.ViewModels
             
             databaseService.AddProduct(productProperties);
 
-            var unitTypes = new List<UnitType>();
             foreach (var item in UnitTypeList)
             {
-                var unitTypeProperties = new UnitType
-                {
-                    Id = $"unitType-list.{Guid.NewGuid()}",
-                    DocumentType = "unitType-list",
-                    ProductId = productId,
-                    Name = item.Name,
-                    Barcode = item.Barcode,
-                    TaxInId = item.TaxInId,
-                    TaxOutId = item.TaxOutId,
-                    LastBuyPrice = item.LastBuyPrice,
-                    BuyPrice = item.BuyPrice,
-                    SellPrice = item.SellPrice,
-                    Stock = item.Stock,
-                    IsActive = item.IsActive
-                };
-
-                if (SelectedTaxIn != null)
-                    unitTypeProperties.TaxInId = SelectedTaxIn.Id;
-                if (SelectedTaxOut != null)
-                    unitTypeProperties.TaxOutId = SelectedTaxOut.Id;                                
-            }
-            databaseService.AddBulkUnitType(unitTypes);
+                item.ProductId = productId;
+            }            
+            databaseService.AddBulkUnitType(new List<UnitTypeContext>(UnitTypeList));
         }
 
         private void UpdateData()
         {
-            //var productResult = context.GetProductById(ProductDTO.Id);
-            //if (productResult != null)
-            //{
-            //    productResult = Mapper.Map(ProductDTO, productResult);
-            //    productResult.Version += 1;
-            //    productResult.UpdatedAt = DateTime.Now;
+            var productResult = databaseService.GetProduct(productId);
+            if (productResult != null)
+            {
+                productResult.Name = Name;
+                productResult.IsActive = IsActive;
 
-            //    if (SelectedCategory != null)
-            //        productResult.CategoryId = SelectedCategory.Id;
+                if (SelectedCategory != null)
+                    productResult.CategoryId = SelectedCategory.Id;
 
-            //    if (SelectedVendor != null)
-            //        productResult.VendorId = SelectedVendor.Id;
+                if (SelectedVendor != null)
+                    productResult.VendorId = SelectedVendor.Id;
 
-            //    context.UpdateProduct(productResult);
-            //}
+                databaseService.UpdateProduct(productResult);
+            }
 
-            //if (UnitTypeList.Count > 0)
-            //{
-            //    foreach (var unitType in UnitTypeList)
-            //    {
-            //        var unitTypeResult = context.GetUnitTypeById(unitType.Id);
-            //        if (unitTypeResult != null)
-            //        {
-            //            unitTypeResult = Mapper.Map(unitType, unitTypeResult);
-            //            unitTypeResult.Version += 1;
-            //            unitTypeResult.UpdatedAt = DateTime.Now;
-
-            //            var taxOut = context.GetTaxById(unitType.TaxOutId);
-            //            if (taxOut != null)
-            //            {
-            //                unitTypeResult.TaxOutPrice = unitType.SellPrice * (decimal)taxOut.Value / 100;
-            //            }
-            //            context.UpdateUnitType(unitTypeResult);
-            //        }
-            //    }
-            //}
+            if (UnitTypeList.Count > 0)
+            {
+                databaseService.UpdateBulkUnitType(new List<UnitTypeContext>(UnitTypeList));
+            }
         }
 
         private void LoadData(string productId)
         {
-            var product = databaseService.GetData(productId);
+            var product = databaseService.GetProduct(productId);
             if (product != null)
             {
-                Name = product["name"] as string;
-                IsActive = Convert.ToBoolean(product["isActive"]);
+                Name = product.Name;
+                IsActive = product.IsActive;
             }
-
         }
 
         private async void LoadUnitTypeList(string productId, string unitTypeId = null)
@@ -463,22 +456,22 @@ namespace LireOffice.ViewModels
             var tempUnitTypeList = await Task.Run(() =>
             {
                 Collection<UnitTypeContext> _unitTypeList = new Collection<UnitTypeContext>();
-                var unitTypeList = databaseService.GetUnitTypes(productId);
+                var unitTypeList = databaseService.GetUnitTypes(productId, true);
                 if (unitTypeList.Count > 0)
                 {
                     foreach (var item in unitTypeList)
                     {
                         UnitTypeContext unitType = new UnitTypeContext
                         {
-                            Id = item["id"] as string,
-                            ProductId = item["productId"] as string,
-                            Name = item["name"] as string,
-                            Barcode = item["name"] as string,
-                            LastBuyPrice = Convert.ToDecimal(item["lastBuyPrice"]),
-                            BuyPrice = Convert.ToDecimal(item["buyPrice"]),
-                            SellPrice = Convert.ToDecimal(item["sellPrice"]),
-                            TaxInId = item["taxInId"] as string,
-                            TaxOutId = item["taxOutId"] as string
+                            Id = item.Id,
+                            ProductId = productId,
+                            Name = item.Name,
+                            Barcode = item.Barcode,
+                            LastBuyPrice = item.LastBuyPrice,
+                            BuyPrice = item.BuyPrice,
+                            SellPrice = item.SellPrice,
+                            TaxInId = item.TaxInId,
+                            TaxOutId = item.TaxOutId
                         };
                         
                         _unitTypeList.Add(unitType);
@@ -491,10 +484,13 @@ namespace LireOffice.ViewModels
             UnitTypeList.AddRange(tempUnitTypeList);
 
             if (unitTypeId != null)
-                SelectedUnitType = UnitTypeList.SingleOrDefault(c => c.Id == unitTypeId);
+            {
+                SelectedUnitType = UnitTypeList.SingleOrDefault(c => c.Id == unitTypeId);                
+            }
             else
+            {
                 SelectedUnitType = UnitTypeList.ElementAtOrDefault(0);
-
+            }
             LoadTaxList(SelectedUnitType.TaxInId, SelectedUnitType.TaxOutId);
         }
 
@@ -620,10 +616,10 @@ namespace LireOffice.ViewModels
 
                 IsUpdated = true;
 
-                //LoadData(product.Id);
-                //LoadUnitTypeList(product.Id, product.UnitTypeId);
-                //LoadCategoryList(product.CategoryId);
-                //LoadVendorList(product.VendorId);
+                LoadData(product.Id);
+                LoadUnitTypeList(product.Id, product.UnitTypeId);
+                LoadCategoryList(product.CategoryId);
+                LoadVendorList(product.VendorId);
             }
             else
             {

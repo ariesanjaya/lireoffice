@@ -17,23 +17,16 @@ namespace LireOffice.ViewModels
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
         private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
         private bool IsUpdated = false;
 
-        public AddAccountViewModel(IEventAggregator ea, IRegionManager rm, IOfficeContext context)
+        public AddAccountViewModel(IEventAggregator ea, IRegionManager rm, ICouchBaseService service, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.context = context;
-
-            AccountDTO = new AccountContext();
-            CategoryList = new List<string>
-            {
-                "Kas",
-                "Pemasukan",
-                "Pengeluaran"
-            };
-            SelectedCategory = CategoryList.FirstOrDefault();
+            databaseService = service;
         }
 
         #region Binding Properties

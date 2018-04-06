@@ -111,13 +111,13 @@
                         <TextBox Text="{Binding Barcode, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" VerticalContentAlignment="Center"/>
 
                         <Label Grid.Row="2" Content="Harga Beli" FontSize="14" VerticalAlignment="Center" />
-                        <control:CurrencyTextBox IsTabStop="False" Grid.Column="1" Grid.Row="2" Number="{Binding UnitTypeDTO.LastBuyPrice}" IsReadOnly="True"/>
+                        <control:CurrencyTextBox IsTabStop="False" Grid.Column="1" Grid.Row="2" Number="{Binding LastBuyPrice}" IsReadOnly="True"/>
 
                         <Label Grid.Row="4" Content="Harga Jual" FontSize="14" VerticalAlignment="Center" />
-                        <control:CurrencyTextBox Grid.Column="1" Grid.Row="4" Number="{Binding UnitTypeDTO.SellPrice}"/>
+                        <control:CurrencyTextBox Grid.Column="1" Grid.Row="4" Number="{Binding SellPrice}"/>
 
                         <Label Grid.Row="6" Content="HPP" FontSize="14" VerticalAlignment="Center" />
-                        <control:CurrencyTextBox IsTabStop="False" Grid.Column="1" Grid.Row="6" Number="{Binding UnitTypeDTO.BuyPrice}" IsReadOnly="True"/>
+                        <control:CurrencyTextBox IsTabStop="False" Grid.Column="1" Grid.Row="6" Number="{Binding BuyPrice}" IsReadOnly="True"/>
 
                         <Label Grid.Row="2" Grid.Column="3" Content="Pjk Masukan" FontSize="14" VerticalAlignment="Center" />
                         <ComboBox IsTabStop="False" FontSize="14" Grid.Column="4" Grid.Row="2" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxIn}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
@@ -126,7 +126,7 @@
                         <ComboBox IsTabStop="False" FontSize="14" Grid.Column="4" Grid.Row="4" Width="120" ItemsSource="{Binding TaxList}" SelectedItem="{Binding SelectedTaxOut}" DisplayMemberPath="Name" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
 
                         <Label Grid.Row="8" Grid.Column="3" Content="Jumlah Stok" FontSize="14" VerticalAlignment="Center" />
-                        <control:CurrencyTextBox Grid.Row="8" Grid.Column="4" Width="80" StringFormat="n2" Number="{Binding UnitTypeDTO.Stock}" VerticalAlignment="Stretch" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+                        <control:CurrencyTextBox Grid.Row="8" Grid.Column="4" Width="80" StringFormat="n2" Number="{Binding Stock}" VerticalAlignment="Stretch" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
                     </Grid>
                     <!--<TabControl Grid.Row="8" Grid.ColumnSpan="5" IsTabStop="False">
                         <TabItem Header="Detail" Width="80" FontSize="14" IsTabStop="False">

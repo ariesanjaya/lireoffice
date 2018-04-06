@@ -20,13 +20,15 @@ namespace LireOffice.ViewModels
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
         private readonly IOfficeContext context;
+        private readonly ICouchBaseService databaseService;
 
-        public AccountViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, IOfficeContext context)
+        public AccountViewModel(IEventAggregator ea, IRegionManager rm, IUnityContainer container, ICouchBaseService service, IOfficeContext context)
         {
             eventAggregator = ea;
             regionManager = rm;
             this.container = container;
             this.context = context;
+            databaseService = service;
 
             AccountList = new ObservableCollection<AccountInfoContext>();
 

@@ -28,35 +28,137 @@ namespace LireOffice.Service
                     ValueIndexItem.Expression(Expression.Property("name")),
                     ValueIndexItem.Expression(Expression.Property("isActive"))));
 
-                #region Seed Data
-                Models.Tax tax = new Models.Tax
-                {
-                    Id = $"tax-list.{Guid.NewGuid()}",
-                    DocumentType = "tax-list",
-                    Name = "Non Pjk",
-                    Value = 0,
-                    Description = "Non Pjk",
-                    IsActive = true
-                };
-                AddTax(tax);
-
-                tax = new Models.Tax
-                {
-                    Id = $"tax-list.{Guid.NewGuid()}",
-                    DocumentType = "tax-list",
-                    Name = "PPn 10%",
-                    Value = 10,
-                    Description = "PPn 10%",
-                    IsActive = true
-                };
-                AddTax(tax);
-                #endregion
+                SeedTaxData();
+                SeedAccountData();
             }
             else
                 database = new Database("office", new DatabaseConfiguration
                 {
                     Directory = Environment.CurrentDirectory
                 });
+            
+        }
+
+        private void SeedTaxData()
+        {
+            #region Seed Data
+            Models.Tax tax = new Models.Tax
+            {
+                Id = $"tax-list.{Guid.NewGuid()}",
+                DocumentType = "tax-list",
+                Name = "Non Pjk",
+                Value = 0,
+                Description = "Non Pjk",
+                IsActive = true
+            };
+            AddTax(tax);
+
+            tax = new Models.Tax
+            {
+                Id = $"tax-list.{Guid.NewGuid()}",
+                DocumentType = "tax-list",
+                Name = "PPn 10%",
+                Value = 10,
+                Description = "PPn 10%",
+                IsActive = true
+            };
+            AddTax(tax);
+            #endregion
+        }
+
+        private void SeedAccountData()
+        {
+            const string documentType = "account-list";
+
+            Dictionary<string, object> dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Kas",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Bank",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Pendapatan Usaha",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Pendapatan Lain",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Biaya Usaha",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Pengeluaran Operasional",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Pengeluaran Non Usaha",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Pengeluaran Lain",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Persediaan",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Aset Tetap",
+            };
+
+            AddData(dictionary);            
         }
 
         public void DeleteDatabase()
@@ -213,37 +315,7 @@ namespace LireOffice.Service
 
         //    return GetData(query);            
         //}
-
-        public List<Dictionary<string, object>> GetUnitTypes(string productId)
-        {
-            //var view = database.GetView("taxlistByName");
-            //view.SetMap((doc, emit) =>
-            //{
-            //    if (!doc.ContainsKey("type") || doc["type"] as string != "unitType-list" || !doc.ContainsKey("name") 
-            //    || !doc.ContainsKey("productId") || !doc.ContainsKey("isActive"))
-            //        return;
-
-            //    Dictionary<string, object> key = new Dictionary<string, object>
-            //    {
-            //        ["productId"] = doc["productId"],
-            //        ["isActive"] = doc["isActive"]
-            //    };
-
-            //    emit(key, null);
-            //}, "2.0");
-
-            //var filterKey = new List<object>
-            //{
-            //    productId, true
-            //};
-
-            //var query = view.CreateQuery();
-            ////query.PrefixMatchLevel = 1;
-
-            //return GetData(query);
-            return null;
-        }
-
+        
         //public List<Dictionary<string, object>> GetProducts(string filterText, bool isActive)
         //{
         //    //var queryTest = QueryBuilder.Select(
@@ -620,6 +692,35 @@ namespace LireOffice.Service
             }
             return list;
         }
+
+        public void AddAccount(Dictionary<string, object> dictionary)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateAccount(Dictionary<string, object> dictionary)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public List<Dictionary<string, object>> GetAccounts()
+        {
+            return null;
+        }
         #endregion
 
         #region Product Methods
@@ -717,7 +818,32 @@ namespace LireOffice.Service
             return productCategory;
         }
 
-        public void AddBulkUnitType(List<Models.UnitType> unitTypes)
+        public void AddUnitType(Models.UnitType unitType)
+        {
+            try
+            {
+                var doc = new MutableDocument(unitType.Id);
+                doc.SetString("type", unitType.DocumentType);
+                doc.SetString("productId", unitType.ProductId);
+                doc.SetString("name", unitType.Name);
+                doc.SetString("barcode", unitType.Barcode);
+                doc.SetString("taxInId", unitType.TaxInId);
+                doc.SetString("taxOutId", unitType.TaxOutId);
+                doc.SetDouble("lastBuyPrice", Convert.ToDouble(unitType.LastBuyPrice));
+                doc.SetDouble("buyPrice", Convert.ToDouble(unitType.BuyPrice));
+                doc.SetDouble("sellPrice", Convert.ToDouble(unitType.SellPrice));
+                doc.SetDouble("stock", unitType.Stock);
+                doc.SetBoolean("isActive", unitType.IsActive);
+
+                database.Save(doc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void AddBulkUnitType(List<Models.UnitTypeContext> unitTypes)
         {
             try
             {
@@ -725,8 +851,8 @@ namespace LireOffice.Service
                 {
                     foreach (var unitType in unitTypes)
                     {
-                        var doc = new MutableDocument(unitType.Id);
-                        doc.SetString("type", unitType.DocumentType);
+                        var doc = new MutableDocument($"unitType-list.{Guid.NewGuid()}");
+                        doc.SetString("type", "unitType-list");
                         doc.SetString("productId", unitType.ProductId);
                         doc.SetString("name", unitType.Name);
                         doc.SetString("barcode", unitType.Barcode);
@@ -748,7 +874,35 @@ namespace LireOffice.Service
             }
         }
 
-        public void UpdateBulkUnitType(List<Models.UnitType> unitTypes)
+        public void UpdateUnitType(Models.UnitType unitType)
+        {
+            try
+            {
+                var _doc = database.GetDocument(unitType.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("productId", unitType.ProductId);
+                    doc.SetString("name", unitType.Name);
+                    doc.SetString("barcode", unitType.Barcode);
+                    doc.SetString("taxInId", unitType.TaxInId);
+                    doc.SetString("taxOutId", unitType.TaxOutId);
+                    doc.SetDouble("lastBuyPrice", Convert.ToDouble(unitType.LastBuyPrice));
+                    doc.SetDouble("buyPrice", Convert.ToDouble(unitType.BuyPrice));
+                    doc.SetDouble("sellPrice", Convert.ToDouble(unitType.SellPrice));
+                    doc.SetDouble("stock", unitType.Stock);
+                    doc.SetBoolean("isActive", unitType.IsActive);
+
+                    database.Save(doc);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpdateBulkUnitType(List<Models.UnitTypeContext> unitTypes)
         {
             try
             {
@@ -782,8 +936,69 @@ namespace LireOffice.Service
             }
         }
 
+        public List<Models.UnitType> GetUnitTypes(string productId)
+        {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID), SelectResult.Property("type"),
+                SelectResult.Property("name"), SelectResult.Property("barcode"),
+                SelectResult.Property("taxInId"), SelectResult.Property("taxOutId"),
+                SelectResult.Property("lastBuyPrice"), SelectResult.Property("buyPrice"),
+                SelectResult.Property("sellPrice"), SelectResult.Property("stock"),
+                SelectResult.Property("isActive"))
+                .From(DataSource.Database(database))
+                .Where(Expression.Property("type").EqualTo(Expression.String("unitType-list"))
+                .And(Expression.Property("productId").EqualTo(Expression.String(productId))));
+
+            return GetUnitTypesQuery(query);
+        }
+        
         public List<Models.UnitType> GetUnitTypes(string productId, bool isActive)
         {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID), SelectResult.Property("type"),
+                SelectResult.Property("name"), SelectResult.Property("barcode"),
+                SelectResult.Property("taxInId"), SelectResult.Property("taxOutId"),
+                SelectResult.Property("lastBuyPrice"), SelectResult.Property("buyPrice"),
+                SelectResult.Property("sellPrice"), SelectResult.Property("stock"),
+                SelectResult.Property("isActive"))
+                .From(DataSource.Database(database))
+                .Where(Expression.Property("type").EqualTo(Expression.String("unitType-list"))
+                .And(Expression.Property("productId").EqualTo(Expression.String(productId)))
+                .And(Expression.Property("isActive").EqualTo(Expression.Boolean(isActive))));
+                        
+            return GetUnitTypesQuery(query);
+        }
+
+        private List<Models.UnitType> GetUnitTypesQuery(IWhere query)
+        {
+            var rows = query.Execute();
+
+            if (rows != null)
+            {
+                List<Models.UnitType> unitTypeList = new List<Models.UnitType>();
+
+                foreach (var row in rows)
+                {
+                    var unitType = new Models.UnitType
+                    {
+                        Id = row.GetString("id"),
+                        DocumentType = row.GetString("type"),
+                        ProductId = row.GetString("productId"),
+                        TaxInId = row.GetString("taxInId"),
+                        TaxOutId = row.GetString("taxOutId"),
+                        Name = row.GetString("name"),
+                        Barcode = row.GetString("barcode"),
+                        LastBuyPrice = Convert.ToDecimal(row.GetDouble("lastBuyPrice")),
+                        BuyPrice = Convert.ToDecimal(row.GetDouble("buyPrice")),
+                        SellPrice = Convert.ToDecimal(row.GetDouble("sellPrice")),
+                        Stock = row.GetDouble("stock"),
+                        IsActive = row.GetBoolean("isActive")
+                    };
+
+                    unitTypeList.Add(unitType);
+                }
+                return unitTypeList;
+            }
             return null;
         }
 
@@ -808,7 +1023,24 @@ namespace LireOffice.Service
 
         public void UpdateProduct(Models.Product product)
         {
+            try
+            {
+                var _doc = database.GetDocument(product.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("name", product.Name);
+                    doc.SetBoolean("isActive", product.IsActive);
+                    doc.SetString("vendorId", product.VendorId);
+                    doc.SetString("categoryId", product.CategoryId);
 
+                    database.Save(doc);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
 
         public void DeleteProduct(string productId)
@@ -818,7 +1050,28 @@ namespace LireOffice.Service
 
         public List<Models.ProductInfoContext> GetProducts(string text, bool isActive)
         {
-            return null;
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID.From("product")).As("id"),
+                SelectResult.Expression(Meta.ID.From("unitType")).As("unitTypeId"),
+                SelectResult.Expression(Expression.Property("vendorId").From("product")),
+                SelectResult.Expression(Expression.Property("categoryId").From("product")),
+                SelectResult.Expression(Expression.Property("taxInId").From("unitType")),
+                SelectResult.Expression(Expression.Property("taxOutId").From("unitType")),
+                SelectResult.Expression(Expression.Property("barcode").From("unitType")),
+                SelectResult.Expression(Expression.Property("name").From("product")),
+                SelectResult.Expression(Expression.Property("stock").From("unitType")).As("quantity"),
+                SelectResult.Expression(Expression.Property("name").From("unitType")).As("unitType"),
+                SelectResult.Expression(Expression.Property("buyPrice").From("unitType")),
+                SelectResult.Expression(Expression.Property("sellPrice").From("unitType")))
+                .From(DataSource.Database(database).As("product"))
+                .Join(Join.LeftOuterJoin(DataSource.Database(database).As("unitType"))
+                .On(Meta.ID.From("product").EqualTo(Expression.Property("productId").From("unitType"))))
+                .Where(Expression.Property("type").From("product").EqualTo(Expression.String("product-list"))
+                .And(Expression.Property("type").From("unitType").EqualTo(Expression.String("unitType-list")))
+                .And(Expression.Property("isActive").From("unitType").EqualTo(Expression.Boolean(isActive)))
+                .And(Expression.Property("name").From("product").Like(Expression.String($"%{text}%"))));
+                        
+            return GetProductsQuery(query);
         }
 
         public List<Models.ProductInfoContext> GetProductsByVendor(string text, string vendorId, bool isActive)
@@ -842,9 +1095,66 @@ namespace LireOffice.Service
                 .And(Expression.Property("type").From("unitType").EqualTo(Expression.String("unitType-list")))
                 .And(Expression.Property("vendorId").From("product").EqualTo(Expression.String(vendorId)))
                 .And(Expression.Property("isActive").From("product").EqualTo(Expression.Boolean(isActive)))
-                .And(Expression.Property("name").From("product").Like(Expression.String($"%{text}%"))))
-                .OrderBy(Ordering.Property("name").Ascending());
+                .And(Expression.Property("name").From("product").Like(Expression.String($"%{text}%"))));
 
+            return GetProductsQuery(query);
+        }
+
+        public List<Models.ProductInfoContext> GetProductsByCategory(string text, string categoryId, bool isActive)
+        {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID.From("product")).As("id"),
+                SelectResult.Expression(Meta.ID.From("unitType")).As("unitTypeId"),
+                SelectResult.Expression(Expression.Property("vendorId").From("product")),
+                SelectResult.Expression(Expression.Property("categoryId").From("product")),
+                SelectResult.Expression(Expression.Property("taxInId").From("unitType")),
+                SelectResult.Expression(Expression.Property("taxOutId").From("unitType")),
+                SelectResult.Expression(Expression.Property("barcode").From("unitType")),
+                SelectResult.Expression(Expression.Property("name").From("product")),
+                SelectResult.Expression(Expression.Property("stock").From("unitType")).As("quantity"),
+                SelectResult.Expression(Expression.Property("name").From("unitType")).As("unitType"),
+                SelectResult.Expression(Expression.Property("buyPrice").From("unitType")),
+                SelectResult.Expression(Expression.Property("sellPrice").From("unitType")))
+                .From(DataSource.Database(database).As("product"))
+                .Join(Join.LeftOuterJoin(DataSource.Database(database).As("unitType")).On(Meta.ID.From("product").EqualTo(Expression.Property("productId").From("unitType"))))
+                .Where(Expression.Property("type").From("product").EqualTo(Expression.String("product-list"))
+                .And(Expression.Property("type").From("unitType").EqualTo(Expression.String("unitType-list")))
+                .And(Expression.Property("categoryId").From("product").EqualTo(Expression.String(categoryId)))
+                .And(Expression.Property("isActive").From("product").EqualTo(Expression.Boolean(isActive)))
+                .And(Expression.Property("name").From("product").Like(Expression.String($"%{text}%"))));
+
+            return GetProductsQuery(query);
+        }
+
+        public List<Models.ProductInfoContext> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive)
+        {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID.From("product")).As("id"),
+                SelectResult.Expression(Meta.ID.From("unitType")).As("unitTypeId"),
+                SelectResult.Expression(Expression.Property("vendorId").From("product")),
+                SelectResult.Expression(Expression.Property("categoryId").From("product")),
+                SelectResult.Expression(Expression.Property("taxInId").From("unitType")),
+                SelectResult.Expression(Expression.Property("taxOutId").From("unitType")),
+                SelectResult.Expression(Expression.Property("barcode").From("unitType")),
+                SelectResult.Expression(Expression.Property("name").From("product")),
+                SelectResult.Expression(Expression.Property("stock").From("unitType")).As("quantity"),
+                SelectResult.Expression(Expression.Property("name").From("unitType")).As("unitType"),
+                SelectResult.Expression(Expression.Property("buyPrice").From("unitType")),
+                SelectResult.Expression(Expression.Property("sellPrice").From("unitType")))
+                .From(DataSource.Database(database).As("product"))
+                .Join(Join.LeftOuterJoin(DataSource.Database(database).As("unitType")).On(Meta.ID.From("product").EqualTo(Expression.Property("productId").From("unitType"))))
+                .Where(Expression.Property("type").From("product").EqualTo(Expression.String("product-list"))
+                .And(Expression.Property("type").From("unitType").EqualTo(Expression.String("unitType-list")))
+                .And(Expression.Property("categoryId").From("product").EqualTo(Expression.String(categoryId)))
+                .And(Expression.Property("vendorId").From("product").EqualTo(Expression.String(vendorId)))
+                .And(Expression.Property("isActive").From("product").EqualTo(Expression.Boolean(isActive)))
+                .And(Expression.Property("name").From("product").Like(Expression.String($"%{text}%"))));
+
+            return GetProductsQuery(query);
+        }
+
+        private List<Models.ProductInfoContext> GetProductsQuery(IWhere query)
+        {
             var rows = query.Execute();
 
             List<Models.ProductInfoContext> productInfoList = new List<Models.ProductInfoContext>();
@@ -860,7 +1170,11 @@ namespace LireOffice.Service
                     TaxInId = row.GetString("taxInId"),
                     TaxOutId = row.GetString("taxOutId"),
                     Barcode = row.GetString("barcode"),
-                    Name = row.GetString(""),
+                    Name = row.GetString("name"),
+                    UnitType = row.GetString("unitType"),
+                    Quantity = row.GetDouble("quantity"),
+                    BuyPrice = Convert.ToDecimal(row.GetDouble("buyPrice")),
+                    SellPrice = Convert.ToDecimal(row.GetDouble("sellPrice")),
                 };
 
                 productInfoList.Add(productInfo);
@@ -869,19 +1183,32 @@ namespace LireOffice.Service
             return productInfoList;
         }
 
-        public List<Models.ProductInfoContext> GetProductsByCategory(string text, string categoryId, bool isActive)
+        public Models.Product GetProduct(string productId)
         {
+            try
+            {
+                var doc = database.GetDocument(productId);
+                if (doc != null)
+                {
+                    Models.Product product = new Models.Product
+                    {
+                        Id = productId,
+                        DocumentType = doc.GetString("type"),
+                        VendorId = doc.GetString("vendorId"),
+                        CategoryId = doc.GetString("categoryId"),
+                        Name = doc.GetString("name"),
+                        IsActive = doc.GetBoolean("isActive")
+                    };
+
+                    return product;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+
             return null;
-        }
-
-        public List<Models.ProductInfoContext> GetProductsByCategoryVendor(string text, string categoryId, string vendorId, bool isActive)
-        {
-            return null;
-        }
-
-        private void GetProductsQuery(IWhere queryn)
-        {
-
         }
 
         #endregion

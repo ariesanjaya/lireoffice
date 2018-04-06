@@ -14,7 +14,7 @@ namespace LireOffice.Models
         public string ProductId { get; set; }
         public string TaxInId { get; set; }
         public string TaxOutId { get; set; }
-
+        
         private string _name;
 
         public string Name
