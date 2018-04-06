@@ -10,5 +10,14 @@
         public decimal Balance { get; set; }
     }
         
-
+    public class SubAccount
+    {
+        public string Id { get; set; }
+        public string DocumentType { get; set; }
+        public string ReferenceId { get; set; }
+        public string Name { get; set; }
+        public string AccountId { get; set; }
+        public string Description { get; set; }
+        public decimal Balance { get; set; }
+    }
 }

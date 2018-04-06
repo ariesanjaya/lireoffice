@@ -8,55 +8,73 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LireOffice.ViewModels
 {
-    public class AddAccountViewModel : BindableBase, INavigationAware
+    using static LireOffice.Models.RuleCollection<AddAccountViewModel>;
+    public class AddAccountViewModel : NotifyDataErrorInfo<AddAccountViewModel>, INavigationAware
     {
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
-        private readonly IOfficeContext context;
         private readonly ICouchBaseService databaseService;
 
         private bool IsUpdated = false;
+        private const string documentType = "subAccount-list";
 
-        public AddAccountViewModel(IEventAggregator ea, IRegionManager rm, ICouchBaseService service, IOfficeContext context)
+        public AddAccountViewModel(IEventAggregator ea, IRegionManager rm, ICouchBaseService service)
         {
             eventAggregator = ea;
             regionManager = rm;
-            this.context = context;
             databaseService = service;
+
+            AccountList = new List<AccountSimpleContext>();
         }
 
         #region Binding Properties
 
-        private AccountContext _accountDTO;
+        private string subAccountId;
 
-        public AccountContext AccountDTO
+        private string _referenceId;
+
+        public string ReferenceId
         {
-            get => _accountDTO;
-            set => SetProperty(ref _accountDTO, value, nameof(AccountDTO));
+            get => _referenceId;
+            set => SetProperty(ref _referenceId, value, nameof(ReferenceId));
         }
 
-        private List<string> _categoryList;
+        private string _name;
 
-        public List<string> CategoryList
+        public string Name
         {
-            get => _categoryList;
-            set => SetProperty(ref _categoryList, value, nameof(CategoryList));
+            get => _name;
+            set => SetProperty(ref _name, value, nameof(Name));
         }
 
-        private string _selectedCategory;
+        private string _description;
 
-        public string SelectedCategory
+        public string Description
         {
-            get => _selectedCategory;
-            set => SetProperty(ref _selectedCategory, value, () =>
-             {
-                 if (_selectedCategory != null && AccountDTO != null)
-                     AccountDTO.Category = _selectedCategory;
-             }, nameof(SelectedCategory));
+            get => _description;
+            set => SetProperty(ref _description, value, nameof(Description));
+        }
+        
+        private List<AccountSimpleContext> _accountList;
+
+        public List<AccountSimpleContext> AccountList
+        {
+            get => _accountList;
+            set => SetProperty(ref _accountList, value, nameof(AccountList));
+        }
+
+        private AccountSimpleContext _selectedAccount;
+
+        public AccountSimpleContext SelectedAccount
+        {
+            get => _selectedAccount;
+            set => SetProperty(ref _selectedAccount, value, nameof(SelectedAccount));
         }
 
         #endregion Binding Properties
@@ -70,30 +88,46 @@ namespace LireOffice.ViewModels
                 AddData();
             else
                 UpdateData();
-        }
-
-        private void AddData()
-        {
-            Account account = Mapper.Map<AccountContext, Account>(AccountDTO);
-            context.AddAccount(account);
 
             OnCancel();
             eventAggregator.GetEvent<AccountListUpdateEvent>().Publish("Update Account List");
+        }
+
+        private void AddData()
+        {            
+            SubAccount account = new SubAccount
+            {
+                Id = $"{documentType}.{Guid.NewGuid()}",
+                DocumentType = documentType,
+                ReferenceId = ReferenceId,
+                Name = Name,
+                Description = Description
+            };
+
+            if (SelectedAccount != null)
+            {
+                account.AccountId = SelectedAccount.Id;
+            }
+
+            databaseService.AddSubAccount(account);
         }
 
         private void UpdateData()
         {
-            var result = context.GetAccountById(AccountDTO.Id);
-            if (result != null)
+            SubAccount account = new SubAccount
             {
-                result = Mapper.Map(AccountDTO, result);
-                result.Version += 1;
-                result.UpdatedAt = DateTime.Now;
-                context.UpdateAccount(result);
+                Id = subAccountId,
+                ReferenceId = ReferenceId,
+                Name = Name,
+                Description = Description
+            };
+
+            if (SelectedAccount != null)
+            {
+                account.AccountId = SelectedAccount.Id;
             }
 
-            OnCancel();
-            eventAggregator.GetEvent<AccountListUpdateEvent>().Publish("Update Account List");
+            databaseService.UpdateSubAccount(account);            
         }
 
         private void OnCancel()
@@ -102,24 +136,67 @@ namespace LireOffice.ViewModels
             eventAggregator.GetEvent<Option01VisibilityEvent>().Publish(false);
         }
 
-        private void LoadData(AccountInfoContext _account)
+        private void LoadData(string subAccountId)
         {
-            var account = context.GetAccountById(_account.Id);
-            if (account != null)
+            var subAccount = databaseService.GetSubAccount(subAccountId);
+            if (subAccount != null)
             {
-                AccountDTO = Mapper.Map<Account, AccountContext>(account);
-                SelectedCategory = AccountDTO.Category;
+                ReferenceId = subAccount.ReferenceId;
+                Name = subAccount.Name;
+                Description = subAccount.Description;
             }
+        }
+
+        private async void LoadAccountList(string accountId = null)
+        {
+            AccountList.Clear();
+
+            var tempAccountList = await Task.Run(()=> 
+            {
+                Collection<AccountSimpleContext> _accountList = new Collection<AccountSimpleContext>();
+                var accountList = databaseService.GetAccounts();
+                if (accountList.Count > 0)
+                {
+                    foreach (var _account in accountList)
+                    {
+                        var account = new AccountSimpleContext
+                        {
+                            Id = _account["id"] as string,
+                            Name = _account["name"] as string
+                        };
+                        _accountList.Add(account);
+                    }
+                }
+                return _accountList;
+            });
+
+            AccountList.AddRange(tempAccountList);
+
+            if (!string.IsNullOrEmpty(accountId))
+            {
+                SelectedAccount = AccountList.FirstOrDefault(x => string.Equals(x.Id, accountId));
+            }
+            else
+            {
+                SelectedAccount = AccountList.FirstOrDefault();
+            }                
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var parameter = navigationContext.Parameters;
-            if (parameter["SelectedAccount"] is AccountInfoContext account)
+            if (parameter["subAccountId"] is string subAccountId && parameter["accountId"] is string accountId)
             {
+                this.subAccountId = subAccountId;
                 IsUpdated = true;
-                LoadData(account);
+                LoadData(subAccountId);
+                LoadAccountList(accountId);
             }
+            else
+            {
+                LoadAccountList();
+            }
+
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

@@ -22,13 +22,7 @@ namespace LireOffice.Models
             set => SetProperty(ref _name, value, nameof(Name));
         }
 
-        private string _category;
-
-        public string Category
-        {
-            get => _category;
-            set => SetProperty(ref _category, value, nameof(Category));
-        }
+        public string AccountId { get; set; }
 
         private decimal _balance;
 

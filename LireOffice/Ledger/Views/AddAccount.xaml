@@ -22,7 +22,7 @@
                         <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
 
-                    <Label Content="Tambah Akun" FontSize="18" VerticalAlignment="Center" />
+                    <Label Content="Akun" FontSize="18" VerticalAlignment="Center" />
 
                     <Grid Grid.Row="1" Margin="0 12 0 0" HorizontalAlignment="Left">
                         <Grid.RowDefinitions>
@@ -41,16 +41,16 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Content="No. Akun" FontSize="14" VerticalAlignment="Center" />
-                        <TextBox x:Name="ReferenceTextBox" FontSize="14" Grid.Column="1" Width="200" Text="{Binding AccountDTO.ReferenceId, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
+                        <TextBox x:Name="ReferenceTextBox" FontSize="14" Grid.Column="1" Width="200" Text="{Binding ReferenceId, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
 
                         <Label Content="Nama" Grid.Row="2" FontSize="14" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="2" Grid.Column="1" FontSize="14" Width="200" Text="{Binding AccountDTO.Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
+                        <TextBox Grid.Row="2" Grid.Column="1" FontSize="14" Width="200" Text="{Binding Name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
 
                         <Label Content="Kategori" Grid.Row="4" FontSize="14" VerticalAlignment="Center" />
-                        <ComboBox Grid.Row="4" Grid.Column="1" FontSize="14" Width="200" ItemsSource="{Binding CategoryList}" SelectedItem="{Binding SelectedCategory}" HorizontalAlignment="Left" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" FontSize="14" Width="200" ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="Name" HorizontalAlignment="Left" />
 
                         <Label Content="Deskripsi" Grid.Row="6" FontSize="14" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="6" Grid.Column="1" FontSize="14" Text="{Binding AccountDTO.Description}" />
+                        <TextBox Grid.Row="6" Grid.Column="1" FontSize="14" Text="{Binding Description}" />
                     </Grid>
 
                     <StackPanel Margin="15" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">

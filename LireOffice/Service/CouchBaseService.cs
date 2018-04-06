@@ -146,6 +146,25 @@ namespace LireOffice.Service
             {
                 ["id"] = $"{documentType}.{Guid.NewGuid()}",
                 ["type"] = documentType,
+                ["name"] = "Hutang Usaha",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Hutang Non Usaha",
+            };
+
+            AddData(dictionary);
+
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
                 ["name"] = "Persediaan",
             };
 
@@ -158,7 +177,25 @@ namespace LireOffice.Service
                 ["name"] = "Aset Tetap",
             };
 
-            AddData(dictionary);            
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Aset Lain",
+            };
+
+            AddData(dictionary);
+
+            dictionary = new Dictionary<string, object>
+            {
+                ["id"] = $"{documentType}.{Guid.NewGuid()}",
+                ["type"] = documentType,
+                ["name"] = "Modal",
+            };
+
+            AddData(dictionary);
         }
 
         public void DeleteDatabase()
@@ -693,11 +730,19 @@ namespace LireOffice.Service
             return list;
         }
 
-        public void AddAccount(Dictionary<string, object> dictionary)
+        public void AddSubAccount(Models.SubAccount account)
         {
             try
             {
+                var doc = new MutableDocument(account.Id);
+                doc.SetString("type", account.DocumentType);
+                doc.SetString("referenceId", account.ReferenceId);
+                doc.SetString("name", account.Name);
+                doc.SetString("accountId", account.AccountId);
+                doc.SetString("description", account.Description);
+                doc.SetDouble("balance", Convert.ToDouble(account.Balance));
 
+                database.Save(doc);
             }
             catch (Exception ex)
             {
@@ -705,11 +750,22 @@ namespace LireOffice.Service
             }
         }
 
-        public void UpdateAccount(Dictionary<string, object> dictionary)
+        public void UpdateSubAccount(Models.SubAccount account)
         {
             try
             {
+                var _doc = database.GetDocument(account.Id);
+                if (_doc != null)
+                {
+                    var doc = _doc.ToMutable();
+                    doc.SetString("referenceId", account.ReferenceId);
+                    doc.SetString("name", account.Name);
+                    doc.SetString("accountId", account.AccountId);
+                    doc.SetString("description", account.Description);
+                    doc.SetDouble("balance", Convert.ToDouble(account.Balance));
 
+                    database.Save(doc);
+                }                
             }
             catch (Exception ex)
             {
@@ -719,6 +775,87 @@ namespace LireOffice.Service
 
         public List<Dictionary<string, object>> GetAccounts()
         {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID), SelectResult.Property("name"))
+                .From(DataSource.Database(database))
+                .Where(Expression.Property("type").EqualTo(Expression.String("account-list")));
+
+            var rows = query.Execute();
+
+            if (rows != null)
+            {
+                var accountList = new List<Dictionary<string, object>>();
+
+                foreach (var row in rows)
+                {
+                    Dictionary<string, object> account = new Dictionary<string, object>
+                    {
+                        ["id"] = row.GetString("id"),
+                        ["name"] = row.GetString("name")
+                    };
+
+                    accountList.Add(account);
+                }
+                return accountList;
+            }
+            return null;
+        }
+
+        public List<Models.SubAccount> GetSubAccounts()
+        {
+            var query = QueryBuilder.Select(
+                SelectResult.Expression(Meta.ID), SelectResult.Property("type"),
+                SelectResult.Property("referenceId"), SelectResult.Property("name"),
+                SelectResult.Property("accountId"), SelectResult.Property("balance"))
+                .From(DataSource.Database(database)).Where(Expression.Property("type").EqualTo(Expression.String("subAccount-list")));
+
+            var rows = query.Execute();
+            if (rows != null)
+            {
+                List<Models.SubAccount> accountList = new List<Models.SubAccount>();
+                foreach (var row in rows)
+                {
+                    Models.SubAccount account = new Models.SubAccount
+                    {
+                        Id = row.GetString("id"),
+                        DocumentType = row.GetString("type"),
+                        ReferenceId = row.GetString("referenceId"),
+                        Name = row.GetString("name"),
+                        AccountId = row.GetString("accountId"),
+                        Balance = Convert.ToDecimal(row.GetDouble("balance"))
+                    };
+                    accountList.Add(account);
+                }
+                return accountList;
+            }
+            return null;
+        }
+
+        public Models.SubAccount GetSubAccount(string accountId)
+        {
+            try
+            {
+                var doc = database.GetDocument(accountId);
+                if (doc != null)
+                {
+                    Models.SubAccount account = new Models.SubAccount
+                    {
+                        Id = accountId,
+                        DocumentType = doc.GetString("type"),
+                        AccountId = doc.GetString("accountId"),
+                        ReferenceId = doc.GetString("referenceId"),
+                        Name = doc.GetString("name"),
+                        Description = doc.GetString("description"),
+                        Balance = Convert.ToDecimal(doc.GetDouble("balance"))
+                    };
+                    return account;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+
             return null;
         }
         #endregion

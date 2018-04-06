@@ -42,10 +42,12 @@ namespace LireOffice.Service
         void UpdateTax(Models.Tax tax);
         List<Models.Tax> GetTaxes();
 
-        void AddAccount(Dictionary<string, object> dictionary);
-        void UpdateAccount(Dictionary<string, object> dictionary);
+        void AddSubAccount(Models.SubAccount account);
+        void UpdateSubAccount(Models.SubAccount account);
 
         List<Dictionary<string, object>> GetAccounts();
+        List<Models.SubAccount> GetSubAccounts();
+        Models.SubAccount GetSubAccount(string accountId);
 
         #endregion
 

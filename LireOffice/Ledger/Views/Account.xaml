@@ -6,10 +6,9 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:local="clr-namespace:LireOffice.Views"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
         <Grid Margin="16">
             <Grid.RowDefinitions>
@@ -18,6 +17,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ComboBox Margin="0 0 24 0" ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="Name" Height="30" Width="200"/>
                 <Button Content="Tambah" Height="30" Width="100" FontSize="14" Command="{Binding AddCommand}" />
                 <Button Margin="16 0 0 0" Content="Ubah" Height="30" Width="100" FontSize="14" Command="{Binding UpdateCommand}" />
             </StackPanel>
@@ -26,7 +26,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="240" />
+                    <ColumnDefinition Width="280" />
                 </Grid.ColumnDefinitions>
 
                 <!--<syncfusion:SfDataGrid x:Name="dataGrid"
@@ -46,14 +46,12 @@
                     </syncfusion:SfDataGrid.Columns>
                 </syncfusion:SfDataGrid>-->
 
-                <DataGrid x:Name="dataGrid"
-                          ItemsSource="{Binding AccountList}"
-                          SelectedItem="{Binding SelectedAccount}">
+                <DataGrid x:Name="dataGrid">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="No. Referensi" Width="*"/>
-                        <DataGridTextColumn Header="Tgl" Width="*"/>
-                        <DataGridTextColumn Header="Keterangan" Width="*"/>
-                        <DataGridTemplateColumn>
+                        <DataGridTextColumn Header="No. Referensi" Width=".8*"/>
+                        <DataGridTextColumn Header="Tgl" Width="200"/>
+                        <DataGridTextColumn Header="Keterangan" Width="3*"/>
+                        <DataGridTemplateColumn Header="Total" Width="1.2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Total}" VerticalAlignment="Center"/>
@@ -63,7 +61,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 
-                <ListView Grid.Column="2" ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}">
+                <ListView Grid.Column="2" ItemsSource="{Binding SubAccountList}" SelectedItem="{Binding SelectedSubAccount}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

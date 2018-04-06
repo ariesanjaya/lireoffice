@@ -45,4 +45,17 @@
             set => SetProperty(ref _balance, value, nameof(Balance));
         }
     }
+
+    public class AccountSimpleContext : BindableBase
+    {
+        public string Id { get; set; }
+
+        private string _name;
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value, nameof(Name));
+        }
+    }
 }
